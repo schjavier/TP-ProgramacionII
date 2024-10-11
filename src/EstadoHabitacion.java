@@ -13,4 +13,15 @@ public enum EstadoHabitacion {
     public String getEstado() {
         return this.estado;
     }
+
+    public static String retornarValoresDeEnum()
+    {
+        String todos = "";
+        for(EstadoHabitacion valor : EstadoHabitacion.values())
+        {
+            todos = todos.concat(valor.ordinal() + "- " + valor + "\n");
+        }
+        return todos;
+    }
+
 }

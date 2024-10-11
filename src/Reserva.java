@@ -8,7 +8,7 @@ public class Reserva {
     private int id;
     private int referente;
     private ArrayList<Integer> pasajeros;
-    private boolean activa = false;
+    private boolean activa = false; // porque activa?
     private int habitacion;
     private LocalDate fechaInicio;
     private LocalDate fechaFinal;
