@@ -6,63 +6,88 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Habitaciones<T extends Habitacion>{
-    ArrayList<T> lista = new ArrayList<>();
+    ArrayList<T> listaHabitaciones = new ArrayList<>();
     String tipoHabitacion;
 
-    public Habitaciones(String tipohabitacion) {
-        this.tipoHabitacion = tipohabitacion;
+
+    public Habitaciones(String tipoHabitacion) {
+        this.tipoHabitacion = tipoHabitacion;
     }
+
 
     public void agregarHabitacion(T habitacion)
     {
-        lista.add(habitacion);
+        listaHabitaciones.add(habitacion);
     }
 
-    public boolean eliminarSegunNumeroHabitacion(int numhabitacion)
+
+    public boolean eliminarSegunNumeroHabitacion(int numHabitacion)
     {
-        return lista.removeIf(habitacion -> habitacion.getNroHabitacion() == numhabitacion);
+        return listaHabitaciones.removeIf(habitacion -> habitacion.getNroHabitacion() == numHabitacion);
         // estaria bueno borrar reservas hechas de esa habitacion (aca no)
     }
 
-    public StringBuilder listarTodos()
+    /**
+     * Lista todas las habitaciones.
+     * @return Un StringBuilder con las habitaciones (Podria devolver un string mejor -> habitaciones.toString())
+     */
+    public StringBuilder listarHabitaciones()
     {
-        StringBuilder todos = new StringBuilder();
-        for(T habitacion : lista)
+        StringBuilder habitaciones = new StringBuilder();
+        for(T habitacion : listaHabitaciones)
         {
-            todos.append(habitacion.toString() + "\n");
+            habitaciones.append(habitacion.toString()).append("\n");
         }
-        return todos;
+        return habitaciones;
     }
 
-    public StringBuilder listarTodosSegunEstado(EstadoHabitacion estado)
+    /**
+     * Metodo que lista todas las habitaciones segun el estado en el que se encuentran.
+     * @param estado Enum que representa el estado de la habitacion
+     * @return Devuelve un stringBuilder con todas las habitaciones que coinciden
+     * con el estado pasado por parametro.
+     *
+     * (Podria devolver un string mejor -> habitaciones.toString())
+     */
+    public StringBuilder listarHabitacionesSegunEstado(EstadoHabitacion estado)
     {
-        StringBuilder todos = new StringBuilder();
+        StringBuilder habitaciones = new StringBuilder();
 
-        for(T habitacion : lista)
+        for(T habitacion : listaHabitaciones)
         {
             if(habitacion.getEstado() == estado)
             {
-                todos.append(habitacion + "\n");
+                habitaciones.append(habitacion).append("\n");
             }
         }
 
-        return todos;
+        return habitaciones;
     }
 
+    /**
+     * Metodo que asigna a todas las habitaciones el estado pasado por parametro
+     * @param estado
+     */
     public void asignarEstadoAtodas(EstadoHabitacion estado)
     {
-        for(T habitacion : lista)
+        for(T habitacion : listaHabitaciones)
         {
             habitacion.setEstado(estado);
         }
     }
 
-    public T traerHabitacionSegunId(int numhabitacion) throws HabitacionNoEncontradaException
+    /**
+     *
+     * @param numHabitacion
+     * @return
+     * @throws HabitacionNoEncontradaException
+     */
+    public T traerHabitacionSegunId(int numHabitacion) throws HabitacionNoEncontradaException
     {
         T room = null;
-        for(T habitacion : lista)
+        for(T habitacion : listaHabitaciones)
         {
-            if(habitacion.getNroHabitacion() == numhabitacion)
+            if(habitacion.getNroHabitacion() == numHabitacion)
             {
                 room = habitacion;
             }
@@ -76,10 +101,16 @@ public class Habitaciones<T extends Habitacion>{
         return room;
     }
 
+    /**
+     *  Si creo que seria lo mejor hacer un static id
+     * @param numhabitacion
+     * @return
+     */
+
     public boolean verSiElNumeroEstaDisponible(int numhabitacion) // esto es para hacer que sean unicas (creo que puede ser un static id, haciendo esto innecesario)
     {
         boolean respuesta = true;
-        for(T habitacion : lista)
+        for(T habitacion : listaHabitaciones)
         {
             if(habitacion.getNroHabitacion() == numhabitacion)
             {
@@ -90,6 +121,12 @@ public class Habitaciones<T extends Habitacion>{
         return respuesta;
     }
 
+    /**
+     * Juan cruz me dijo una vez que no esta bueno devolver un map,
+     * por que desde el map se pueden modificar las cosas,
+     * entonces no se aplicaria el encapsulamiento de manera correcta.
+     * @return
+     */
     public HashMap<EstadoHabitacion,Integer> contarCantidadHabitacionesSegunEstado()
     {
         HashMap<EstadoHabitacion,Integer> cantidad = new HashMap<>();
@@ -99,7 +136,7 @@ public class Habitaciones<T extends Habitacion>{
             cantidad.put(valor,0);
         }
 
-        for(T habitacion : lista)
+        for(T habitacion : listaHabitaciones)
         {
             EstadoHabitacion estado = habitacion.getEstado();
             cantidad.put(estado, cantidad.get(estado) + 1);
