@@ -46,4 +46,13 @@ public class Empleado extends Persona {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "idEmpleado: " + idEmpleado + '\n' +
+                "usuario: " + usuario + '\n' +
+                "clave: " + clave + '\n' +
+                "email: " + email + '\n';
+    }
 }

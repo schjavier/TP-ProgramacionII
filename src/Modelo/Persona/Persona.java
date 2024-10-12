@@ -36,10 +36,6 @@ abstract public class Persona {
     }
 
     public String toString() {
-        return "Nombre: " + this.nombre + "\nApellido: " + this.apellido + "\nDNI: " + this.dni;
-    }
-
-    public void mostrar() {
-        System.out.println(this.toString());
+        return "Nombre: " + this.nombre + "\nApellido: " + this.apellido + "\nDNI: " + this.dni + "\n";
     }
 }

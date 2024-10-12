@@ -1,3 +1,17 @@
-/*public class HabitacionStandard extends Modelo.Modelo.Habitaciones.Habitaciones.Habitacion{ // la dejo vacia asi cuando se arregle esto de los pasajeros lo arranco
-// hacer abstracto Modelo.Modelo.Habitaciones.Habitaciones.Habitacion
-}*/
+package Modelo.Habitaciones;
+
+import Modelo.Habitaciones.EstadoHabitacion;
+import Modelo.Habitaciones.Habitacion;
+
+public class HabitacionStandard extends Habitacion { // la dejo vacia asi cuando se arregle esto de los pasajeros lo arranco
+
+    public HabitacionStandard(int nroHabitacion, int capacidadMaxima, EstadoHabitacion estado) {
+        super(nroHabitacion, capacidadMaxima, estado);
+    }
+
+    public HabitacionStandard(int nroHabitacion, int capacidadMaxima) {
+        super(nroHabitacion, capacidadMaxima);
+    }
+
+
+}

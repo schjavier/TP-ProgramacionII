@@ -1,20 +1,38 @@
-import Exceptions.BadOptionException;
+import DataChecks.VerificacionesDeDatos;
+import Exceptions.*;
 import Modelo.Habitaciones.EstadoHabitacion;
 import Modelo.Habitaciones.Habitacion;
+import Modelo.Habitaciones.HabitacionStandard;
 import Modelo.Habitaciones.Habitaciones;
+import Modelo.Persona.Empleado;
+import Modelo.Persona.Pasajero;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Hotel { // ESTO ES EL WRAPPER CLASS
-    ArrayList<Integer> pasajeros = new ArrayList<>();
-    Habitacion habitacion1 = new Habitacion(12,4, EstadoHabitacion.DISPONIBLE,pasajeros);
-    Habitacion habitacion2 = new Habitacion(15,4,EstadoHabitacion.OCUPADA,pasajeros);
-    Habitacion habitacion3 = new Habitacion(11,4,EstadoHabitacion.OCUPADA,pasajeros);
-    Habitacion habitacion4 = new Habitacion(18,4,EstadoHabitacion.LIMPIEZA,pasajeros);
-    Habitacion habitacion5 = new Habitacion(9,4,EstadoHabitacion.DISPONIBLE,pasajeros);
 
-    Habitaciones<Habitacion> habitaciones = new Habitaciones<>("test");
+    /* TESTEO */
+    HabitacionStandard habitacion1 = new HabitacionStandard(12,4, EstadoHabitacion.DISPONIBLE);
+    HabitacionStandard habitacion2 = new HabitacionStandard(15,4,EstadoHabitacion.OCUPADA);
+    HabitacionStandard habitacion3 = new HabitacionStandard(11,4,EstadoHabitacion.OCUPADA);
+    HabitacionStandard habitacion4 = new HabitacionStandard(18,4,EstadoHabitacion.LIMPIEZA);
+    HabitacionStandard habitacion5 = new HabitacionStandard(9,4,EstadoHabitacion.DISPONIBLE);
+
+    Habitaciones<HabitacionStandard> habitaciones = new Habitaciones<>("test");
+    ArrayList<Pasajero> pasajeros = new ArrayList<>();
+    ArrayList<Empleado> empleados = new ArrayList<>();
+
+    Pasajero persona1 = new Pasajero("Carlos","Test",11111111,"Calle 124 N°214");
+    Pasajero persona2 = new Pasajero("Zara","Nana",44444444,"Donde sea N°111");
+    Pasajero persona3 = new Pasajero("Mora","Li",55555555,"Calle xd N°214");
+    Pasajero persona4 = new Pasajero("Doña","Flores",12345678,"Casa");
+
+    Empleado empleado1 = new Empleado("Mr Empleado","N1",22225555, "Mr1","test@gmail.com","Test123");
+    Empleado empleado2 = new Empleado("Miss Empleado","N2",22225555, "Miss1","miss1@gmail.com","Lololol123123");
+    /* TESTEO END */
+
+
 
     public Hotel() { // test
         habitaciones.agregarHabitacion(habitacion1);
@@ -22,6 +40,14 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
         habitaciones.agregarHabitacion(habitacion3);
         habitaciones.agregarHabitacion(habitacion4);
         habitaciones.agregarHabitacion(habitacion5);
+
+        pasajeros.add(persona1);
+        pasajeros.add(persona2);
+        pasajeros.add(persona3);
+        pasajeros.add(persona4);
+
+        empleados.add(empleado1);
+        empleados.add(empleado2);
     }
 
     public HashMap contarEstadoHabitaciones(int tipohabitacion)
@@ -59,6 +85,78 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
     {
         return selectorDeTipoHabitacion(tipohabitacion).listarTodosSegunEstado(estado);
     }
+
+    public boolean existePasajeroConEseDNI(int dni) throws BadDataException // para hacer reservas o alguna otra cosa
+    {
+        VerificacionesDeDatos.verificarDni(dni);
+
+        boolean existe = false;
+        for(Pasajero pasajero : pasajeros)
+        {
+            if(pasajero.getDni() == dni)
+            {
+                existe = true;
+                break;
+            }
+        }
+        return existe;
+    }
+
+    public Pasajero buscarPasajeroConEseDNI(int dni) throws PersonaNoExisteException // para mostrarDatos de una o mas personas (puede ser de las reservas no?)
+    {
+        VerificacionesDeDatos.verificarDni(dni);
+        Pasajero persona = null;
+        for(Pasajero pasajero : pasajeros)
+        {
+            if(pasajero.getDni() == dni)
+            {
+                persona = pasajero;
+                break;
+            }
+        }
+
+        if(persona == null)
+        {
+            throw new PersonaNoExisteException("Persona con el DNI: "+ dni +" no existe, por favor cargar persona con ese dni de nuevo.");
+        }
+
+        return persona;
+    }
+
+    public boolean existeEmpleadoConEseDNI(int dni)
+    {
+        VerificacionesDeDatos.verificarDni(dni);
+        boolean existe = false;
+        for(Empleado empleado : empleados)
+        {
+            if(empleado.getDni() == dni)
+            {
+                existe = true;
+                break;
+            }
+        }
+        return existe;
+    }
+
+
+    public void verSiElDniEstaCargardo(int dni) throws PersonaExisteException, BadDataException
+    {
+        VerificacionesDeDatos.verificarDni(dni);
+
+        if(existeEmpleadoConEseDNI(dni) || existePasajeroConEseDNI(dni))
+        {
+            throw new PersonaExisteException("Hay alguien con el dni " + dni );
+        }
+    }
+
+
+
+    public boolean agregarPasajero(String nombre,String apellido,int dni,String direccion)
+    {
+        Pasajero pasajero = new Pasajero(nombre,apellido,dni,direccion);
+        return pasajeros.add(pasajero);
+    }
+
 
 
 

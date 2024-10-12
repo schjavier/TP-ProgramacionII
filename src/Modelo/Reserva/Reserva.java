@@ -8,13 +8,13 @@ import java.util.ArrayList;
 public class Reserva {
     private static int contadorIdReserva = 0; // id auto incremental
     private int id;
-    private int referente;
+    private int referente; // dni de persona que es "dueño" de la reserva
     private ArrayList<Integer> pasajeros;
     private boolean activa = false; // porque activa?
     private int habitacion;
     private LocalDate fechaInicio;
     private LocalDate fechaFinal;
-    private int guardadoPor;
+    private int guardadoPor; // empleado id
 
     public Reserva(int referente, ArrayList<Integer> pasajeros, boolean activa, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor) {
         this.id = ++contadorIdReserva;
