@@ -42,8 +42,9 @@ abstract public class Habitacion {
 
     @Override
     public String toString() {
-        return "Habitacion + " + nroHabitacion + '\n' +
+        return "Habitacion " + nroHabitacion + '\n' +
                 "Capacidad maxima: " + capacidadMaxima + '\n' +
+                "Ocupantes actuales: " + ocupantes.size() + '\n' +
                 "Estado: " + estado + '\n' +
                 "DNI ocupantes: " + ocupantes.toString() + '\n';
     }
