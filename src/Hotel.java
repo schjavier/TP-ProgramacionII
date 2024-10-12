@@ -159,6 +159,11 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
     }
 
 
+    public void gestionarHabitaciones(int tipohabitacion)
+    {
+        GestionHabitaciones.mostrarMenu(selectorDeTipoHabitacion(tipohabitacion));
+    }
+
 
 
 

@@ -14,7 +14,7 @@ public class Main {
         System.out.println(hotel.contarEstadoHabitaciones(1));
         System.out.println(hotel.listarHabitaciones(1));
 
-        GestionHabitacion.mostrarMenu(hotel.habitaciones.traerHabitacionSegunId(2));
+        hotel.gestionarHabitaciones(1);
 
 
         try {

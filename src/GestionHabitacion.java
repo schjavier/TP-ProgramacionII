@@ -37,7 +37,7 @@ public class GestionHabitacion {
             }
         } while (opcion != 0);
 
-        scanner.close();
+        scanner.nextLine();
     }
 
     private static <T extends Habitacion> void verEstado(T habitacion) {
