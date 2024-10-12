@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 abstract public class Habitacion {
     private static int contadorIdHabitacion = 0; // id auto incremental
-    private final int nroHabitacion; // esto deberia ser unico pero ni idea
+    private final int nroHabitacion;
     private final int capacidadMaxima;
     private EstadoHabitacion estado;
     private ArrayList<Integer> ocupantes;
