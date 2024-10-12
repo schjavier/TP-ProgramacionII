@@ -39,6 +39,10 @@ abstract public class Habitacion {
         this.ocupantes = ocupantes;
     }
 
+    public int getNroOcupantes() {
+        return ocupantes.size();
+    }
+
     public int getNroHabitacion() {
         return nroHabitacion;
     }
