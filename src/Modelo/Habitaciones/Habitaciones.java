@@ -9,14 +9,17 @@ public class Habitaciones<T extends Habitacion>{
     ArrayList<T> listaHabitaciones = new ArrayList<>();
     String tipoHabitacion;
 
-    public Habitaciones(String tipohabitacion) {
-        this.tipoHabitacion = tipohabitacion;
+
+    public Habitaciones(String tipoHabitacion) {
+        this.tipoHabitacion = tipoHabitacion;
     }
+
 
     public void agregarHabitacion(T habitacion)
     {
         listaHabitaciones.add(habitacion);
     }
+
 
     public boolean eliminarSegunNumeroHabitacion(int numHabitacion)
     {
@@ -73,6 +76,13 @@ public class Habitaciones<T extends Habitacion>{
         }
     }
 
+
+    /**
+     *
+     * @param numHabitacion
+     * @return
+     * @throws HabitacionNoEncontradaException
+     */
     public T traerHabitacionSegunId(int numHabitacion) throws HabitacionNoEncontradaException
     {
         T room = null;

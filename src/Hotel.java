@@ -84,6 +84,7 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
     public StringBuilder listarSegunEstado(int tipohabitacion,EstadoHabitacion estado)
     {
         return selectorDeTipoHabitacion(tipohabitacion).listarHabitacionesSegunEstado(estado);
+
     }
 
     public boolean existePasajeroConEseDNI(int dni) throws BadDataException // para hacer reservas o alguna otra cosa
