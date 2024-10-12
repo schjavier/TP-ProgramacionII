@@ -9,6 +9,13 @@ abstract public class Habitacion {
     private EstadoHabitacion estado;
     private ArrayList<Integer> ocupantes;
 
+    public Habitacion(int capacidadMaxima, EstadoHabitacion estado) {
+            this.nroHabitacion = ++contadorIdHabitacion;
+            this.capacidadMaxima = capacidadMaxima;
+            this.estado = estado;
+            this.ocupantes = new ArrayList<Integer>();
+    }
+
     public Habitacion(int capacidadMaxima) {
         this.nroHabitacion = ++contadorIdHabitacion;
         this.capacidadMaxima = capacidadMaxima;
