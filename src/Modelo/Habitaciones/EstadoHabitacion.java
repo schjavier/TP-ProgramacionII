@@ -1,3 +1,5 @@
+package Modelo.Habitaciones;
+
 public enum EstadoHabitacion {
     DISPONIBLE("Disponible"),
     OCUPADA("Ocupada"),

@@ -1,9 +1,14 @@
+import Exceptions.BadOptionException;
+import Modelo.Habitaciones.EstadoHabitacion;
+import Modelo.Habitaciones.Habitacion;
+import Modelo.Habitaciones.Habitaciones;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Hotel { // ESTO ES EL WRAPPER CLASS
     ArrayList<Integer> pasajeros = new ArrayList<>();
-    Habitacion habitacion1 = new Habitacion(12,4,EstadoHabitacion.DISPONIBLE,pasajeros);
+    Habitacion habitacion1 = new Habitacion(12,4, EstadoHabitacion.DISPONIBLE,pasajeros);
     Habitacion habitacion2 = new Habitacion(15,4,EstadoHabitacion.OCUPADA,pasajeros);
     Habitacion habitacion3 = new Habitacion(11,4,EstadoHabitacion.OCUPADA,pasajeros);
     Habitacion habitacion4 = new Habitacion(18,4,EstadoHabitacion.LIMPIEZA,pasajeros);
@@ -40,13 +45,13 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
      *
      * @param tipohabitacion Un numero del 1 al x siendo x el ultimo tipo de habitacion que haya
      * @return La lista que en la que se trabajara
-     * @throws BadOption En el caso de que el id de tipo habitacion (lista) no este dentro del switch
+     * @throws BadOptionException En el caso de que el id de tipo habitacion (lista) no este dentro del switch
      */
-    public Habitaciones selectorDeTipoHabitacion(int tipohabitacion) throws BadOption
+    public Habitaciones selectorDeTipoHabitacion(int tipohabitacion) throws BadOptionException
     {
         return switch (tipohabitacion) {
             case 1 -> habitaciones;
-            default -> throw new BadOption("Elegir una opcion correcta!!");
+            default -> throw new BadOptionException("Elegir una opcion correcta!!");
         };
     }
 

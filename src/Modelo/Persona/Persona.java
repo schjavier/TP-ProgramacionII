@@ -1,3 +1,5 @@
+package Modelo.Persona;
+
 abstract public class Persona {
     private String nombre;
     private String apellido;

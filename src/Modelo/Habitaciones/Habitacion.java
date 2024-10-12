@@ -1,3 +1,5 @@
+package Modelo.Habitaciones;
+
 import java.util.ArrayList;
 
 /* abstract */ public class Habitacion {
@@ -53,7 +55,7 @@ import java.util.ArrayList;
 
     @Override
     public String toString() {
-        return "Habitacion{" +
+        return "Modelo.Modelo.Habitaciones.Habitaciones.Habitacion{" +
                 "nroHabitacion=" + nroHabitacion +
                 ", capacidadMaxima=" + capacidadMaxima +
                 ", estado=" + estado +

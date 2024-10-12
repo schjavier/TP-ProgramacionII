@@ -1,3 +1,5 @@
+package Modelo.Persona;
+
 public class Pasajero extends Persona {
     private String domicilio;
 

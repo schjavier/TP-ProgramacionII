@@ -1,12 +1,16 @@
+package Modelo.Habitaciones;
+
+import Exceptions.HabitacionNoEncontradaException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Habitaciones<T extends Habitacion>{
     ArrayList<T> lista = new ArrayList<>();
-    String tipohabitacion;
+    String tipoHabitacion;
 
     public Habitaciones(String tipohabitacion) {
-        this.tipohabitacion = tipohabitacion;
+        this.tipoHabitacion = tipohabitacion;
     }
 
     public void agregarHabitacion(T habitacion)

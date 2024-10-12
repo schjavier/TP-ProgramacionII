@@ -1,3 +1,5 @@
+package Modelo.Persona;
+
 public class Empleado extends Persona {
     private static int contadorIdEmpleado = 0; // id auto incremental
     private int idEmpleado;
