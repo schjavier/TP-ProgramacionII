@@ -32,7 +32,7 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
 
     public StringBuilder listarHabitaciones(int tipohabitacion)
     {
-        return selectorDeTipoHabitacion(tipohabitacion).listarTodos();
+        return selectorDeTipoHabitacion(tipohabitacion).listarHabitaciones();
     }
 
     public boolean eliminarHabitacion(int tipohabitacion,int habitacion)
@@ -57,7 +57,7 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
 
     public StringBuilder listarSegunEstado(int tipohabitacion,EstadoHabitacion estado)
     {
-        return selectorDeTipoHabitacion(tipohabitacion).listarTodosSegunEstado(estado);
+        return selectorDeTipoHabitacion(tipohabitacion).listarHabitacionesSegunEstado(estado);
     }
 
 
