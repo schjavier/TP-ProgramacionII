@@ -76,6 +76,7 @@ public class Habitaciones<T extends Habitacion>{
         }
     }
 
+
     /**
      *
      * @param numHabitacion
@@ -106,7 +107,6 @@ public class Habitaciones<T extends Habitacion>{
      * @param numhabitacion
      * @return
      */
-
     public boolean verSiElNumeroEstaDisponible(int numhabitacion) // esto es para hacer que sean unicas (creo que puede ser un static id, haciendo esto innecesario)
     {
         boolean respuesta = true;

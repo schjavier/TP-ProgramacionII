@@ -15,4 +15,10 @@ public class Pasajero extends Persona {
     public void setDomicilio(String domicilio) {
         this.domicilio = domicilio;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "domicilio: " + domicilio;
+    }
 }
