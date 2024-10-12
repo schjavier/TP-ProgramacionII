@@ -14,6 +14,8 @@ public class Main {
         System.out.println(hotel.contarEstadoHabitaciones(1));
         System.out.println(hotel.listarHabitaciones(1));
 
+        GestionHabitacion.mostrarMenu(hotel.habitaciones.traerHabitacionSegunId(2));
+
 
         try {
             //System.out.println(hotel.eliminarHabitacion(1,11)); // funciona :)
