@@ -58,7 +58,7 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
 
     public StringBuilder listarHabitaciones(int tipohabitacion)
     {
-        return selectorDeTipoHabitacion(tipohabitacion).listarHabitacionesf();
+        return selectorDeTipoHabitacion(tipohabitacion).listarHabitaciones();
     }
 
     public boolean eliminarHabitacion(int tipohabitacion,int habitacion)
