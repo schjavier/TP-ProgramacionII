@@ -14,6 +14,9 @@ public class Habitaciones<T extends Habitacion>{
         this.tipoHabitacion = tipoHabitacion;
     }
 
+    public ArrayList<T> getListaHabitaciones() {
+        return listaHabitaciones;
+    }
 
     public void agregarHabitacion(T habitacion)
     {

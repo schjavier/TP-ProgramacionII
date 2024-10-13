@@ -8,6 +8,7 @@ abstract public class Habitacion {
     private final int capacidadMaxima;
     private EstadoHabitacion estado;
     private ArrayList<Integer> ocupantes;
+    protected String tipoHabitacion;
 
     public Habitacion(int capacidadMaxima, EstadoHabitacion estado) {
             this.nroHabitacion = ++contadorIdHabitacion;
@@ -51,9 +52,14 @@ abstract public class Habitacion {
         return capacidadMaxima;
     }
 
+    public String getTipoHabitacion() {
+        return tipoHabitacion;
+    }
+
     @Override
     public String toString() {
         return "Habitacion " + nroHabitacion + '\n' +
+                "Tipo: " + getTipoHabitacion() + '\n' +
                 "Capacidad maxima: " + capacidadMaxima + '\n' +
                 "Ocupantes actuales: " + ocupantes.size() + '\n' +
                 "Estado: " + estado + '\n' +

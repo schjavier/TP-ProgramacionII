@@ -15,6 +15,7 @@ public class GestionHabitacion {
             System.out.println("2. Cambiar estado de la habitación");
             System.out.println("3. Ver DNI de ocupantes de la habitación");
             System.out.println("4. Ver número de ocupantes actuales");
+            System.out.println("5. Ver resumen de la habitacion");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
@@ -31,6 +32,9 @@ public class GestionHabitacion {
                     break;
                 case 4:
                     verNumeroOcupantes(habitacion);
+                    break;
+                case 5:
+                    System.out.println(habitacion.toString());
                     break;
                 case 0:
                     System.out.println("Saliendo...");
