@@ -21,7 +21,7 @@ public enum EstadoHabitacion {
         String todos = "";
         for(EstadoHabitacion valor : EstadoHabitacion.values())
         {
-            todos = todos.concat(valor.ordinal() + "- " + valor + "\n");
+            todos = todos.concat(valor.ordinal() + ". " + valor.getEstado() + "\n");
         }
         return todos;
     }
