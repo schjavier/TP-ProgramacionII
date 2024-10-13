@@ -1,3 +1,6 @@
+import Modelo.Habitaciones.EstadoHabitacion;
+import Modelo.Habitaciones.Habitacion;
+
 import java.util.Scanner;
 
 public class GestionHabitacion {

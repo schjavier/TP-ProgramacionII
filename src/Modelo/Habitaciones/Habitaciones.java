@@ -21,7 +21,7 @@ public class Habitaciones<T extends Habitacion>{
     }
 
 
-    public boolean eliminarSegunNumeroHabitacion(int numHabitacion)
+    public boolean eliminarHabitacionSegunNumero(int numHabitacion)
     {
         return listaHabitaciones.removeIf(habitacion -> habitacion.getNroHabitacion() == numHabitacion);
         // estaria bueno borrar reservas hechas de esa habitacion (aca no)
@@ -145,5 +145,7 @@ public class Habitaciones<T extends Habitacion>{
         return cantidad;
     }
 
-
+    public String getTipoHabitacion() {
+        return tipoHabitacion;
+    }
 }

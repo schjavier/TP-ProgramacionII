@@ -1,8 +1,8 @@
 import DataChecks.VerificacionesDeDatos;
 import Exceptions.*;
 import Modelo.Habitaciones.EstadoHabitacion;
-import Modelo.Habitaciones.Habitacion;
 import Modelo.Habitaciones.HabitacionStandard;
+import Modelo.Habitaciones.HabitacionSuite;
 import Modelo.Habitaciones.Habitaciones;
 import Modelo.Persona.Empleado;
 import Modelo.Persona.Pasajero;
@@ -13,13 +13,20 @@ import java.util.HashMap;
 public class Hotel { // ESTO ES EL WRAPPER CLASS
 
     /* TESTEO */
-    HabitacionStandard habitacion1 = new HabitacionStandard(12,4, EstadoHabitacion.DISPONIBLE);
-    HabitacionStandard habitacion2 = new HabitacionStandard(15,4,EstadoHabitacion.OCUPADA);
-    HabitacionStandard habitacion3 = new HabitacionStandard(11,4,EstadoHabitacion.OCUPADA);
-    HabitacionStandard habitacion4 = new HabitacionStandard(18,4,EstadoHabitacion.LIMPIEZA);
-    HabitacionStandard habitacion5 = new HabitacionStandard(9,4,EstadoHabitacion.DISPONIBLE);
+    HabitacionStandard habitacion1 = new HabitacionStandard(4, EstadoHabitacion.DISPONIBLE);
+    HabitacionStandard habitacion2 = new HabitacionStandard(4,EstadoHabitacion.OCUPADA);
+    HabitacionStandard habitacion3 = new HabitacionStandard(4,EstadoHabitacion.OCUPADA);
+    HabitacionStandard habitacion4 = new HabitacionStandard(4,EstadoHabitacion.LIMPIEZA);
+    HabitacionStandard habitacion5 = new HabitacionStandard(4,EstadoHabitacion.DISPONIBLE);
 
-    Habitaciones<HabitacionStandard> habitaciones = new Habitaciones<>("test");
+    HabitacionSuite habitacion6 = new HabitacionSuite(4, EstadoHabitacion.DISPONIBLE);
+    HabitacionSuite habitacion7 = new HabitacionSuite(4,EstadoHabitacion.OCUPADA);
+    HabitacionSuite habitacion8 = new HabitacionSuite(4,EstadoHabitacion.OCUPADA);
+    HabitacionSuite habitacion9 = new HabitacionSuite(4,EstadoHabitacion.LIMPIEZA);
+    HabitacionSuite habitacion10 = new HabitacionSuite(4,EstadoHabitacion.DISPONIBLE);
+
+    Habitaciones<HabitacionStandard> habitacionesStandard = new Habitaciones<>("Standard");
+    Habitaciones<HabitacionSuite> habitacionesSuite = new Habitaciones<>("Suite");
     ArrayList<Pasajero> pasajeros = new ArrayList<>();
     ArrayList<Empleado> empleados = new ArrayList<>();
 
@@ -35,11 +42,17 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
 
 
     public Hotel() { // test
-        habitaciones.agregarHabitacion(habitacion1);
-        habitaciones.agregarHabitacion(habitacion2);
-        habitaciones.agregarHabitacion(habitacion3);
-        habitaciones.agregarHabitacion(habitacion4);
-        habitaciones.agregarHabitacion(habitacion5);
+        habitacionesStandard.agregarHabitacion(habitacion1);
+        habitacionesStandard.agregarHabitacion(habitacion2);
+        habitacionesStandard.agregarHabitacion(habitacion3);
+        habitacionesStandard.agregarHabitacion(habitacion4);
+        habitacionesStandard.agregarHabitacion(habitacion5);
+
+        habitacionesSuite.agregarHabitacion(habitacion6);
+        habitacionesSuite.agregarHabitacion(habitacion7);
+        habitacionesSuite.agregarHabitacion(habitacion8);
+        habitacionesSuite.agregarHabitacion(habitacion9);
+        habitacionesSuite.agregarHabitacion(habitacion10);
 
         pasajeros.add(persona1);
         pasajeros.add(persona2);
@@ -63,7 +76,7 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
 
     public boolean eliminarHabitacion(int tipohabitacion,int habitacion)
     {
-        return selectorDeTipoHabitacion(tipohabitacion).eliminarSegunNumeroHabitacion(habitacion);
+        return selectorDeTipoHabitacion(tipohabitacion).eliminarHabitacionSegunNumero(habitacion);
     }
 
 
@@ -76,7 +89,8 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
     public Habitaciones selectorDeTipoHabitacion(int tipohabitacion) throws BadOptionException
     {
         return switch (tipohabitacion) {
-            case 1 -> habitaciones;
+            case 1 -> habitacionesStandard;
+            case 2 -> habitacionesSuite;
             default -> throw new BadOptionException("Elegir una opcion correcta!!");
         };
     }

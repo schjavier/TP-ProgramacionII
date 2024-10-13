@@ -1,13 +1,18 @@
+import Modelo.Habitaciones.*;
+
 import java.util.Scanner;
 
 public class GestionHabitaciones {
+
+    // Esto va a gestionar TODAS las habitaciones del hotel, no solo un tipo
+    // Tengo que cambiarlo pero lo commiteo para que quede guardado
 
     public static <T extends Habitacion> void mostrarMenu(Habitaciones<T> habitaciones) {
         Scanner scanner = new Scanner(System.in);
         int opcion;
 
         do {
-            System.out.println("\n--- Gestión de Habitaciones de tipo: " + habitaciones.getClass().getName() + " ---");
+            System.out.println("\n--- Gestión de Habitaciones de tipo: " + habitaciones.getTipoHabitacion() + " ---");
             System.out.println("1. Agregar habitación");
             System.out.println("2. Eliminar habitación por número");
             System.out.println("3. Ver lista de todas las habitaciones");
@@ -49,13 +54,22 @@ public class GestionHabitaciones {
             }
         } while (opcion != 0);
 
-        scanner.close();
+        scanner.nextLine();
     }
 
     private static <T extends Habitacion> void agregarHabitacion(Scanner scanner, Habitaciones<T> habitaciones) {
         System.out.print("Ingrese la capacidad máxima de la nueva habitación: ");
         int capacidadMaxima = scanner.nextInt();
-        T nuevaHabitacion = (T) new Habitacion(capacidadMaxima);
+
+        T nuevaHabitacion;
+        if (habitaciones.getTipoHabitacion().equals("Standard")) { // No me gusta pero lo voy a cambiar despues
+            nuevaHabitacion = (T) new HabitacionStandard(capacidadMaxima);
+        } else if (habitaciones.getTipoHabitacion().equals("Suite")) {
+            nuevaHabitacion = (T) new HabitacionSuite(capacidadMaxima);
+        } else {
+            throw new IllegalArgumentException("Tipo de habitaciones no soportado");
+        }
+
         habitaciones.agregarHabitacion(nuevaHabitacion);
         System.out.println("Habitación agregada.");
     }
@@ -72,7 +86,7 @@ public class GestionHabitaciones {
 
     private static <T extends Habitacion> void listarHabitaciones(Habitaciones<T> habitaciones) {
         System.out.println("Lista de todas las habitaciones:");
-        System.out.println(habitaciones.listarTodos());
+        System.out.println(habitaciones.listarHabitaciones());
     }
 
     private static <T extends Habitacion> void listarHabitacionesSegunEstado(Scanner scanner, Habitaciones<T> habitaciones) {
@@ -83,7 +97,7 @@ public class GestionHabitaciones {
         if (estadoSeleccionado >= 0 && estadoSeleccionado < EstadoHabitacion.values().length) {
             EstadoHabitacion estado = EstadoHabitacion.values()[estadoSeleccionado];
             System.out.println("Lista de habitaciones en estado " + estado + ":");
-            System.out.println(habitaciones.listarTodosSegunEstado(estado));
+            System.out.println(habitaciones.listarHabitacionesSegunEstado(estado));
         } else {
             System.out.println("Estado no válido.");
         }

@@ -7,26 +7,27 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-    static public Scanner teclado = new Scanner(System.in);
+    public static Scanner teclado = new Scanner(System.in);
+
     public static void main(String[] args) {
         Hotel hotel = new Hotel();
-        /*
         System.out.println(hotel.contarEstadoHabitaciones(1));
         System.out.println(hotel.listarHabitaciones(1));
 
+        //Funciona pero es un asco, voy a rehacerlo
         hotel.gestionarHabitaciones(1);
+        hotel.gestionarHabitaciones(2);
 
 
-        try {
+/*        try {
             //System.out.println(hotel.eliminarHabitacion(1,11)); // funciona :)
         } catch (BadOptionException e)
         {
             System.out.println(e.getMessage());
         }
 
-        System.out.println(hotel.listarSegunEstado(1, EstadoHabitacion.OCUPADA));*/
+        System.out.println(hotel.listarSegunEstado(1, EstadoHabitacion.OCUPADA));
 
-        /*
         System.out.println("Que tipo de habitación quiere reservar?");
 
 
@@ -51,14 +52,13 @@ public class Main {
         } catch (PersonaNoExisteException e)
         {
             System.out.println(e.getMessage());
-        }*/
+        }
 
-        /*
         Empleado empleado1 = new Empleado("Julio","Test",22224444,"carlitoslol","carlitos@gmail.com","helloworld");
         System.out.println("\n");
         System.out.println(empleado1);*/
 
-        agregarPasajero(hotel);
+        //agregarPasajero(hotel);
     }
 
     static public void agregarPasajero(Hotel hotel)
