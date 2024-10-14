@@ -34,10 +34,12 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
 //
 //    Empleado empleado1 = new Empleado("Mr Empleado","N1",22225555, "Mr1","test@gmail.com","Test123");
 //    Empleado empleado2 = new Empleado("Miss Empleado","N2",22225555, "Miss1","miss1@gmail.com","Lololol123123");
+    HabitacionesStandard habitacionesStandard = new HabitacionesStandard();
+    HabitacionesSuite habitacionesSuite = new HabitacionesSuite();
     /* TESTEO END */
 
-    private final Habitaciones<HabitacionStandard> habitacionesStandard = new Habitaciones<>("Standard");
-    private final Habitaciones<HabitacionSuite> habitacionesSuite = new Habitaciones<>("Suite");
+    /*private final Habitaciones<HabitacionStandard> habitacionesStandard = new Habitaciones<>(TipoHabitacion.REGULAR);
+    private final Habitaciones<HabitacionSuite> habitacionesSuite = new Habitaciones<>(TipoHabitacion.SUITE);*/
     private final ArrayList<Pasajero> pasajeros = new ArrayList<>();
     private final ArrayList<Empleado> empleados = new ArrayList<>();
     private String nombre;
@@ -56,12 +58,14 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
             switch (tipoHabitacion) {
                 case 1 -> habitaciones.agregarHabitacion(new HabitacionStandard(capacidadMaxima));
                 case 2 -> habitaciones.agregarHabitacion(new HabitacionSuite(capacidadMaxima));
+                //case 3 -> agregarpresidencial
                 default -> throw new BadOptionException("Elegir una opcion correcta!!");
             }
         }
+        habitaciones.listarHabitaciones();
     }
 
-    public HashMap contarEstadoHabitaciones(int tipohabitacion) {
+    public String contarEstadoHabitaciones(int tipohabitacion) {
         return selectorDeTipoHabitacion(tipohabitacion).contarCantidadHabitacionesSegunEstado();
     }
 
@@ -94,6 +98,7 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
         return switch (tipohabitacion) {
             case 1 -> habitacionesStandard;
             case 2 -> habitacionesSuite;
+            //case 3 -> habitacionesPresidencial;
             default -> throw new BadOptionException("Elegir una opcion correcta!!");
         };
     }

@@ -1,15 +1,21 @@
 package Modelo.Habitaciones;
 
-public class HabitacionSuite extends Habitacion{
+import java.time.LocalDateTime;
 
-    public HabitacionSuite(int capacidadMaxima, EstadoHabitacion estado) {
-        super(capacidadMaxima, estado);
-        super.tipoHabitacion = "Suite";
-    }
+public class HabitacionSuite extends Habitacion implements TieneCocina {
+    private LocalDateTime ultimarevisioncocina;
 
     public HabitacionSuite(int capacidadMaxima) {
-        super(capacidadMaxima);
-        super.tipoHabitacion = "Suite";
+        super(capacidadMaxima,TipoHabitacion.SUITE);
     }
 
+
+    public LocalDateTime getUltimarevisioncocina() {
+        return ultimarevisioncocina;
+    }
+
+    @Override
+    public void marcarMantenimientoHechoEnCocina() {
+        this.ultimarevisioncocina = LocalDateTime.now();
+    }
 }
