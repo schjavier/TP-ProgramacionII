@@ -5,15 +5,18 @@ import Exceptions.HabitacionNoEncontradaException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Habitaciones<T extends Habitacion>{
-    ArrayList<T> listaHabitaciones = new ArrayList<>();
-    String tipoHabitacion;
+abstract public class Habitaciones<T extends Habitacion>{
+    private ArrayList<T> listaHabitaciones = new ArrayList<>();
+    private TipoHabitacion tipoHabitacion;
 
 
-    public Habitaciones(String tipoHabitacion) {
+    public Habitaciones(TipoHabitacion tipoHabitacion) {
         this.tipoHabitacion = tipoHabitacion;
     }
 
+    public ArrayList<T> getListaHabitaciones() {
+        return listaHabitaciones;
+    }
 
     public void agregarHabitacion(T habitacion)
     {
@@ -21,7 +24,7 @@ public class Habitaciones<T extends Habitacion>{
     }
 
 
-    public boolean eliminarSegunNumeroHabitacion(int numHabitacion)
+    public boolean eliminarHabitacionSegunNumero(int numHabitacion)
     {
         return listaHabitaciones.removeIf(habitacion -> habitacion.getNroHabitacion() == numHabitacion);
         // estaria bueno borrar reservas hechas de esa habitacion (aca no)
@@ -127,7 +130,7 @@ public class Habitaciones<T extends Habitacion>{
      * entonces no se aplicaria el encapsulamiento de manera correcta.
      * @return
      */
-    public HashMap<EstadoHabitacion,Integer> contarCantidadHabitacionesSegunEstado()
+    public String contarCantidadHabitacionesSegunEstado()
     {
         HashMap<EstadoHabitacion,Integer> cantidad = new HashMap<>();
 
@@ -142,8 +145,8 @@ public class Habitaciones<T extends Habitacion>{
             cantidad.put(estado, cantidad.get(estado) + 1);
         }
 
-        return cantidad;
+        System.out.println(cantidad);
+
+        return cantidad.toString();
     }
-
-
 }
