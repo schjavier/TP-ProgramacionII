@@ -208,9 +208,6 @@ public class Main {
      * Muestra un menu para gestionar una habitacion segun el numero ingresado por teclado
      */
 
-    //Yo creo que este metodo se beneficiaria mucho de la existencia de un validador
-    //Como esta ahora, solo funciona si hay dos tipos de habitacion
-
     public static void gestionarHabitacion(Hotel hotel) {
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");
         int numeroHabitacion = teclado.nextInt();
