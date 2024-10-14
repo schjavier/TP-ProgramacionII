@@ -6,8 +6,12 @@ import Modelo.Habitaciones.HabitacionStandard;
 import Modelo.Habitaciones.Habitaciones;
 import Modelo.Persona.Empleado;
 import Modelo.Persona.Pasajero;
+import Modelo.Reserva.Reserva;
+import Modelo.Reserva.ReservaService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Hotel { // ESTO ES EL WRAPPER CLASS
@@ -23,6 +27,8 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
     ArrayList<Pasajero> pasajeros = new ArrayList<>();
     ArrayList<Empleado> empleados = new ArrayList<>();
 
+
+
     Pasajero persona1 = new Pasajero("Carlos","Test",11111111,"Calle 124 N°214");
     Pasajero persona2 = new Pasajero("Zara","Nana",44444444,"Donde sea N°111");
     Pasajero persona3 = new Pasajero("Mora","Li",55555555,"Calle xd N°214");
@@ -30,6 +36,17 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
 
     Empleado empleado1 = new Empleado("Mr Empleado","N1",22225555, "Mr1","test@gmail.com","Test123");
     Empleado empleado2 = new Empleado("Miss Empleado","N2",22225555, "Miss1","miss1@gmail.com","Lololol123123");
+
+    // prueba de reservas
+    ReservaService reservaService = new ReservaService();
+    ArrayList<Reserva> reservas = reservaService.filtrarPorActivas();
+
+    Reserva reserva1 = new Reserva(persona1.getDni(), true, habitacion1.getNroHabitacion(), LocalDate.of(2024, 11, 12), LocalDate.of(2024, 11, 15), empleado1.getIdEmpleado());
+    Reserva reserva2 = new Reserva(persona2.getDni(), true, habitacion2.getNroHabitacion(), LocalDate.of(2024, 11, 12), LocalDate.of(2024, 11, 15), empleado1.getIdEmpleado());
+    Reserva reserva3 = new Reserva(persona3.getDni(), true, habitacion4.getNroHabitacion(), LocalDate.of(2024, 11, 12), LocalDate.of(2024, 11, 15), empleado1.getIdEmpleado());
+
+
+
     /* TESTEO END */
 
 
@@ -48,6 +65,10 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
 
         empleados.add(empleado1);
         empleados.add(empleado2);
+
+        reservaService.generarReserva(reserva1);
+        reservaService.generarReserva(reserva2);
+        reservaService.generarReserva(reserva3);
     }
 
     public HashMap contarEstadoHabitaciones(int tipohabitacion)

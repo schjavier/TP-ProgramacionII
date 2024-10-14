@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Reserva {
     private static int contadorIdReserva = 0; // id auto incremental
     private int id;
-    private int referente; // dni de persona que es "dueño" de la reserva
+    private int dniTitular; // dni de persona que es "dueño" de la reserva
     private ArrayList<Integer> pasajeros;
     private boolean activa = false; // porque activa?
     private int habitacion;
@@ -16,10 +16,10 @@ public class Reserva {
     private LocalDate fechaFinal;
     private int guardadoPor; // empleado id
 
-    public Reserva(int referente, ArrayList<Integer> pasajeros, boolean activa, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor) {
+    public Reserva(int dniTitular, boolean activa, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor) {
         this.id = ++contadorIdReserva;
-        this.referente = referente;
-        this.pasajeros = pasajeros;
+        this.dniTitular = dniTitular;
+        this.pasajeros = new ArrayList<>();
         this.activa = activa;
         this.habitacion = habitacion;
         this.fechaInicio = fechaInicio;
@@ -27,20 +27,17 @@ public class Reserva {
         this.guardadoPor = guardadoPor;
     }
 
-    public static int getContadorIdReserva() {
-        return contadorIdReserva;
-    }
 
     public int getId() {
         return id;
     }
 
-    public int getReferente() {
-        return referente;
+    public int getDniTitular() {
+        return dniTitular;
     }
 
-    public void setReferente(int referente) {
-        this.referente = referente;
+    public void setDniTitular(int dniTitular) {
+        this.dniTitular = dniTitular;
     }
 
     public ArrayList<Integer> getPasajeros() {
@@ -81,5 +78,18 @@ public class Reserva {
 
     public void setFechaFinal(LocalDate fechaFinal) {
         this.fechaFinal = fechaFinal; // aca podria ponerse una excepcion
+    }
+
+    @Override
+    public String toString() {
+        return "Reserva {" +
+                "id=" + id +
+                ", dniTitular=" + dniTitular +
+                ", pasajeros=" + pasajeros +
+                ", activa=" + activa +
+                ", habitacion=" + habitacion +
+                ", fechaInicio=" + fechaInicio +
+                ", fechaFinal=" + fechaFinal +
+                '}';
     }
 }
