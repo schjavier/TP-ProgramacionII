@@ -4,12 +4,13 @@ import JSONCreator.CreadorAJSON;
 import Modelo.Habitaciones.*;
 import Modelo.Persona.Empleado;
 import Modelo.Persona.Pasajero;
-import Modelo.Persona.TipoEmpleado;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import Modelo.Reserva.Reserva;
+import Modelo.Reserva.ReservaService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 public class Hotel {
     private String nombre;
