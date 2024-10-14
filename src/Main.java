@@ -211,14 +211,17 @@ public class Main {
     //Yo creo que este metodo se beneficiaria mucho de la existencia de un validador
     //Como esta ahora, solo funciona si hay dos tipos de habitacion
 
-    public static void gestionarHabitacion(Hotel hotel) throws HabitacionNoEncontradaException {
+    public static void gestionarHabitacion(Hotel hotel) {
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");
         int numeroHabitacion = teclado.nextInt();
-        try {
-            GestionHabitacion.mostrarMenu(hotel.selectorDeTipoHabitacion(1).traerHabitacionSegunId(numeroHabitacion));
-        } catch (HabitacionNoEncontradaException e) {
-            GestionHabitacion.mostrarMenu(hotel.selectorDeTipoHabitacion(2).traerHabitacionSegunId(numeroHabitacion));
+        for (int i = 1; i <= 2; i++) { // 2 es el nro de tipos de habitacion que existen
+            try {
+                GestionHabitacion.mostrarMenu(hotel.selectorDeTipoHabitacion(i).traerHabitacionSegunId(numeroHabitacion));
+                return;
+            } catch (HabitacionNoEncontradaException e) {
+            }
         }
+        System.out.println("No existe la habitacion ingresada");
     }
 
 }
