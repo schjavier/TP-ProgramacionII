@@ -1,7 +1,6 @@
 import DataChecks.VerificacionesDeDatos;
 import Exceptions.*;
 import Modelo.Habitaciones.EstadoHabitacion;
-import Modelo.Habitaciones.TipoHabitacion;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -25,9 +24,7 @@ public class Main {
             System.out.println("7. Obtener un conteo de todas las habitaciones segun el estado");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
-            //hotel.contarEstadoHabitaciones(1); esto funca pero hay que hacer una feature para esto :)
             opcion = teclado.nextInt();
-
 
             switch (opcion) {
                 case 1:
@@ -143,9 +140,6 @@ public class Main {
             {
                 System.out.println("No puede tener letras!");
             }
-            finally {
-                teclado.nextLine();
-            }
         }
         return dni;
     }
@@ -160,32 +154,13 @@ public class Main {
             cantHab = teclado.nextInt();
             System.out.println("Ingrese su capacidad maxima: ");
             capMaxHab = teclado.nextInt();
-
-            boolean tipook = false;
-            while(!tipook)
-            {
-                System.out.println("Ingrese el tipo de habitacion: ");
-                System.out.println(TipoHabitacion.retornarValoresDeEnum());
-                try {
-                tipoHab = teclado.nextInt();
-                tipook = TipoHabitacion.verificarEntrada(tipoHab);
-                } catch (BadOptionException e)
-                {
-                    System.out.println(e.getMessage());
-                }
-                catch (InputMismatchException e)
-                {
-                    System.out.println("No es correcto!!");
-                }
-                finally {
-                    teclado.nextLine();
-                }
-            }
-            hotel.crearHabitaciones(cantHab,capMaxHab,tipoHab);
+            System.out.println("Ingrese el tipo de habitacion: ");
+            tipoHab = teclado.nextInt();
         } catch (BadOptionException e) {
             System.out.println("No existe el tipo de habitacion!");
         }
 
+        hotel.crearHabitaciones(cantHab,capMaxHab,tipoHab);
     }
 
     public static void eliminarHabitacion(Hotel hotel) {

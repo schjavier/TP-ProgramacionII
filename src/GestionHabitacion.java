@@ -34,7 +34,7 @@ public class GestionHabitacion {
                     verNumeroOcupantes(habitacion);
                     break;
                 case 5:
-                    System.out.println(habitacion);
+                    System.out.println(habitacion.toString());
                     break;
                 case 0:
                     System.out.println("Saliendo...");
@@ -71,6 +71,4 @@ public class GestionHabitacion {
     private static <T extends Habitacion> void verNumeroOcupantes(T habitacion) {
         System.out.println("Ocupantes actuales: " + habitacion.getNroOcupantes());
     }
-
-
 }
