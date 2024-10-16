@@ -18,7 +18,7 @@ public class GestionHabitacion {
             System.out.println("5. Ver resumen de la habitacion");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
+            opcion = Integer.parseInt(scanner.nextLine());
 
             switch (opcion) {
                 case 1:
@@ -43,8 +43,6 @@ public class GestionHabitacion {
                     System.out.println("Opción no válida. Intente de nuevo.");
             }
         } while (opcion != 0);
-
-        scanner.nextLine();
     }
 
     private static <T extends Habitacion> void verEstado(T habitacion) {
@@ -55,7 +53,7 @@ public class GestionHabitacion {
         System.out.println("Estados disponibles:");
         System.out.println(EstadoHabitacion.retornarValoresDeEnum());
         System.out.print("Seleccione el nuevo estado: ");
-        int estadoSeleccionado = scanner.nextInt();
+        int estadoSeleccionado = Integer.parseInt(scanner.nextLine());
         if (estadoSeleccionado >= 0 && estadoSeleccionado < EstadoHabitacion.values().length) {
             habitacion.setEstado(EstadoHabitacion.values()[estadoSeleccionado]);
             System.out.println("Estado cambiado a: " + habitacion.getEstado());

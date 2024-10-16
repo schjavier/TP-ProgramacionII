@@ -24,7 +24,7 @@ public class Main {
             System.out.println("7. Obtener un conteo de todas las habitaciones segun el estado");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
-            opcion = teclado.nextInt();
+            opcion = Integer.parseInt(teclado.nextLine());
 
             switch (opcion) {
                 case 1:
@@ -55,8 +55,6 @@ public class Main {
                     System.out.println("Opción no válida. Intente de nuevo.");
             }
         } while (opcion != 0);
-
-        teclado.nextLine();
 
 
 /*        try {
@@ -129,7 +127,7 @@ public class Main {
         {
             try {
                 System.out.println("Dni");
-                dni = teclado.nextInt();
+                dni = Integer.parseInt(teclado.nextLine());
                 hotel.verSiElDniEstaCargardo(dni);
                 dniver = true;
             } catch (BadDataException | PersonaExisteException e)
@@ -151,11 +149,11 @@ public class Main {
 
         try {
             System.out.println("Ingrese la cantidad de habitaciones: ");
-            cantHab = teclado.nextInt();
+            cantHab = Integer.parseInt(teclado.nextLine());
             System.out.println("Ingrese su capacidad maxima: ");
-            capMaxHab = teclado.nextInt();
+            capMaxHab = Integer.parseInt(teclado.nextLine());
             System.out.println("Ingrese el tipo de habitacion: ");
-            tipoHab = teclado.nextInt();
+            tipoHab = Integer.parseInt(teclado.nextLine());
         } catch (BadOptionException e) {
             System.out.println("No existe el tipo de habitacion!");
         }
@@ -167,7 +165,7 @@ public class Main {
         int nroHab = 0;
 
         System.out.println("Ingrese el numero de habitacion a eliminar: ");
-        nroHab = teclado.nextInt();
+        nroHab = Integer.parseInt(teclado.nextLine());
         hotel.eliminarHabitacion(nroHab);
     }
 
@@ -177,8 +175,7 @@ public class Main {
 
         try {
             System.out.println("Ingrese el tipo de habitacion: ");
-            tipoHab = teclado.nextInt();
-            teclado.nextLine(); //Limpia el buffer
+            tipoHab = Integer.parseInt(teclado.nextLine());
             System.out.println("Ingrese el estado: ");
             estadoSeleccionado = teclado.nextLine();
             System.out.println(hotel.listarSegunEstado(tipoHab, EstadoHabitacion.valueOf(estadoSeleccionado.toUpperCase())));
@@ -194,7 +191,6 @@ public class Main {
         int totalHabitaciones = 0;
 
         try {
-            teclado.nextLine(); //Limpia el buffer
             System.out.println("Ingrese el estado: ");
             estadoSeleccionado = teclado.nextLine();
             totalHabitaciones = hotel.obtenerNroHabitacionesSegunEstado(EstadoHabitacion.valueOf(estadoSeleccionado.toUpperCase()));
@@ -210,7 +206,7 @@ public class Main {
 
     public static void gestionarHabitacion(Hotel hotel) {
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");
-        int numeroHabitacion = teclado.nextInt();
+        int numeroHabitacion = Integer.parseInt(teclado.nextLine());
         for (int i = 1; i <= 2; i++) { // 2 es el nro de tipos de habitacion que existen
             try {
                 GestionHabitacion.mostrarMenu(hotel.selectorDeTipoHabitacion(i).traerHabitacionSegunId(numeroHabitacion));
