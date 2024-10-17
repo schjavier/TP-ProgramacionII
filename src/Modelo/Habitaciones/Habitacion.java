@@ -8,7 +8,7 @@ abstract public class Habitacion {
     private final int capacidadMaxima;
     private EstadoHabitacion estado;
     private ArrayList<Integer> ocupantes;
-    protected String tipoHabitacion;
+    private TipoHabitacion tipoHabitacion;
 
     public Habitacion(int capacidadMaxima, EstadoHabitacion estado) {
             this.nroHabitacion = ++contadorIdHabitacion;
@@ -17,11 +17,12 @@ abstract public class Habitacion {
             this.ocupantes = new ArrayList<Integer>();
     }
 
-    public Habitacion(int capacidadMaxima) {
+    public Habitacion(int capacidadMaxima, TipoHabitacion tipo) {
         this.nroHabitacion = ++contadorIdHabitacion;
         this.capacidadMaxima = capacidadMaxima;
         this.estado = EstadoHabitacion.DISPONIBLE;
         this.ocupantes = new ArrayList<Integer>();
+        this.tipoHabitacion = tipo;
     }
 
     public EstadoHabitacion getEstado() {
@@ -52,14 +53,10 @@ abstract public class Habitacion {
         return capacidadMaxima;
     }
 
-    public String getTipoHabitacion() {
-        return tipoHabitacion;
-    }
-
     @Override
     public String toString() {
         return "Habitacion " + nroHabitacion + '\n' +
-                "Tipo: " + getTipoHabitacion() + '\n' +
+                "Tipo: " + tipoHabitacion.getTipo() + '\n' +
                 "Capacidad maxima: " + capacidadMaxima + '\n' +
                 "Ocupantes actuales: " + ocupantes.size() + '\n' +
                 "Estado: " + estado + '\n' +
