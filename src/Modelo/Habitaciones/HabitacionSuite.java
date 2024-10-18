@@ -7,6 +7,7 @@ public class HabitacionSuite extends Habitacion implements TieneCocina {
 
     public HabitacionSuite(int capacidadMaxima) {
         super(capacidadMaxima,TipoHabitacion.SUITE);
+        this.ultimaRevisionCocina = LocalDateTime.now();
     }
 
 

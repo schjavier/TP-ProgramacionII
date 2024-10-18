@@ -7,39 +7,11 @@ import Modelo.Persona.Pasajero;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Hotel { // ESTO ES EL WRAPPER CLASS
+public class Hotel {
 
-    /* TESTEO */
-//    HabitacionStandard habitacion1 = new HabitacionStandard(4, EstadoHabitacion.DISPONIBLE);
-//    HabitacionStandard habitacion2 = new HabitacionStandard(4,EstadoHabitacion.OCUPADA);
-//    HabitacionStandard habitacion3 = new HabitacionStandard(4,EstadoHabitacion.OCUPADA);
-//    HabitacionStandard habitacion4 = new HabitacionStandard(4,EstadoHabitacion.LIMPIEZA);
-//    HabitacionStandard habitacion5 = new HabitacionStandard(4,EstadoHabitacion.DISPONIBLE);
-//
-//    HabitacionSuite habitacion6 = new HabitacionSuite(4, EstadoHabitacion.DISPONIBLE);
-//    HabitacionSuite habitacion7 = new HabitacionSuite(4,EstadoHabitacion.OCUPADA);
-//    HabitacionSuite habitacion8 = new HabitacionSuite(4,EstadoHabitacion.OCUPADA);
-//    HabitacionSuite habitacion9 = new HabitacionSuite(4,EstadoHabitacion.LIMPIEZA);
-//    HabitacionSuite habitacion10 = new HabitacionSuite(4,EstadoHabitacion.DISPONIBLE);
-//
-//    Habitaciones<HabitacionStandard> habitacionesStandard = new Habitaciones<>("Standard");
-//    Habitaciones<HabitacionSuite> habitacionesSuite = new Habitaciones<>("Suite");
-//    ArrayList<Pasajero> pasajeros = new ArrayList<>();
-//    ArrayList<Empleado> empleados = new ArrayList<>();
-//
-//    Pasajero persona1 = new Pasajero("Carlos","Test",11111111,"Calle 124 N°214");
-//    Pasajero persona2 = new Pasajero("Zara","Nana",44444444,"Donde sea N°111");
-//    Pasajero persona3 = new Pasajero("Mora","Li",55555555,"Calle xd N°214");
-//    Pasajero persona4 = new Pasajero("Doña","Flores",12345678,"Casa");
-//
-//    Empleado empleado1 = new Empleado("Mr Empleado","N1",22225555, "Mr1","test@gmail.com","Test123");
-//    Empleado empleado2 = new Empleado("Miss Empleado","N2",22225555, "Miss1","miss1@gmail.com","Lololol123123");
-    HabitacionesStandard habitacionesStandard = new HabitacionesStandard();
-    HabitacionesSuite habitacionesSuite = new HabitacionesSuite();
-    /* TESTEO END */
-
-    /*private final Habitaciones<HabitacionStandard> habitacionesStandard = new Habitaciones<>(TipoHabitacion.REGULAR);
-    private final Habitaciones<HabitacionSuite> habitacionesSuite = new Habitaciones<>(TipoHabitacion.SUITE);*/
+    private final HabitacionesStandard habitacionesStandard = new HabitacionesStandard();
+    private final HabitacionesSuite habitacionesSuite = new HabitacionesSuite();
+    private final HabitacionesPresidenciales habitacionesPresidenciales = new HabitacionesPresidenciales();
     private final ArrayList<Pasajero> pasajeros = new ArrayList<>();
     private final ArrayList<Empleado> empleados = new ArrayList<>();
     private String nombre;
@@ -58,11 +30,10 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
             switch (tipoHabitacion) {
                 case 1 -> habitaciones.agregarHabitacion(new HabitacionStandard(capacidadMaxima));
                 case 2 -> habitaciones.agregarHabitacion(new HabitacionSuite(capacidadMaxima));
-                //case 3 -> agregarpresidencial
+                case 3 -> habitaciones.agregarHabitacion(new HabitacionPresidencial(capacidadMaxima));
                 default -> throw new BadOptionException("Elegir una opcion correcta!!");
             }
         }
-        habitaciones.listarHabitaciones();
     }
 
     public String contarEstadoHabitaciones(int tipohabitacion) {
@@ -70,7 +41,8 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
     }
 
     public StringBuilder listarHabitaciones() {
-        return habitacionesStandard.listarHabitaciones().append(habitacionesSuite.listarHabitaciones());
+        return habitacionesStandard.listarHabitaciones().append(habitacionesSuite.listarHabitaciones()
+                .append(habitacionesPresidenciales.listarHabitaciones()));
     }
 
     public StringBuilder listarHabitacionesSegunTipo(int tipohabitacion) {
@@ -82,6 +54,8 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
         if (habitacionesStandard.eliminarHabitacionSegunNumero(habitacion)) {
             return true;
         } else if (habitacionesSuite.eliminarHabitacionSegunNumero(habitacion)) {
+            return true;
+        } else if (habitacionesPresidenciales.eliminarHabitacionSegunNumero(habitacion)){
             return true;
         } else {
             return false;
@@ -98,14 +72,13 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
         return switch (tipohabitacion) {
             case 1 -> habitacionesStandard;
             case 2 -> habitacionesSuite;
-            //case 3 -> habitacionesPresidencial;
+            case 3 -> habitacionesPresidenciales;
             default -> throw new BadOptionException("Elegir una opcion correcta!!");
         };
     }
 
     public StringBuilder listarSegunEstado(int tipohabitacion, EstadoHabitacion estado) {
         return selectorDeTipoHabitacion(tipohabitacion).listarHabitacionesSegunEstado(estado);
-
     }
 
     public boolean existePasajeroConEseDNI(int dni) throws BadDataException // para hacer reservas o alguna otra cosa
@@ -175,6 +148,9 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
         for (HabitacionSuite habitacion : habitacionesSuite.getListaHabitaciones()) {
             total += 1;
         }
+        for (HabitacionPresidencial habitacion : habitacionesPresidenciales.getListaHabitaciones()) {
+            total += 1;
+        }
 
         return total;
     }
@@ -188,6 +164,11 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
             }
         }
         for (HabitacionSuite habitacion : habitacionesSuite.getListaHabitaciones()) {
+            if (habitacion.getEstado() == estadoHabitacion) {
+                total += 1;
+            }
+        }
+        for (HabitacionPresidencial habitacion : habitacionesPresidenciales.getListaHabitaciones()) {
             if (habitacion.getEstado() == estadoHabitacion) {
                 total += 1;
             }

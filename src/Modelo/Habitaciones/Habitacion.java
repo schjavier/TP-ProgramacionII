@@ -10,7 +10,7 @@ abstract public class Habitacion {
     private ArrayList<Integer> ocupantes;
     private TipoHabitacion tipoHabitacion;
 
-    public Habitacion(int capacidadMaxima, EstadoHabitacion estado) {
+    public Habitacion(int capacidadMaxima, EstadoHabitacion estado) { // esto para que casos serviria?
             this.nroHabitacion = ++contadorIdHabitacion;
             this.capacidadMaxima = capacidadMaxima;
             this.estado = estado;

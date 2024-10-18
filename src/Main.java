@@ -157,7 +157,7 @@ public class Main {
             cantHab = Integer.parseInt(teclado.nextLine());
             System.out.println("Ingrese su capacidad maxima: ");
 
-            capMaxHab = teclado.nextInt();
+            capMaxHab = Integer.parseInt(teclado.nextLine());
 
             boolean tipook = false;
             while(!tipook)
@@ -174,9 +174,6 @@ public class Main {
                 catch (InputMismatchException e)
                 {
                     System.out.println("No es correcto!!");
-                }
-                finally {
-                    teclado.nextLine();
                 }
             }
             hotel.crearHabitaciones(cantHab,capMaxHab,tipoHab);
