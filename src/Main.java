@@ -179,7 +179,7 @@ public class Main {
                     teclado.nextLine();
                 }
             }
-            hotel.crearHabitaciones(cantHab,capMaxHab,tipoHab)
+            hotel.crearHabitaciones(cantHab,capMaxHab,tipoHab);
         } catch (BadOptionException e) {
             System.out.println("No existe el tipo de habitacion!");
         }

@@ -3,19 +3,19 @@ package Modelo.Habitaciones;
 import java.time.LocalDateTime;
 
 public class HabitacionSuite extends Habitacion implements TieneCocina {
-    private LocalDateTime ultimarevisioncocina;
+    private LocalDateTime ultimaRevisionCocina;
 
     public HabitacionSuite(int capacidadMaxima) {
         super(capacidadMaxima,TipoHabitacion.SUITE);
     }
 
 
-    public LocalDateTime getUltimarevisioncocina() {
-        return ultimarevisioncocina;
+    public LocalDateTime getUltimaRevisionCocina() {
+        return ultimaRevisionCocina;
     }
 
     @Override
     public void marcarMantenimientoHechoEnCocina() {
-        this.ultimarevisioncocina = LocalDateTime.now();
+        this.ultimaRevisionCocina = LocalDateTime.now();
     }
 }

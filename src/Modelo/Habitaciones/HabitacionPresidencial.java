@@ -3,23 +3,23 @@ package Modelo.Habitaciones;
 import java.time.LocalDateTime;
 
 public class HabitacionPresidencial extends Habitacion implements TieneCocina {
-    private LocalDateTime ultimarevisioncocina;
-    private LocalDateTime ultimarevisionjacuzzi;
+    private LocalDateTime ultimaRevisionCocina;
+    private LocalDateTime ultimaRevisionJacuzzi;
 
     public HabitacionPresidencial(int capacidadMaxima) {
         super(capacidadMaxima,TipoHabitacion.PRESIDENCIAL);
-        this.ultimarevisioncocina = LocalDateTime.now();
-        this.ultimarevisionjacuzzi = LocalDateTime.now();
+        this.ultimaRevisionCocina = LocalDateTime.now();
+        this.ultimaRevisionJacuzzi = LocalDateTime.now();
     }
 
     @Override
     public void marcarMantenimientoHechoEnCocina() {
-        this.ultimarevisioncocina = LocalDateTime.now();
+        this.ultimaRevisionCocina = LocalDateTime.now();
     }
 
     public void marcarMantenimientoEnJacuzzi()
     {
-        this.ultimarevisionjacuzzi = LocalDateTime.now();
+        this.ultimaRevisionJacuzzi = LocalDateTime.now();
     }
 
 }
