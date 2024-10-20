@@ -12,6 +12,7 @@ public class Main {
     public static void main(String[] args) {
         Hotel hotel = new Hotel("Hotel California");
 
+        //agregarPasajero(hotel);
         int opcion;
 
         do {
@@ -139,9 +140,6 @@ public class Main {
             catch (InputMismatchException e)
             {
                 System.out.println("No puede tener letras!");
-            }
-            finally {
-                teclado.nextLine();
             }
         }
         return dni;

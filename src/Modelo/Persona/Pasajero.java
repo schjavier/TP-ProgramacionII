@@ -1,5 +1,7 @@
 package Modelo.Persona;
 
+import org.json.JSONObject;
+
 public class Pasajero extends Persona {
     private String domicilio;
 
@@ -20,5 +22,17 @@ public class Pasajero extends Persona {
     public String toString() {
         return super.toString() +
                 "domicilio: " + domicilio;
+    }
+
+
+
+    public JSONObject toJSON()
+    {
+        JSONObject persona = new JSONObject();
+        persona.put("Nombre",getNombre());
+        persona.put("Apellido",getApellido());
+        persona.put("Dni",getDni());
+        persona.put("Domicilio",getDomicilio());
+        return persona;
     }
 }

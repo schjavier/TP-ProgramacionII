@@ -1,23 +1,39 @@
 import DataChecks.VerificacionesDeDatos;
 import Exceptions.*;
+import JSONCreator.CreadorAJSON;
 import Modelo.Habitaciones.*;
 import Modelo.Persona.Empleado;
 import Modelo.Persona.Pasajero;
+import Modelo.Persona.TipoEmpleado;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Hotel {
+    private String nombre;
+    private Empleado empleado_en_sistema = null;
 
     private final HabitacionesStandard habitacionesStandard = new HabitacionesStandard();
     private final HabitacionesSuite habitacionesSuite = new HabitacionesSuite();
     private final HabitacionesPresidenciales habitacionesPresidenciales = new HabitacionesPresidenciales();
     private final ArrayList<Pasajero> pasajeros = new ArrayList<>();
     private final ArrayList<Empleado> empleados = new ArrayList<>();
-    private String nombre;
+
+
+    private final String archivopasajeros = "Pasajeros.json";
+    private final String archivoempleados = "Empleados.json";
+
 
     public Hotel(String nombre) {
         this.nombre = nombre;
+        try {
+            cargarJSONPasajeros();
+            cargarJSONEmpleados();
+        } catch (NullNameException e) {
+            throw new NullNameException(e.getMessage());
+        }
     }
 
     /**
@@ -135,9 +151,10 @@ public class Hotel {
     }
 
 
-    public boolean agregarPasajero(String nombre, String apellido, int dni, String direccion) {
+    public void agregarPasajero(String nombre, String apellido, int dni, String direccion) {
         Pasajero pasajero = new Pasajero(nombre, apellido, dni, direccion);
-        return pasajeros.add(pasajero);
+        pasajeros.add(pasajero);
+        CreadorAJSON.uploadJSON(archivopasajeros,pasarListaDePersonasAJSON());
     }
 
     public int obtenerNroHabitaciones() {
@@ -175,6 +192,138 @@ public class Hotel {
         }
 
         return total;
+    }
+
+    public void cargarJSONPasajeros() throws NullNameException
+    {
+        try {
+            JSONArray pasajerosjson = new JSONArray(CreadorAJSON.downloadJSON(archivopasajeros));
+
+            for(int i = 0;i<pasajerosjson.length();i++)
+            {
+                JSONObject jsonpasajero = pasajerosjson.getJSONObject(i);
+                String nombre = jsonpasajero.getString("Nombre");
+                String apellido = jsonpasajero.getString("Apellido");
+                int dni = jsonpasajero.getInt("Dni");
+                String domicilio = jsonpasajero.getString("Domicilio");
+
+                try {
+                    VerificacionesDeDatos.verificarDni(dni);
+                    Pasajero pasajeronew = new Pasajero(nombre,apellido,dni,domicilio);
+                    pasajeros.add(pasajeronew);
+                } catch (BadDataException e) {
+                    System.out.println("Error en persona" + nombre + " " + apellido + e.getMessage());
+                }
+            }
+
+        } catch (IOException e) {
+            CreadorAJSON.uploadJSON(archivopasajeros,"[]");
+            System.out.println("Creando archivo...");
+        } catch (NullNameException e)
+        {
+            throw new NullNameException(e.getMessage());
+        }
+    }
+
+    public String pasarListaDePersonasAJSON()
+    {
+        JSONArray arreglopasajeros = new JSONArray();
+        for(Pasajero pasajero : pasajeros)
+        {
+            arreglopasajeros.put(pasajero.toJSON());
+        }
+        return arreglopasajeros.toString();
+    }
+
+    public void cargarJSONEmpleados() throws NullNameException
+    {
+        try {
+            JSONArray empleosjson = new JSONArray(CreadorAJSON.downloadJSON(archivoempleados));
+            for(int i = 0;i<empleosjson.length();i++)
+            {
+                JSONObject jsonpasajero = empleosjson.getJSONObject(i);
+                String nombre = jsonpasajero.getString("Nombre");
+                String apellido = jsonpasajero.getString("Apellido");
+                int dni = jsonpasajero.getInt("Dni");
+
+                String usuario = jsonpasajero.getString("Usuario");
+                String clave = jsonpasajero.getString("Clave");
+                String email = jsonpasajero.getString("Email");
+                TipoEmpleado tipohabitacion = jsonpasajero.getEnum(TipoEmpleado.class,"TipoEmpleado");
+
+                try {
+                    VerificacionesDeDatos.verificarDni(dni);
+                    Empleado empleado = new Empleado(nombre,apellido,dni,usuario,clave,email,tipohabitacion);
+                    empleados.add(empleado);
+                } catch (BadDataException e) {
+                    System.out.println("Error en persona" + nombre + " " + apellido + e.getMessage());
+                }
+            }
+
+        } catch (IOException e) {
+            CreadorAJSON.uploadJSON(archivoempleados,"[]");
+            System.out.println("Creando archivo...");
+        } catch (NullNameException e)
+        {
+            throw new NullNameException(e.getMessage());
+        }
+    }
+
+    public String pasarListaDeEmpleadosAJSON()
+    {
+        JSONArray arregloempleados = new JSONArray();
+        for(Empleado empleado : empleados)
+        {
+            arregloempleados.put(empleado.toJSON());
+        }
+        System.out.println(arregloempleados.toString());
+        return arregloempleados.toString();
+    }
+
+
+    /*los mismo seria para las habitaciones y sus tipos :)*/
+
+    // iniciar secion (talvez)
+
+    public void intentarIniciarSesion(String username, String clave) throws PersonaExisteException
+    {
+        Empleado empleadologin = null;
+
+        for(Empleado empleado : empleados)
+        {
+            if(empleado.getClave().equals(clave) && empleado.getUsuario().equals(clave))
+            {
+                empleadologin = empleado;
+                break;
+            }
+        }
+
+        if(empleadologin == null)
+        {
+            throw new PersonaNoExisteException("El usuario no existe!");
+        }
+
+        empleado_en_sistema = empleadologin;
+    }
+
+    public void logOut()
+    {
+        empleado_en_sistema = null;
+    }
+
+    public TipoEmpleado buscarPermisoDeUsuario()
+    {
+        return empleado_en_sistema.getTipo();
+    }
+
+    public Empleado retornarEmpleadoLoggeado()
+    {
+        return empleado_en_sistema;
+    }
+
+    public int retornarDniEmpleadoLoggeado()
+    {
+        return empleado_en_sistema.getDni();
     }
 
 }
