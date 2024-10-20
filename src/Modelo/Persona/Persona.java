@@ -1,5 +1,7 @@
 package Modelo.Persona;
 
+import org.json.JSONObject;
+
 abstract public class Persona {
     private String nombre;
     private String apellido;
@@ -38,4 +40,7 @@ abstract public class Persona {
     public String toString() {
         return "Nombre: " + this.nombre + "\nApellido: " + this.apellido + "\nDNI: " + this.dni + "\n";
     }
+
+
+
 }

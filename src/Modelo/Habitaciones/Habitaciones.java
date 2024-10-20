@@ -1,17 +1,21 @@
 package Modelo.Habitaciones;
 
 import Exceptions.HabitacionNoEncontradaException;
+import Exceptions.NullNameException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-abstract public class Habitaciones<T extends Habitacion>{
+abstract public class Habitaciones<T extends Habitacion> {
+    private String nombrearchivo = "";
     private ArrayList<T> listaHabitaciones = new ArrayList<>();
     private TipoHabitacion tipoHabitacion;
 
 
     public Habitaciones(TipoHabitacion tipoHabitacion) {
         this.tipoHabitacion = tipoHabitacion;
+        this.nombrearchivo = this.nombrearchivo.concat("Habitaciones" + tipoHabitacion.getTipo() + ".json");
     }
 
     public ArrayList<T> getListaHabitaciones() {
@@ -149,4 +153,10 @@ abstract public class Habitaciones<T extends Habitacion>{
 
         return cantidad.toString();
     }
+
+    public String getNombrearchivo() {
+        return nombrearchivo;
+    }
+
+    abstract void leerArchivoYcargarAMemoria() throws IOException, NullNameException;
 }
