@@ -101,14 +101,14 @@ public class Main {
     static public String definirNombreoApe(String mensaje)
     {
         String dato = "";
-        boolean nomver = false;
-        while(!nomver)
+        boolean nombreVerificado = false;
+        while(!nombreVerificado)
         {
             try {
                 System.out.println(mensaje);
                 dato = teclado.nextLine();
                 VerificacionesDeDatos.tieneNumeros(dato);
-                nomver = true;
+                nombreVerificado = true;
             } catch (BadDataException e)
             {
                 System.out.println(e.getMessage());
@@ -124,15 +124,15 @@ public class Main {
     static public int definirDni(Hotel hotel)
     {
         int dni = 0;
-        boolean dniver = false;
+        boolean dniVerificado = false;
 
-        while(!dniver)
+        while(!dniVerificado)
         {
             try {
                 System.out.println("Dni");
                 dni = Integer.parseInt(teclado.nextLine());
-                hotel.verSiElDniEstaCargardo(dni);
-                dniver = true;
+                hotel.verSiElDniEstaCargado(dni);
+                dniVerificado = true;
             } catch (BadDataException | PersonaExisteException e)
             {
                 System.out.println(e.getMessage());
@@ -157,14 +157,14 @@ public class Main {
 
             capMaxHab = Integer.parseInt(teclado.nextLine());
 
-            boolean tipook = false;
-            while(!tipook)
+            boolean tipoVerificado = false;
+            while(!tipoVerificado)
             {
                 System.out.println("Ingrese el tipo de habitacion: ");
                 System.out.println(TipoHabitacion.retornarValoresDeEnum());
                 try {
                 tipoHab = Integer.parseInt(teclado.nextLine());
-                tipook = TipoHabitacion.verificarEntrada(tipoHab);
+                tipoVerificado = TipoHabitacion.verificarEntrada(tipoHab);
                 } catch (BadOptionException e)
                 {
                     System.out.println(e.getMessage());

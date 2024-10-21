@@ -62,7 +62,7 @@ public class Empleado extends Persona {
                 "usuario: " + usuario + '\n' +
                 "clave: " + clave + '\n' +
                 "email: " + email + '\n' +
-                "tipo: " + tipo.getTipoempleado();
+                "tipo: " + tipo.getTipoEmpleado();
     }
 
     public JSONObject toJSON()

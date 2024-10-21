@@ -5,14 +5,14 @@ public enum TipoEmpleado {
     ADMINISTRADOR("Admin"),
     RECEPCIONISTA("Recepcionista");
 
-    private String tipoempleado;
+    private String tipoEmpleado;
 
-    TipoEmpleado(String tipoempleado) {
-        this.tipoempleado = tipoempleado;
+    TipoEmpleado(String tipoEmpleado) {
+        this.tipoEmpleado = tipoEmpleado;
     }
 
-    public String getTipoempleado() {
-        return tipoempleado;
+    public String getTipoEmpleado() {
+        return tipoEmpleado;
     }
 
 }
