@@ -9,10 +9,8 @@ public class HabitacionesSuite extends Habitaciones<HabitacionSuite> {
         super(TipoHabitacion.SUITE);
     }
 
-    public void marcarTodasHabitacionesComoRevisadas()
-    {
-        for (HabitacionSuite habitacion : super.getListaHabitaciones())
-        {
+    public void marcarTodasHabitacionesComoRevisadas() {
+        for (HabitacionSuite habitacion : super.getListaHabitaciones()) {
             habitacion.marcarMantenimientoHechoEnCocina();
         }
     }

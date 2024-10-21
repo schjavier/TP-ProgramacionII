@@ -97,8 +97,7 @@ public class Hotel {
         return selectorDeTipoHabitacion(tipoHabitacion).listarHabitacionesSegunEstado(estado);
     }
 
-    public boolean existePasajeroConEseDNI(int dni) throws BadDataException // para hacer reservas o alguna otra cosa
-    {
+    public boolean existePasajeroConEseDNI(int dni) throws BadDataException { // para hacer reservas o alguna otra cosa
         VerificacionesDeDatos.verificarDni(dni);
 
         boolean existe = false;
@@ -111,8 +110,7 @@ public class Hotel {
         return existe;
     }
 
-    public Pasajero buscarPasajeroConEseDNI(int dni) throws PersonaNoExisteException // para mostrarDatos de una o mas personas (puede ser de las reservas no?)
-    {
+    public Pasajero buscarPasajeroConEseDNI(int dni) throws PersonaNoExisteException {// para mostrarDatos de una o mas personas (puede ser de las reservas no?)
         VerificacionesDeDatos.verificarDni(dni);
         Pasajero persona = null;
         for (Pasajero pasajero : pasajeros) {
@@ -230,12 +228,10 @@ public class Hotel {
         return arregloPasajeros.toString();
     }
 
-    public void cargarJSONEmpleados() throws NullNameException
-    {
+    public void cargarJSONEmpleados() throws NullNameException {
         try {
             JSONArray empleadosJson = new JSONArray(CreadorAJSON.downloadJSON(archivoEmpleados));
-            for(int i = 0;i<empleadosJson.length();i++)
-            {
+            for (int i = 0; i < empleadosJson.length(); i++) {
                 JSONObject jsonEmpleados = empleadosJson.getJSONObject(i);
                 String nombre = jsonEmpleados.getString("Nombre");
                 String apellido = jsonEmpleados.getString("Apellido");
@@ -244,11 +240,11 @@ public class Hotel {
                 String usuario = jsonEmpleados.getString("Usuario");
                 String clave = jsonEmpleados.getString("Clave");
                 String email = jsonEmpleados.getString("Email");
-                TipoEmpleado tipoEmpleado = jsonEmpleados.getEnum(TipoEmpleado.class,"TipoEmpleado");
+                TipoEmpleado tipoEmpleado = jsonEmpleados.getEnum(TipoEmpleado.class, "TipoEmpleado");
 
                 try {
                     VerificacionesDeDatos.verificarDni(dni);
-                    Empleado empleado = new Empleado(nombre,apellido,dni,usuario,clave,email,tipoEmpleado);
+                    Empleado empleado = new Empleado(nombre, apellido, dni, usuario, clave, email, tipoEmpleado);
                     empleados.add(empleado);
                 } catch (BadDataException e) {
                     System.out.println("Error en persona" + nombre + " " + apellido + e.getMessage());
@@ -256,68 +252,56 @@ public class Hotel {
             }
 
         } catch (IOException e) {
-            CreadorAJSON.uploadJSON(archivoEmpleados,"[]");
+            CreadorAJSON.uploadJSON(archivoEmpleados, "[]");
             System.out.println("Creando archivo...");
-        } catch (NullNameException e)
-        {
+        } catch (NullNameException e) {
             throw new NullNameException(e.getMessage());
         }
     }
 
-    public String pasarListaDeEmpleadosAJSON()
-    {
+    public String pasarListaDeEmpleadosAJSON() {
         JSONArray arregloEmpleados = new JSONArray();
-        for(Empleado empleado : empleados)
-        {
+        for (Empleado empleado : empleados) {
             arregloEmpleados.put(empleado.toJSON());
         }
         System.out.println(arregloEmpleados.toString());
         return arregloEmpleados.toString();
     }
 
+    /*lo mismo seria para las habitaciones y sus tipos :)*/
 
-    /*los mismo seria para las habitaciones y sus tipos :)*/
+    // iniciar sesion (tal vez)
 
-    // iniciar secion (talvez)
-
-    public void intentarIniciarSesion(String username, String clave) throws PersonaExisteException
-    {
+    public void intentarIniciarSesion(String username, String clave) throws PersonaExisteException {
         Empleado credencialesEmpleado = null;
 
-        for(Empleado empleado : empleados)
-        {
-            if(empleado.getClave().equals(clave) && empleado.getUsuario().equals(clave))
-            {
+        for (Empleado empleado : empleados) {
+            if (empleado.getClave().equals(clave) && empleado.getUsuario().equals(clave)) {
                 credencialesEmpleado = empleado;
                 break;
             }
         }
 
-        if(credencialesEmpleado == null)
-        {
+        if (credencialesEmpleado == null) {
             throw new PersonaNoExisteException("El usuario no existe!");
         }
 
         empleadoEnSistema = credencialesEmpleado;
     }
 
-    public void logOut()
-    {
+    public void logOut() {
         empleadoEnSistema = null;
     }
 
-    public TipoEmpleado buscarPermisoDeUsuario()
-    {
+    public TipoEmpleado buscarPermisoDeUsuario() {
         return empleadoEnSistema.getTipo();
     }
 
-    public Empleado obtenerEmpleadoLogueado()
-    {
+    public Empleado obtenerEmpleadoLogueado() {
         return empleadoEnSistema;
     }
 
-    public int obtenerDniEmpleadoLogueado()
-    {
+    public int obtenerDniEmpleadoLogueado() {
         return empleadoEnSistema.getDni();
     }
 

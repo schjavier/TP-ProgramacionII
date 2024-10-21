@@ -17,8 +17,7 @@ public class HabitacionPresidencial extends Habitacion implements TieneCocina {
         this.ultimaRevisionCocina = LocalDateTime.now();
     }
 
-    public void marcarMantenimientoEnJacuzzi()
-    {
+    public void marcarMantenimientoEnJacuzzi() {
         this.ultimaRevisionJacuzzi = LocalDateTime.now();
     }
 

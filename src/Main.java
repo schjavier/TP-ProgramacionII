@@ -63,8 +63,7 @@ public class Main {
         } while (opcion != 0);
     }
 
-    static public void agregarPasajero(Hotel hotel)
-    {
+    static public void agregarPasajero(Hotel hotel) {
         String nombre;
         String apellido;
         int dni;
@@ -77,50 +76,40 @@ public class Main {
         System.out.println("Direccion");
         direccion = teclado.nextLine();
 
-        hotel.agregarPasajero(nombre,apellido,dni,direccion);
+        hotel.agregarPasajero(nombre, apellido, dni, direccion);
     }
 
-    static public String definirNombreoApe(String mensaje)
-    {
+    static public String definirNombreoApe(String mensaje) {
         String dato = "";
         boolean nombreVerificado = false;
-        while(!nombreVerificado)
-        {
+        while (!nombreVerificado) {
             try {
                 System.out.println(mensaje);
                 dato = teclado.nextLine();
                 VerificacionesDeDatos.tieneNumeros(dato);
                 nombreVerificado = true;
-            } catch (BadDataException e)
-            {
+            } catch (BadDataException e) {
                 System.out.println(e.getMessage());
-            }
-            catch (InputMismatchException e)
-            {
+            } catch (InputMismatchException e) {
                 System.out.println("algo paso");
             }
         }
         return dato;
     }
 
-    static public int definirDni(Hotel hotel)
-    {
+    static public int definirDni(Hotel hotel) {
         int dni = 0;
         boolean dniVerificado = false;
 
-        while(!dniVerificado)
-        {
+        while (!dniVerificado) {
             try {
                 System.out.println("Dni");
                 dni = Integer.parseInt(teclado.nextLine());
                 hotel.verSiElDniEstaCargado(dni);
                 dniVerificado = true;
-            } catch (BadDataException | PersonaExisteException e)
-            {
+            } catch (BadDataException | PersonaExisteException e) {
                 System.out.println(e.getMessage());
-            }
-            catch (InputMismatchException e)
-            {
+            } catch (InputMismatchException e) {
                 System.out.println("No puede tener letras!");
             }
         }
@@ -140,23 +129,19 @@ public class Main {
             capMaxHab = Integer.parseInt(teclado.nextLine());
 
             boolean tipoVerificado = false;
-            while(!tipoVerificado)
-            {
+            while (!tipoVerificado) {
                 System.out.println("Ingrese el tipo de habitacion: ");
                 System.out.println(TipoHabitacion.retornarValoresDeEnum());
                 try {
-                tipoHab = Integer.parseInt(teclado.nextLine());
-                tipoVerificado = TipoHabitacion.verificarEntrada(tipoHab);
-                } catch (BadOptionException e)
-                {
+                    tipoHab = Integer.parseInt(teclado.nextLine());
+                    tipoVerificado = TipoHabitacion.verificarEntrada(tipoHab);
+                } catch (BadOptionException e) {
                     System.out.println(e.getMessage());
-                }
-                catch (InputMismatchException e)
-                {
+                } catch (InputMismatchException e) {
                     System.out.println("No es correcto!!");
                 }
             }
-            hotel.crearHabitaciones(cantHab,capMaxHab,tipoHab);
+            hotel.crearHabitaciones(cantHab, capMaxHab, tipoHab);
         } catch (BadOptionException e) {
             System.out.println("No existe el tipo de habitacion!");
         }

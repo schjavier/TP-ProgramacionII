@@ -12,18 +12,14 @@ public class HabitacionesPresidenciales extends Habitaciones<HabitacionPresidenc
         super(TipoHabitacion.PRESIDENCIAL);
     }
 
-    public void marcarTodasHabitacionesComoRevisadas()
-    {
-        for (HabitacionPresidencial habitacion : super.getListaHabitaciones())
-        {
+    public void marcarTodasHabitacionesComoRevisadas() {
+        for (HabitacionPresidencial habitacion : super.getListaHabitaciones()) {
             habitacion.marcarMantenimientoHechoEnCocina();
         }
     }
 
-    public void marcarTodasHabitacionesComoRevisadasJacuzzi()
-    {
-        for (HabitacionPresidencial habitacion : super.getListaHabitaciones())
-        {
+    public void marcarTodasHabitacionesComoRevisadasJacuzzi() {
+        for (HabitacionPresidencial habitacion : super.getListaHabitaciones()) {
             habitacion.marcarMantenimientoEnJacuzzi();
         }
     }
