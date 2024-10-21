@@ -10,9 +10,12 @@ public class Main {
     public static Scanner teclado = new Scanner(System.in);
 
     public static void main(String[] args) {
+        menuHabitaciones();
+    }
+
+    static public void menuHabitaciones() {
         Hotel hotel = new Hotel("Hotel California");
 
-        //agregarPasajero(hotel);
         int opcion;
 
         do {
@@ -58,27 +61,6 @@ public class Main {
                     System.out.println("Opción no válida. Intente de nuevo.");
             }
         } while (opcion != 0);
-
-
-/*        try {
-            System.out.println(hotel.existePasajeroConEseDNI(11111111));
-        } catch (BadDataException e)
-        {
-            System.out.println(e.getMessage());
-        }
-
-        try{
-            System.out.println(hotel.buscarPasajeroConEseDNI(11111111));
-        } catch (PersonaNoExisteException e)
-        {
-            System.out.println(e.getMessage());
-        }
-
-        Empleado empleado1 = new Empleado("Julio","Test",22224444,"carlitoslol","carlitos@gmail.com","helloworld");
-        System.out.println("\n");
-        System.out.println(empleado1);*/
-
-        //agregarPasajero(hotel);
     }
 
     static public void agregarPasajero(Hotel hotel)
@@ -227,7 +209,7 @@ public class Main {
     public static void gestionarHabitacion(Hotel hotel) {
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");
         int numeroHabitacion = Integer.parseInt(teclado.nextLine());
-        for (int i = 1; i <= 2; i++) { // 2 es el nro de tipos de habitacion que existen
+        for (int i = 1; i <= 3; i++) { // 3 es el nro de tipos de habitacion que existen
             try {
                 GestionHabitacion.mostrarMenu(hotel.selectorDeTipoHabitacion(i).traerHabitacionSegunId(numeroHabitacion));
                 return;
