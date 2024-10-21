@@ -16,6 +16,8 @@ import java.util.HashMap;
 
 public class Hotel { // ESTO ES EL WRAPPER CLASS
 
+    private ArrayList<Reserva> historialReservas;
+
     /* TESTEO */
     HabitacionStandard habitacion1 = new HabitacionStandard(12,4, EstadoHabitacion.DISPONIBLE);
     HabitacionStandard habitacion2 = new HabitacionStandard(15,4,EstadoHabitacion.OCUPADA);
@@ -27,8 +29,6 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
     ArrayList<Pasajero> pasajeros = new ArrayList<>();
     ArrayList<Empleado> empleados = new ArrayList<>();
 
-
-
     Pasajero persona1 = new Pasajero("Carlos","Test",11111111,"Calle 124 N°214");
     Pasajero persona2 = new Pasajero("Zara","Nana",44444444,"Donde sea N°111");
     Pasajero persona3 = new Pasajero("Mora","Li",55555555,"Calle xd N°214");
@@ -37,14 +37,6 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
     Empleado empleado1 = new Empleado("Mr Empleado","N1",22225555, "Mr1","test@gmail.com","Test123");
     Empleado empleado2 = new Empleado("Miss Empleado","N2",22225555, "Miss1","miss1@gmail.com","Lololol123123");
 
-    // prueba de reservas
-    ReservaService reservaService = new ReservaService();
-    ArrayList<Reserva> reservas = reservaService.filtrarPorActivas();
-
-    Reserva reserva1 = new Reserva(persona1.getDni(), true, habitacion1.getNroHabitacion(), LocalDate.of(2024, 11, 12), LocalDate.of(2024, 11, 15), empleado1.getIdEmpleado());
-    Reserva reserva2 = new Reserva(persona2.getDni(), true, habitacion2.getNroHabitacion(), LocalDate.of(2024, 11, 12), LocalDate.of(2024, 11, 15), empleado1.getIdEmpleado());
-    Reserva reserva3 = new Reserva(persona3.getDni(), true, habitacion4.getNroHabitacion(), LocalDate.of(2024, 11, 12), LocalDate.of(2024, 11, 15), empleado1.getIdEmpleado());
-
 
 
     /* TESTEO END */
@@ -52,6 +44,8 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
 
 
     public Hotel() { // test
+        historialReservas = new ArrayList<>();
+
         habitaciones.agregarHabitacion(habitacion1);
         habitaciones.agregarHabitacion(habitacion2);
         habitaciones.agregarHabitacion(habitacion3);
@@ -66,9 +60,7 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
         empleados.add(empleado1);
         empleados.add(empleado2);
 
-        reservaService.generarReserva(reserva1);
-        reservaService.generarReserva(reserva2);
-        reservaService.generarReserva(reserva3);
+
     }
 
     public HashMap contarEstadoHabitaciones(int tipohabitacion)
@@ -180,7 +172,130 @@ public class Hotel { // ESTO ES EL WRAPPER CLASS
     }
 
 
+    // Todo lo relativo a las reservas.
 
+    /**
+     *
+     * Busca reservas por dni.
+     *
+     * @param dni El dni del titular de la reserva
+     * @return true, si se encontro al menos una reserva con el dni asociado, false en otro caso.
+     */
+    public boolean buscarReservaPorTitular(int dni){
+        boolean respuesta = false;
+
+        for (Reserva reserva : historialReservas){
+            if (reserva.getDniTitular() == dni){
+                respuesta = true;
+            }
+        }
+        return respuesta;
+    }
+
+    /**
+     * Busca reservas activas por el dni del titular de la reservas.
+     *
+     * @param dni El dni del titular de la reserva
+     * @return True si encuentra una reserva activa con el ese dni, false en cualquier otro caso.
+     */
+
+    public boolean buscarReservaActivaPorTitular(int dni){
+        boolean respuesta = false;
+        for (Reserva reserva : historialReservas){
+            if (reserva.getDniTitular() == dni && reserva.isActiva()){
+                respuesta = true;
+            }
+        }
+        return respuesta;
+    }
+
+    /**
+     *
+     * Muestra un historico de reservas filtrado por el dni del titular
+     *
+     * @param dni El dni del titular de la reserva
+     * @return Un String con la informacion de las reservas que tuvo el titular a lo largo del tiempo.
+     */
+    public String historicoPorTitular(int dni){
+        StringBuilder respuesta = new StringBuilder("Reserva - Fecha Inicio - Fecha Final - Habitacion").append("\n");
+
+        for (Reserva reserva : historialReservas){
+            if (reserva.getDniTitular() == dni){
+                respuesta.append(reserva.getId())
+                        .append(" - ")
+                        .append(reserva.getFechaInicio())
+                        .append(" - ")
+                        .append(reserva.getFechaFinal())
+                        .append(" - ")
+                        .append(reserva.getHabitacion())
+                        .append("\n");
+            }
+        }
+
+        return respuesta.toString();
+    }
+
+    /**
+     * Filtran el historial de las reservas para mostrar todas las activas!
+     * @return string debe devolver un string todavia no lo hace! ja!
+     */
+
+    public ArrayList<Reserva> filtrarPorActivas(){
+        ArrayList<Reserva> reservasActivas = new ArrayList<>();
+        for (Reserva reserva : historialReservas){
+            if (reserva.isActiva()){
+                reservasActivas.add(reserva);
+            }
+        }
+        return reservasActivas;
+    }
+
+    /**
+     *
+     * Genera una reserva nueva y la guarda en el historial de reservas.
+     *
+     * @param dniTitular int representando el dni del titular de la reserva
+     * @param activa si se encuentra activa, es decir si no sucedio o esta sucediendo
+     * @param habitacion numero de la habitacion de la reserva
+     * @param fechaInicio LocalDateTime para la fecha de inicio de la reserva
+     * @param fechaFinal LocalDateTime para el final de la reserva
+     * @param guardadoPor dni del empleado que guarda la reserva.
+     *
+     * @return Devuelve True si la reserva pudo generarse, False de otro modo.
+     */
+
+    public boolean generarReserva(int dniTitular, boolean activa, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor){
+        boolean respuesta = false;
+        Reserva reserva = new Reserva(dniTitular, activa, habitacion, fechaInicio, fechaFinal, guardadoPor);
+
+        if (historialReservas.isEmpty()){
+            historialReservas.add(reserva);
+            respuesta = true;
+        } else if (!buscarReservaActivaPorTitular(dniTitular)){
+            historialReservas.add(reserva);
+            respuesta = true;
+        }
+        return respuesta;
+    }
+
+    /**
+     *
+     * Genera una reserva nueva y la guarda en el historial de reservas.
+     *
+     * @param reserva Objeto Reserva que sera generado.
+     * @return Devuelve True si la reserva pudo generarse, False de otro modo.
+     */
+    public boolean generarReserva(Reserva reserva){
+        boolean respuesta = false;
+        if (historialReservas.isEmpty()){
+            historialReservas.add(reserva);
+            respuesta = true;
+        } else if (!buscarReservaActivaPorTitular(reserva.getDniTitular())){
+            historialReservas.add(reserva);
+            respuesta = true;
+        }
+        return respuesta;
+    }
 
 
 }

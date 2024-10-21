@@ -109,6 +109,7 @@ public class Main {
             try {
                 System.out.println("Dni");
                 dni = teclado.nextInt();
+
                 hotel.verSiElDniEstaCargardo(dni);
                 dniver = true;
             } catch (BadDataException | PersonaExisteException e)
@@ -118,6 +119,9 @@ public class Main {
             catch (InputMismatchException e)
             {
                 System.out.println("No puede tener letras!");
+            }
+            finally {
+                teclado.nextLine();
             }
         }
         return dni;
