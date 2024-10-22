@@ -1,21 +1,77 @@
 import DataChecks.VerificacionesDeDatos;
 import Exceptions.*;
 import Modelo.Habitaciones.EstadoHabitacion;
+import Modelo.Habitaciones.Habitacion;
+import Modelo.Habitaciones.HabitacionPresidencial;
 import Modelo.Habitaciones.TipoHabitacion;
+import Modelo.Persona.Empleado;
+import Modelo.Persona.TipoEmpleado;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     public static Scanner teclado = new Scanner(System.in);
+    public static boolean logueado = false;
 
     public static void main(String[] args) {
-        menuHabitaciones();
+
+        Hotel hotel = new Hotel("Hotel California");
+        menuLogin(hotel);
+
+        if (logueado) {
+            menuHabitaciones(hotel);
+        }
     }
 
-    static public void menuHabitaciones() {
-        Hotel hotel = new Hotel("Hotel California");
+    static public void menuLogin(Hotel hotel) {
+        String username;
+        String clave;
 
+        if (hotel.obtenerEmpleados().isEmpty()) {
+            System.out.println("El hotel no tiene ningun usuario. Debe crearse un usuario para continuar");
+            crearUsuario(hotel,true);
+        }
+
+        System.out.println("Usuario: ");
+        username = teclado.nextLine();
+        System.out.println("Clave: ");
+        clave = teclado.nextLine();
+
+        hotel.intentarIniciarSesion(username,clave);
+    }
+
+    static public void crearUsuario(Hotel hotel, boolean esPrimerUsuario) {
+        String nombre;
+        String apellido;
+        int dni;
+        String usuario;
+        String email;
+        String clave;
+        int tipoEmpleado;
+
+        nombre = definirNombreoApe("Nombre: ");
+        apellido = definirNombreoApe("Apellido: ");
+        dni = definirDni(hotel);
+        usuario = definirUsuario(hotel);
+
+        System.out.println("Email: ");
+        email = teclado.nextLine();
+
+        System.out.println("Clave: ");
+        clave = teclado.nextLine();
+
+        if (!esPrimerUsuario) {
+            System.out.println("Tipo de empleado: ");
+            System.out.println(TipoEmpleado.retornarValoresDeEnum());
+            tipoEmpleado = Integer.parseInt(teclado.nextLine());
+            hotel.crearUsuario(nombre,apellido,dni,usuario,email,clave,tipoEmpleado);  // despues lo cambio
+        } else {
+            hotel.crearUsuario(nombre,apellido,dni,usuario,email,clave,1);
+        }
+    }
+
+    static public void menuHabitaciones(Hotel hotel) {
         int opcion;
 
         do {
@@ -192,16 +248,37 @@ public class Main {
      */
 
     public static void gestionarHabitacion(Hotel hotel) {
+        Habitacion prueba = null;
+
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");
+
         int numeroHabitacion = Integer.parseInt(teclado.nextLine());
         for (int i = 1; i <= 3; i++) { // 3 es el nro de tipos de habitacion que existen
-            try {
-                GestionHabitacion.mostrarMenu(hotel.selectorDeTipoHabitacion(i).traerHabitacionSegunId(numeroHabitacion));
-                return;
-            } catch (HabitacionNoEncontradaException e) {
+            prueba = hotel.selectorDeTipoHabitacion(i).traerHabitacionSegunId(numeroHabitacion);
+            if (prueba != null) {
+                break;
             }
         }
-        System.out.println("No existe la habitacion ingresada");
+
+        if (prueba == null) {
+            throw new HabitacionNoEncontradaException("No existe la habitacion ingresada");
+        } else {
+            GestionHabitacion.mostrarMenu(prueba);
+        }
+    }
+
+    public static String definirUsuario(Hotel hotel) {
+        String username;
+        boolean usuarioNoExiste = true;
+
+        System.out.println("Ingrese un nombre de usuario");
+        username = teclado.nextLine();
+        if (hotel.existeUsuario(username)) {
+            usuarioNoExiste = false;
+            throw new BadDataException("El usuario ingresado ya existe");
+        }
+
+        return username;
     }
 
 }

@@ -52,6 +52,13 @@ public class Hotel {
         }
     }
 
+    public void crearUsuario(String nombre, String apellido, int dni, String usuario, String email, String clave, int tipoEmpleado) {
+        switch(tipoEmpleado) {
+            case 1 -> empleados.add(new Empleado(nombre,apellido,dni,usuario,email,clave,TipoEmpleado.ADMINISTRADOR));
+            case 2 -> empleados.add(new Empleado(nombre,apellido,dni,usuario,email,clave,TipoEmpleado.RECEPCIONISTA));
+        }
+    }
+
     public String contarEstadoHabitaciones(int tipoHabitacion) {
         return selectorDeTipoHabitacion(tipoHabitacion).contarCantidadHabitacionesSegunEstado();
     }
@@ -67,17 +74,16 @@ public class Hotel {
 
     //Que elimine habitaciones solo con el numero
     public boolean eliminarHabitacion(int habitacion) {
-        if (habitacionesStandard.eliminarHabitacionSegunNumero(habitacion)) {
-            return true;
-        } else if (habitacionesSuite.eliminarHabitacionSegunNumero(habitacion)) {
-            return true;
-        } else if (habitacionesPresidenciales.eliminarHabitacionSegunNumero(habitacion)){
-            return true;
-        } else {
-            return false;
-        }
-    }
+        boolean habitacionEliminada = false;
+        int i = 1;
 
+        while(!habitacionEliminada && i <= 3) {
+            habitacionEliminada = selectorDeTipoHabitacion(i).eliminarHabitacionSegunNumero(habitacion);
+            i++;
+        }
+
+        return habitacionEliminada;
+    }
 
     /**
      * @param tipoHabitacion Un numero del 1 al x siendo x el ultimo tipo de habitacion que haya
@@ -95,6 +101,14 @@ public class Hotel {
 
     public StringBuilder listarSegunEstado(int tipoHabitacion, EstadoHabitacion estado) {
         return selectorDeTipoHabitacion(tipoHabitacion).listarHabitacionesSegunEstado(estado);
+    }
+
+    public ArrayList<Empleado> obtenerEmpleados() {
+        return empleados;
+    }
+
+    public ArrayList<Pasajero> obtenerPasajeros() {
+        return pasajeros;
     }
 
     public boolean existePasajeroConEseDNI(int dni) throws BadDataException { // para hacer reservas o alguna otra cosa
@@ -228,6 +242,15 @@ public class Hotel {
         return arregloPasajeros.toString();
     }
 
+    public boolean existeUsuario(String username) {
+        for (Empleado empleado : empleados) {
+            if (empleado.getUsuario().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void cargarJSONEmpleados() throws NullNameException {
         try {
             JSONArray empleadosJson = new JSONArray(CreadorAJSON.downloadJSON(archivoEmpleados));
@@ -272,11 +295,11 @@ public class Hotel {
 
     // iniciar sesion (tal vez)
 
-    public void intentarIniciarSesion(String username, String clave) throws PersonaExisteException {
+    public void intentarIniciarSesion(String username, String clave) throws PersonaNoExisteException {
         Empleado credencialesEmpleado = null;
 
         for (Empleado empleado : empleados) {
-            if (empleado.getClave().equals(clave) && empleado.getUsuario().equals(clave)) {
+            if (empleado.getClave().equals(clave) && empleado.getUsuario().equals(username)) {
                 credencialesEmpleado = empleado;
                 break;
             }

@@ -3,8 +3,6 @@ package Modelo.Reserva;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-// en gral creo que podrian ponerse algunos atributos finales
-
 public class Reserva {
     private static int contadorIdReserva = 0; // id auto incremental
     private int id;

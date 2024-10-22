@@ -90,10 +90,6 @@ abstract public class Habitaciones<T extends Habitacion> {
             }
         }
 
-        if (room == null) {
-            throw new HabitacionNoEncontradaException("No hay ninguna habitación con ese numero");
-        }
-
         return room;
     }
 
