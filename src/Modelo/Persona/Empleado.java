@@ -59,10 +59,10 @@ public class Empleado extends Persona {
     public String toString() {
         return super.toString() +
                 "idEmpleado: " + idEmpleado + '\n' +
-                "usuario: " + usuario + '\n' +
-                "clave: " + clave + '\n' +
-                "email: " + email + '\n' +
-                "tipo: " + tipo.getTipoEmpleado();
+                "Usuario: " + usuario + '\n' +
+                "Clave: " + clave + '\n' +
+                "Email: " + email + '\n' +
+                "Tipo: " + tipo.getTipoEmpleado() + "\n";
     }
 
     public JSONObject toJSON() {

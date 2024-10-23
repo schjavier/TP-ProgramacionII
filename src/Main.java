@@ -2,9 +2,7 @@ import DataChecks.VerificacionesDeDatos;
 import Exceptions.*;
 import Modelo.Habitaciones.EstadoHabitacion;
 import Modelo.Habitaciones.Habitacion;
-import Modelo.Habitaciones.HabitacionPresidencial;
 import Modelo.Habitaciones.TipoHabitacion;
-import Modelo.Persona.Empleado;
 import Modelo.Persona.TipoEmpleado;
 
 import java.util.InputMismatchException;
@@ -19,18 +17,25 @@ public class Main {
         Hotel hotel = new Hotel("Hotel California");
         menuLogin(hotel);
 
-        if (logueado) {
-            menuHabitaciones(hotel);
+        System.out.println("Bienvenido " + hotel.obtenerEmpleadoLogueado().getNombre() + "!");
+
+        if (logueado && hotel.obtenerEmpleadoLogueado().getTipo() == TipoEmpleado.ADMINISTRADOR) {
+            menuGestionAdmin(hotel);
+        } else if (logueado && hotel.obtenerEmpleadoLogueado().getTipo() == TipoEmpleado.RECEPCIONISTA) {
+            menuGestionRecepcionista(hotel);
         }
+
+        hotel.logOut();
+        logueado = false;
     }
 
     static public void menuLogin(Hotel hotel) {
         String username;
         String clave;
 
-        if (hotel.obtenerEmpleados().isEmpty()) {
-            System.out.println("El hotel no tiene ningun usuario. Debe crearse un usuario para continuar");
-            crearUsuario(hotel,true);
+        if (hotel.obtenerCantidadEmpleados() == 0) {
+            System.out.println("El hotel no tiene ningun empleado. Debe crearse un administrador para continuar");
+            crearEmpleado(hotel,true);
         }
 
         System.out.println("Usuario: ");
@@ -39,9 +44,10 @@ public class Main {
         clave = teclado.nextLine();
 
         hotel.intentarIniciarSesion(username,clave);
+        logueado = true;
     }
 
-    static public void crearUsuario(Hotel hotel, boolean esPrimerUsuario) {
+    static public void crearEmpleado(Hotel hotel, boolean esPrimerUsuario) {
         String nombre;
         String apellido;
         int dni;
@@ -69,20 +75,27 @@ public class Main {
         } else {
             hotel.crearUsuario(nombre,apellido,dni,usuario,email,clave,1);
         }
+
+        hotel.guardarEmpleados();
     }
 
-    static public void menuHabitaciones(Hotel hotel) {
+    static public void menuGestionAdmin(Hotel hotel) {
+        if (hotel.obtenerEmpleadoLogueado().getTipo() != TipoEmpleado.ADMINISTRADOR) {
+            throw new UsuarioNoAutorizadoException("El usuario no tiene permisos para este menu");
+        }
+
         int opcion;
 
         do {
-            System.out.println("\n--- Gestion del hotel ---");
+            System.out.println("\n--- Menu del administrador ---");
             System.out.println("1. Crear habitacion(es)");
             System.out.println("2. Gestionar una habitacion por su ID");
             System.out.println("3. Eliminar una habitacion por su ID");
-            System.out.println("4. Listar todas las habitaciones");
-            System.out.println("5. Listar habitaciones de acuerdo a su tipo y estado");
-            System.out.println("6. Obtener conteo total de habitaciones");
-            System.out.println("7. Obtener un conteo de todas las habitaciones segun el estado");
+            System.out.println("4. Crear un empleado");
+            System.out.println("5. Ver lista de empleados");
+            System.out.println("6. Gestionar un empleado");
+            System.out.println("7. Eliminar un empleado");
+            System.out.println("8. Hacer backup preventivo");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -99,15 +112,62 @@ public class Main {
                     eliminarHabitacion(hotel);
                     break;
                 case 4:
-                    System.out.println(hotel.listarHabitaciones());
+                    crearEmpleado(hotel,false);
                     break;
                 case 5:
-                    listarHabitacionesEstado(hotel);
+                    System.out.println(hotel.verEmpleados());
                     break;
                 case 6:
-                    System.out.println("Habitaciones totales: " + hotel.obtenerNroHabitaciones());
+                    //gestionarPersona(hotel); Similar a gestionarHabitacion()
                     break;
                 case 7:
+                    eliminarEmpleado(hotel);
+                    break;
+                case 8:
+                    //hotel.hacerBackup();
+                    break;
+                case 0:
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+        } while (opcion != 0);
+    }
+
+    static public void menuGestionRecepcionista(Hotel hotel) {
+        if (hotel.obtenerEmpleadoLogueado().getTipo() != TipoEmpleado.RECEPCIONISTA) {
+            throw new UsuarioNoAutorizadoException("El usuario no tiene permisos para este menu");
+        }
+
+        int opcion;
+
+        do {
+            System.out.println("\n--- Menu del recepcionista ---");
+            System.out.println("1. Gestionar una habitacion por su ID");
+            System.out.println("2. Listar todas las habitaciones");
+            System.out.println("3. Listar habitaciones de acuerdo a su tipo y estado");
+            System.out.println("4. Obtener conteo total de habitaciones");
+            System.out.println("5. Obtener un conteo de todas las habitaciones segun el estado");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
+
+            opcion = Integer.parseInt(teclado.nextLine());
+
+            switch (opcion) {
+                case 1:
+                    gestionarHabitacion(hotel);
+                    break;
+                case 2:
+                    System.out.println(hotel.listarHabitaciones());
+                    break;
+                case 3:
+                    listarHabitacionesEstado(hotel);
+                    break;
+                case 4:
+                    System.out.println("Habitaciones totales: " + hotel.obtenerNroHabitaciones());
+                    break;
+                case 5:
                     contarHabitacionesEstado(hotel);
                     break;
                 case 0:
@@ -159,7 +219,7 @@ public class Main {
 
         while (!dniVerificado) {
             try {
-                System.out.println("Dni");
+                System.out.println("Dni: ");
                 dni = Integer.parseInt(teclado.nextLine());
                 hotel.verSiElDniEstaCargado(dni);
                 dniVerificado = true;
@@ -279,6 +339,29 @@ public class Main {
         }
 
         return username;
+    }
+
+    public static void eliminarEmpleado(Hotel hotel) {
+        int dniEmpleado = 0;
+        boolean dniVerificado = false;
+
+        try {
+            System.out.println("Ingrese el numero de dni del empleado a eliminar: ");
+            dniEmpleado = Integer.parseInt(teclado.nextLine());
+            dniVerificado = hotel.existeEmpleadoConEseDNI(dniEmpleado);
+
+            if (dniEmpleado != hotel.obtenerDniEmpleadoLogueado() && dniVerificado) {
+                hotel.eliminarEmpleadoPorElDni(dniEmpleado);
+                System.out.println("El empleado ha sido eliminado exitosamente");
+            } else if (dniEmpleado == hotel.obtenerDniEmpleadoLogueado()) {
+                System.out.println("No se puede eliminar al empleado que está operando en este momento");
+            } else {
+                System.out.println("El dni ingresado no corresponde a un empleado o ya fue eliminado");
+            }
+
+        } catch (BadDataException e) {
+            System.out.println("No es un dni");
+        }
     }
 
 }

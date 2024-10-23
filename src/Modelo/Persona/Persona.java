@@ -38,7 +38,9 @@ abstract public class Persona {
     }
 
     public String toString() {
-        return "Nombre: " + this.nombre + "\nApellido: " + this.apellido + "\nDNI: " + this.dni + "\n";
+        return "Nombre: " + this.nombre + "\n" +
+                "Apellido: " + this.apellido + "\n" +
+                "DNI: " + this.dni + "\n";
     }
 
 

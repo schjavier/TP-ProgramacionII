@@ -8,6 +8,7 @@ import Modelo.Persona.TipoEmpleado;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -103,8 +104,19 @@ public class Hotel {
         return selectorDeTipoHabitacion(tipoHabitacion).listarHabitacionesSegunEstado(estado);
     }
 
-    public ArrayList<Empleado> obtenerEmpleados() {
-        return empleados;
+    public int obtenerCantidadEmpleados() {
+        return empleados.size();
+    }
+
+    public StringBuilder verEmpleados() {
+        StringBuilder resultado = new StringBuilder("Lista de empleados: \n\n");
+
+        for (Empleado empleado: empleados) {
+            resultado.append(empleado.toString());
+            resultado.append("\n");
+        }
+
+        return resultado;
     }
 
     public ArrayList<Pasajero> obtenerPasajeros() {
@@ -261,13 +273,13 @@ public class Hotel {
                 int dni = jsonEmpleados.getInt("Dni");
 
                 String usuario = jsonEmpleados.getString("Usuario");
-                String clave = jsonEmpleados.getString("Clave");
                 String email = jsonEmpleados.getString("Email");
+                String clave = jsonEmpleados.getString("Clave");
                 TipoEmpleado tipoEmpleado = jsonEmpleados.getEnum(TipoEmpleado.class, "TipoEmpleado");
 
                 try {
                     VerificacionesDeDatos.verificarDni(dni);
-                    Empleado empleado = new Empleado(nombre, apellido, dni, usuario, clave, email, tipoEmpleado);
+                    Empleado empleado = new Empleado(nombre, apellido, dni, usuario, email, clave, tipoEmpleado);
                     empleados.add(empleado);
                 } catch (BadDataException e) {
                     System.out.println("Error en persona" + nombre + " " + apellido + e.getMessage());
@@ -291,9 +303,20 @@ public class Hotel {
         return arregloEmpleados.toString();
     }
 
-    /*lo mismo seria para las habitaciones y sus tipos :)*/
+    public void guardarEmpleados() {
+        FileWriter archi;
+        String arregloEmpleados = pasarListaDeEmpleadosAJSON();
 
-    // iniciar sesion (tal vez)
+        try {
+            archi = new FileWriter(archivoEmpleados);
+            archi.write(arregloEmpleados);
+            archi.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Hubo un error escribiendo el archivo");
+        }
+    }
+
+    /*lo mismo seria para las habitaciones y sus tipos :)*/
 
     public void intentarIniciarSesion(String username, String clave) throws PersonaNoExisteException {
         Empleado credencialesEmpleado = null;
@@ -326,6 +349,17 @@ public class Hotel {
 
     public int obtenerDniEmpleadoLogueado() {
         return empleadoEnSistema.getDni();
+    }
+
+    public boolean eliminarEmpleadoPorElDni(int dni) {
+        for (Empleado empleado : empleados) {
+            if (empleado.getDni() == dni) {
+                empleados.remove(empleado);
+                guardarEmpleados();
+                return true;
+            }
+        }
+        return false;
     }
 
 }
