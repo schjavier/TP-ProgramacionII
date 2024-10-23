@@ -17,7 +17,7 @@ public final class CreadorAJSON {
         }
 
         try {
-            File archivo = new File(nombre);
+            File archivo = new File("src/Persistencia/" + nombre);
             BufferedWriter salida = new BufferedWriter(new FileWriter(archivo,false));
             salida.write(contenido);
             salida.flush();
@@ -37,7 +37,7 @@ public final class CreadorAJSON {
         String datos;
 
         try {
-            File archivo = new File(nombre);
+            File archivo = new File("src/Persistencia/" + nombre);
             BufferedReader lectura = new BufferedReader(new FileReader(archivo));
             datos = lectura.readLine();
         } catch (IOException e) {
@@ -55,7 +55,7 @@ public final class CreadorAJSON {
         }
 
         try {
-            File archivo = new File(nombre);
+            File archivo = new File("src/Persistencia/" + nombre);
             BufferedWriter escritura = new BufferedWriter(new FileWriter(archivo,false));
             escritura.write("");
             escritura.flush();
