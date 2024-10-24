@@ -13,11 +13,11 @@ public class HabitacionStandard extends Habitacion { // la dejo vacia asi cuando
         return super.toString() + "Tipo: Standard\n";
     }
 
-    //    public JSONObject toJSON() {
-//        JSONObject habitacion = new JSONObject();
-//        habitacion.put("")
-//
-//        return habitacion;
-//    }
+    @Override
+    public JSONObject toJson() {
+        JSONObject habitacion = super.toJson();
+        habitacion.put("tipoHabitacion", "standard");
+        return habitacion;
+    }
 
 }

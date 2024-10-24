@@ -1,5 +1,7 @@
 package Modelo.Habitaciones;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 abstract public class Habitacion {
@@ -58,5 +60,15 @@ abstract public class Habitacion {
                 "Ocupantes actuales: " + ocupantes.size() + '\n' +
                 "Estado: " + estado + '\n' +
                 "DNI ocupantes: " + ocupantes.toString() + '\n';
+    }
+
+    public JSONObject toJson() {
+        JSONObject habitacion = new JSONObject();
+
+        habitacion.put("nroHabitacion", this.nroHabitacion);
+        habitacion.put("capacidadMaxima", this.capacidadMaxima);
+        habitacion.put("estado", this.estado);
+        habitacion.put("ocupantes",this.ocupantes.toString());
+        return habitacion;
     }
 }

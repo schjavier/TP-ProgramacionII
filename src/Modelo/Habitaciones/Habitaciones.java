@@ -2,6 +2,7 @@ package Modelo.Habitaciones;
 
 import Exceptions.HabitacionNoEncontradaException;
 import Exceptions.NullNameException;
+import org.json.JSONArray;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -130,6 +131,4 @@ abstract public class Habitaciones<T extends Habitacion> {
     }
 
     abstract void leerArchivoYcargarAMemoria() throws IOException, NullNameException;
-
-//    public JSONArray aJson();
 }
