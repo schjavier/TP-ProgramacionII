@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class HabitacionesSuite extends Habitaciones<HabitacionSuite> {
     public HabitacionesSuite() {
-        super(TipoHabitacion.SUITE);
+        super();
     }
 
     public void marcarTodasHabitacionesComoRevisadas() {
@@ -20,4 +20,7 @@ public class HabitacionesSuite extends Habitaciones<HabitacionSuite> {
     void leerArchivoYcargarAMemoria() throws IOException, NullNameException {
 
     }
+
+
+
 }

@@ -6,7 +6,7 @@ public class HabitacionSuite extends Habitacion implements TieneCocina {
     private LocalDateTime ultimaRevisionCocina;
 
     public HabitacionSuite(int capacidadMaxima) {
-        super(capacidadMaxima,TipoHabitacion.SUITE);
+        super(capacidadMaxima);
         this.ultimaRevisionCocina = LocalDateTime.now();
     }
 
@@ -18,5 +18,11 @@ public class HabitacionSuite extends Habitacion implements TieneCocina {
     @Override
     public void marcarMantenimientoHechoEnCocina() {
         this.ultimaRevisionCocina = LocalDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "Tipo: Suite\n" +
+                "Ultima revisión de la cocina: " + ultimaRevisionCocina.toLocalDate() + "\n";
     }
 }

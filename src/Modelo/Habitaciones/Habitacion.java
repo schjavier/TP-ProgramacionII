@@ -8,7 +8,6 @@ abstract public class Habitacion {
     private final int capacidadMaxima;
     private EstadoHabitacion estado;
     private ArrayList<Integer> ocupantes;
-    private TipoHabitacion tipoHabitacion;
 
     public Habitacion(int capacidadMaxima, EstadoHabitacion estado) { // esto para que casos serviria?
             this.nroHabitacion = ++contadorIdHabitacion;
@@ -17,12 +16,11 @@ abstract public class Habitacion {
             this.ocupantes = new ArrayList<Integer>();
     }
 
-    public Habitacion(int capacidadMaxima, TipoHabitacion tipo) {
+    public Habitacion(int capacidadMaxima) {
         this.nroHabitacion = ++contadorIdHabitacion;
         this.capacidadMaxima = capacidadMaxima;
         this.estado = EstadoHabitacion.DISPONIBLE;
         this.ocupantes = new ArrayList<Integer>();
-        this.tipoHabitacion = tipo;
     }
 
     public EstadoHabitacion getEstado() {
@@ -56,7 +54,6 @@ abstract public class Habitacion {
     @Override
     public String toString() {
         return "Habitacion " + nroHabitacion + '\n' +
-                "Tipo: " + tipoHabitacion.getTipo() + '\n' +
                 "Capacidad maxima: " + capacidadMaxima + '\n' +
                 "Ocupantes actuales: " + ocupantes.size() + '\n' +
                 "Estado: " + estado + '\n' +

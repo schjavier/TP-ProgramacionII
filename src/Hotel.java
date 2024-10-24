@@ -25,6 +25,7 @@ public class Hotel {
 
     private final String archivoPasajeros = "Pasajeros.json";
     private final String archivoEmpleados = "Empleados.json";
+    private final String archivoHabitaciones = "Habitaciones.json";
 
 
     public Hotel(String nombre) {
@@ -299,7 +300,6 @@ public class Hotel {
         for (Empleado empleado : empleados) {
             arregloEmpleados.put(empleado.toJSON());
         }
-        System.out.println(arregloEmpleados.toString());
         return arregloEmpleados.toString();
     }
 
@@ -315,6 +315,39 @@ public class Hotel {
             throw new RuntimeException("Hubo un error escribiendo el archivo");
         }
     }
+
+//    public String pasarListaDeHabitacionesAJSON(int tipoHabitacion) {
+//        JSONArray arregloHabitaciones = new JSONArray();
+//
+//        switch(tipoHabitacion) {
+//            case 1:
+//                for (HabitacionStandard habitacion : habitacionesStandard.getListaHabitaciones()) {
+//                    arregloHabitaciones.put(habitacion.toJSON());
+//                }
+//                break;
+//            case 2:
+//                for (HabitacionSuite habitacion : habitacionesSuite.getListaHabitaciones()) {
+//                    arregloHabitaciones.put(habitacion.toJSON());
+//                }
+//                break;
+//            case 3:
+//                for (HabitacionPresidencial habitacion : habitacionesPresidenciales.getListaHabitaciones()) {
+//                    arregloHabitaciones.put(habitacion.toJSON());
+//                }
+//                break;
+//            default:
+//                System.out.println("Opcion invalida");
+//
+//        }
+//
+//        return arregloHabitaciones.toString();
+//    }
+
+//    public void guardarHabitaciones() {
+//        //guardarHabStandard();
+//        //guardarHabSuite();
+//        //guardarHabPresidencial();
+//    }
 
     /*lo mismo seria para las habitaciones y sus tipos :)*/
 

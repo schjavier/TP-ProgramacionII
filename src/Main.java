@@ -10,23 +10,58 @@ import java.util.Scanner;
 
 public class Main {
     public static Scanner teclado = new Scanner(System.in);
-    public static boolean logueado = false;
 
     public static void main(String[] args) {
-
         Hotel hotel = new Hotel("Hotel California");
-        menuLogin(hotel);
+        boolean continuar = true;
 
-        System.out.println("Bienvenido " + hotel.obtenerEmpleadoLogueado().getNombre() + "!");
-
-        if (logueado && hotel.obtenerEmpleadoLogueado().getTipo() == TipoEmpleado.ADMINISTRADOR) {
-            menuGestionAdmin(hotel);
-        } else if (logueado && hotel.obtenerEmpleadoLogueado().getTipo() == TipoEmpleado.RECEPCIONISTA) {
-            menuGestionRecepcionista(hotel);
+        while(continuar) {
+            menuInicio(hotel);
+            continuar = false;
         }
+    }
 
-        hotel.logOut();
-        logueado = false;
+    public static void menuInicio(Hotel hotel) {
+        int opcion;
+
+        do {
+
+            System.out.println("\n--- Menu principal ---");
+            System.out.println("1. Iniciar sesion / ir al menú");
+            System.out.println("2. Cerrar sesion");
+            System.out.println("0. Salir");
+
+            System.out.println("Ingrese una opcion: ");
+            opcion = Integer.parseInt(teclado.nextLine());
+
+            switch (opcion) {
+                case 1:
+                    try {
+                        if (hotel.obtenerEmpleadoLogueado() == null) {
+                            menuLogin(hotel);
+                        }
+
+                        System.out.println("Bienvenido " + hotel.obtenerEmpleadoLogueado().getNombre() + "!");
+
+                        if (hotel.obtenerEmpleadoLogueado().getTipo() == TipoEmpleado.ADMINISTRADOR) {
+                            menuGestionAdmin(hotel);
+                        } else if (hotel.obtenerEmpleadoLogueado().getTipo() == TipoEmpleado.RECEPCIONISTA) {
+                            menuGestionRecepcionista(hotel);
+                        }
+                    } catch (PersonaNoExisteException e) {
+                        System.out.println("Los datos ingresados son incorrectos o el empleado no existe");
+                    }
+                    break;
+                case 2:
+                    hotel.logOut();
+                    break;
+                case 0:
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("Elija una opcion valida");
+            }
+        } while (opcion != 0);
     }
 
     static public void menuLogin(Hotel hotel) {
@@ -44,7 +79,6 @@ public class Main {
         clave = teclado.nextLine();
 
         hotel.intentarIniciarSesion(username,clave);
-        logueado = true;
     }
 
     static public void crearEmpleado(Hotel hotel, boolean esPrimerUsuario) {
@@ -106,7 +140,11 @@ public class Main {
                     crearHabitaciones(hotel);
                     break;
                 case 2:
-                    gestionarHabitacion(hotel);
+                    try {
+                        gestionarHabitacion(hotel);
+                    } catch (HabitacionNoEncontradaException e) {
+                        System.out.println("La habitacion no pudo ser encontrada o no existe");
+                    }
                     break;
                 case 3:
                     eliminarHabitacion(hotel);
@@ -156,7 +194,11 @@ public class Main {
 
             switch (opcion) {
                 case 1:
-                    gestionarHabitacion(hotel);
+                    try {
+                        gestionarHabitacion(hotel);
+                    } catch (HabitacionNoEncontradaException e) {
+                        System.out.println("La habitacion no pudo ser encontrada o no existe");
+                    }
                     break;
                 case 2:
                     System.out.println(hotel.listarHabitaciones());
@@ -307,7 +349,7 @@ public class Main {
      * Muestra un menu para gestionar una habitacion segun el numero ingresado por teclado
      */
 
-    public static void gestionarHabitacion(Hotel hotel) {
+    public static void gestionarHabitacion(Hotel hotel) throws HabitacionNoEncontradaException{
         Habitacion prueba = null;
 
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");

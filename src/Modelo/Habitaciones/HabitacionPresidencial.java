@@ -7,7 +7,7 @@ public class HabitacionPresidencial extends Habitacion implements TieneCocina {
     private LocalDateTime ultimaRevisionJacuzzi;
 
     public HabitacionPresidencial(int capacidadMaxima) {
-        super(capacidadMaxima,TipoHabitacion.PRESIDENCIAL);
+        super(capacidadMaxima);
         this.ultimaRevisionCocina = LocalDateTime.now();
         this.ultimaRevisionJacuzzi = LocalDateTime.now();
     }
@@ -21,4 +21,10 @@ public class HabitacionPresidencial extends Habitacion implements TieneCocina {
         this.ultimaRevisionJacuzzi = LocalDateTime.now();
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "Tipo: Presidencial\n" +
+                "Última revisión de la cocina: " + ultimaRevisionCocina.toLocalDate() + "\n" +
+                "Última revisión del jacuzzi: " + ultimaRevisionJacuzzi.toLocalDate() + "\n";
+    }
 }
