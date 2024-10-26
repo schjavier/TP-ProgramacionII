@@ -350,60 +350,53 @@ public class Hotel {
         try {
             JSONObject habitacionesJson = new JSONObject(CreadorAJSON.downloadJSON(archivoHabitaciones));
 
-            JSONArray standardArray = habitacionesJson.getJSONArray("habitacionesStandard");
-            JSONArray suiteArray = habitacionesJson.getJSONArray("habitacionesSuite");
-            JSONArray presidencialArray = habitacionesJson.getJSONArray("habitacionesPresidenciales");
+            cargarHabitacionesDesdeJSON(habitacionesJson.getJSONArray("habitacionesStandard"), HabitacionStandard.class);
+            cargarHabitacionesDesdeJSON(habitacionesJson.getJSONArray("habitacionesSuite"), HabitacionSuite.class);
+            cargarHabitacionesDesdeJSON(habitacionesJson.getJSONArray("habitacionesPresidenciales"), HabitacionPresidencial.class);
 
-            for (int i = 0; i < standardArray.length(); i++) {
-                JSONObject jsonHabitacion = standardArray.getJSONObject(i);
-                HabitacionStandard nuevaHab = new HabitacionStandard(jsonHabitacion.getInt("nroHabitacion"),
-                        jsonHabitacion.getInt("capacidadMaxima"),
-                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"));
-
-                JSONArray ocupantes = jsonHabitacion.getJSONArray("ocupantes");
-                for (int j = 0; j < ocupantes.length(); j++) {
-                    nuevaHab.getOcupantes().add(ocupantes.getInt(j));
-                }
-
-                habitacionesStandard.agregarHabitacion(nuevaHab);
-            }
-
-            for (int i = 0; i < suiteArray.length(); i++) {
-                JSONObject jsonHabitacion = suiteArray.getJSONObject(i);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                HabitacionSuite nuevaHab = new HabitacionSuite(jsonHabitacion.getInt("nroHabitacion"),
-                        jsonHabitacion.getInt("capacidadMaxima"),
-                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"),
-                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionCocina"),formatter));
-
-                JSONArray ocupantes = jsonHabitacion.getJSONArray("ocupantes");
-                for (int j = 0; j < ocupantes.length(); j++) {
-                    nuevaHab.getOcupantes().add(ocupantes.getInt(j));
-                }
-
-                habitacionesSuite.agregarHabitacion(nuevaHab);
-            }
-
-            for (int i = 0; i < presidencialArray.length(); i++) {
-                JSONObject jsonHabitacion = presidencialArray.getJSONObject(i);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                HabitacionPresidencial nuevaHab = new HabitacionPresidencial(jsonHabitacion.getInt("nroHabitacion"),
-                        jsonHabitacion.getInt("capacidadMaxima"),
-                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"),
-                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionCocina"),formatter),
-                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionJacuzzi"),formatter));
-
-                JSONArray ocupantes = jsonHabitacion.getJSONArray("ocupantes");
-                for (int j = 0; j < ocupantes.length(); j++) {
-                    nuevaHab.getOcupantes().add(ocupantes.getInt(j));
-                }
-
-                habitacionesPresidenciales.agregarHabitacion(nuevaHab);
-            }
         } catch (IOException e) {
             System.out.println("Error al leer el archivo de habitaciones: " + e.getMessage());
         } catch (BadOptionException e) {
             System.out.println("Error al cargar habitaciones: " + e.getMessage());
+        }
+    }
+
+    private <T extends Habitacion> void cargarHabitacionesDesdeJSON(JSONArray habitacionesArray, Class<T> tipoHabitacion) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        for (int i = 0; i < habitacionesArray.length(); i++) {
+            JSONObject jsonHabitacion = habitacionesArray.getJSONObject(i);
+            T nuevaHab = null;
+
+            if (tipoHabitacion == HabitacionStandard.class) {
+                nuevaHab = (T) new HabitacionStandard(jsonHabitacion.getInt("nroHabitacion"),
+                        jsonHabitacion.getInt("capacidadMaxima"),
+                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"));
+            } else if (tipoHabitacion == HabitacionSuite.class) {
+                nuevaHab = (T) new HabitacionSuite(jsonHabitacion.getInt("nroHabitacion"),
+                        jsonHabitacion.getInt("capacidadMaxima"),
+                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"),
+                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionCocina"), formatter));
+            } else if (tipoHabitacion == HabitacionPresidencial.class) {
+                nuevaHab = (T) new HabitacionPresidencial(jsonHabitacion.getInt("nroHabitacion"),
+                        jsonHabitacion.getInt("capacidadMaxima"),
+                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"),
+                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionCocina"), formatter),
+                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionJacuzzi"), formatter));
+            }
+
+            JSONArray ocupantes = jsonHabitacion.getJSONArray("ocupantes");
+            for (int j = 0; j < ocupantes.length(); j++) {
+                nuevaHab.getOcupantes().add(ocupantes.getInt(j));
+            }
+
+            if (tipoHabitacion == HabitacionStandard.class) {
+                habitacionesStandard.agregarHabitacion((HabitacionStandard) nuevaHab);
+            } else if (tipoHabitacion == HabitacionSuite.class) {
+                habitacionesSuite.agregarHabitacion((HabitacionSuite) nuevaHab);
+            } else if (tipoHabitacion == HabitacionPresidencial.class) {
+                habitacionesPresidenciales.agregarHabitacion((HabitacionPresidencial) nuevaHab);
+            }
         }
     }
 
