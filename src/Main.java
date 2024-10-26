@@ -156,13 +156,13 @@ public class Main {
                     System.out.println(hotel.verEmpleados());
                     break;
                 case 6:
-                    //gestionarPersona(hotel); Similar a gestionarHabitacion()
+                    gestionarPersona(hotel);
                     break;
                 case 7:
                     eliminarEmpleado(hotel);
                     break;
                 case 8:
-                    //hotel.hacerBackup();
+                    hotel.hacerBackup();
                     break;
                 case 0:
                     System.out.println("Saliendo...");
@@ -366,6 +366,19 @@ public class Main {
             throw new HabitacionNoEncontradaException("No existe la habitacion ingresada");
         } else {
             GestionHabitacion.mostrarMenu(prueba);
+        }
+    }
+
+    public static void gestionarPersona(Hotel hotel) {
+        try {
+            System.out.println("Ingrese el numero de dni de la persona a gestionar: ");
+            int dniPersona = Integer.parseInt(teclado.nextLine());
+            GestionPersona.mostrarMenu(hotel.buscarPersonaPorDni(dniPersona),hotel);
+            hotel.hacerBackup();
+        } catch (PersonaNoExisteException e) {
+            System.out.println("El dni ingresado no se encuentra en los registros del hotel");
+        } catch (BadDataException e) {
+            System.out.println(e.getMessage());
         }
     }
 

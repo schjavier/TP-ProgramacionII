@@ -4,6 +4,7 @@ import JSONCreator.CreadorAJSON;
 import Modelo.Habitaciones.*;
 import Modelo.Persona.Empleado;
 import Modelo.Persona.Pasajero;
+import Modelo.Persona.Persona;
 import Modelo.Persona.TipoEmpleado;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -161,6 +162,24 @@ public class Hotel {
         return persona;
     }
 
+    public Persona buscarPersonaPorDni(int dni) throws PersonaNoExisteException {
+        VerificacionesDeDatos.verificarDni(dni);
+
+        for (Empleado empleado : empleados) {
+            if (empleado.getDni() == dni) {
+                return empleado;
+            }
+        }
+
+        for (Pasajero pasajero : pasajeros) {
+            if (pasajero.getDni() == dni) {
+                return pasajero;
+            }
+        }
+
+        throw new PersonaNoExisteException("Persona con el DNI: " + dni + " no existe.");
+    }
+
     public boolean existeEmpleadoConEseDNI(int dni) {
         VerificacionesDeDatos.verificarDni(dni);
         boolean existe = false;
@@ -186,7 +205,7 @@ public class Hotel {
     public void agregarPasajero(String nombre, String apellido, int dni, String direccion) {
         Pasajero pasajero = new Pasajero(nombre, apellido, dni, direccion);
         pasajeros.add(pasajero);
-        CreadorAJSON.uploadJSON(archivoPasajeros,pasarListaDePersonasAJSON());
+        CreadorAJSON.uploadJSON(archivoPasajeros, pasarListaDePasajerosAJSON());
     }
 
     public int obtenerNroHabitaciones() {
@@ -254,7 +273,20 @@ public class Hotel {
         }
     }
 
-    public String pasarListaDePersonasAJSON() {
+    public void guardarPasajeros() {
+        FileWriter archi;
+        String arregloPasajeros = pasarListaDePasajerosAJSON();
+
+        try {
+            archi = new FileWriter(archivoPasajeros);
+            archi.write(arregloPasajeros);
+            archi.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Hubo un error escribiendo el archivo");
+        }
+    }
+
+    public String pasarListaDePasajerosAJSON() {
         JSONArray arregloPasajeros = new JSONArray();
         for (Pasajero pasajero : pasajeros) {
             arregloPasajeros.put(pasajero.toJSON());
@@ -442,6 +474,12 @@ public class Hotel {
             }
         }
         return false;
+    }
+
+    public void hacerBackup() {
+        guardarPasajeros();
+        guardarEmpleados();
+        guardarHabitaciones();
     }
 
 }
