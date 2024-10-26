@@ -8,6 +8,7 @@ import Modelo.Persona.TipoEmpleado;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class Hotel {
         try {
             cargarJSONPasajeros();
             cargarJSONEmpleados();
+            cargarJSONHabitaciones();
         } catch (NullNameException e) {
             throw new NullNameException(e.getMessage());
         }
@@ -52,6 +54,8 @@ public class Hotel {
                 default -> throw new BadOptionException("Elegir una opcion correcta!!");
             }
         }
+
+        guardarHabitaciones();
     }
 
     public void crearUsuario(String nombre, String apellido, int dni, String usuario, String email, String clave, int tipoEmpleado) {
@@ -84,6 +88,7 @@ public class Hotel {
             i++;
         }
 
+        guardarHabitaciones();
         return habitacionEliminada;
     }
 
@@ -316,40 +321,57 @@ public class Hotel {
         }
     }
 
-//    public String pasarListaDeHabitacionesAJSON(int tipoHabitacion) {
-//        JSONArray arregloHabitaciones = new JSONArray();
-//
-//        switch(tipoHabitacion) {
-//            case 1:
-//                for (HabitacionStandard habitacion : habitacionesStandard.getListaHabitaciones()) {
-//                    arregloHabitaciones.put(habitacion.toJSON());
-//                }
-//                break;
-//            case 2:
-//                for (HabitacionSuite habitacion : habitacionesSuite.getListaHabitaciones()) {
-//                    arregloHabitaciones.put(habitacion.toJSON());
-//                }
-//                break;
-//            case 3:
-//                for (HabitacionPresidencial habitacion : habitacionesPresidenciales.getListaHabitaciones()) {
-//                    arregloHabitaciones.put(habitacion.toJSON());
-//                }
-//                break;
-//            default:
-//                System.out.println("Opcion invalida");
-//
-//        }
-//
-//        return arregloHabitaciones.toString();
-//    }
+    public JSONObject todasLasHabitacionesAJson() {
+        JSONObject habitaciones = new JSONObject();
 
-//    public void guardarHabitaciones() {
-//        //guardarHabStandard();
-//        //guardarHabSuite();
-//        //guardarHabPresidencial();
-//    }
+        habitaciones.put("habitacionesStandard",habitacionesStandard.habitacionesAJson());
+        habitaciones.put("habitacionesSuite",habitacionesSuite.habitacionesAJson());
+        habitaciones.put("habitacionesPresidenciales",habitacionesPresidenciales.habitacionesAJson());
 
-    /*lo mismo seria para las habitaciones y sus tipos :)*/
+        return habitaciones;
+    }
+
+    public void guardarHabitaciones() {
+        FileWriter archi;
+        String arregloHabitaciones = todasLasHabitacionesAJson().toString();
+
+        try {
+            archi = new FileWriter(archivoHabitaciones);
+            archi.write(arregloHabitaciones);
+            archi.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Hubo un error escribiendo el archivo");
+        }
+    }
+
+    public void cargarJSONHabitaciones() {
+        try {
+            JSONObject habitacionesJson = new JSONObject(CreadorAJSON.downloadJSON(archivoHabitaciones));
+
+            JSONArray standardArray = habitacionesJson.getJSONArray("habitacionesStandard");
+            JSONArray suiteArray = habitacionesJson.getJSONArray("habitacionesSuite");
+            JSONArray presidencialArray = habitacionesJson.getJSONArray("habitacionesPresidenciales");
+
+            for (int i = 0; i < standardArray.length(); i++) {
+                JSONObject jsonHabitacion = standardArray.getJSONObject(i);
+                habitacionesStandard.agregarHabitacion(new HabitacionStandard(jsonHabitacion.getInt("capacidadMaxima")));
+            }
+
+            for (int i = 0; i < suiteArray.length(); i++) {
+                JSONObject jsonHabitacion = suiteArray.getJSONObject(i);
+                habitacionesSuite.agregarHabitacion(new HabitacionSuite(jsonHabitacion.getInt("capacidadMaxima")));
+            }
+
+            for (int i = 0; i < presidencialArray.length(); i++) {
+                JSONObject jsonHabitacion = presidencialArray.getJSONObject(i);
+                habitacionesPresidenciales.agregarHabitacion(new HabitacionPresidencial(jsonHabitacion.getInt("capacidadMaxima")));
+            }
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo de habitaciones: " + e.getMessage());
+        } catch (BadOptionException e) {
+            System.out.println("Error al cargar habitaciones: " + e.getMessage());
+        }
+    }
 
     public void intentarIniciarSesion(String username, String clave) throws PersonaNoExisteException {
         Empleado credencialesEmpleado = null;
