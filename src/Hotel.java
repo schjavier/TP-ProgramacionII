@@ -61,11 +61,9 @@ public class Hotel {
         guardarHabitaciones();
     }
 
-    public void crearUsuario(String nombre, String apellido, int dni, String usuario, String email, String clave, int tipoEmpleado) {
-        switch(tipoEmpleado) {
-            case 1 -> empleados.add(new Empleado(nombre,apellido,dni,usuario,email,clave,TipoEmpleado.ADMINISTRADOR));
-            case 2 -> empleados.add(new Empleado(nombre,apellido,dni,usuario,email,clave,TipoEmpleado.RECEPCIONISTA));
-        }
+    public void crearEmpleado(String nombre, String apellido, int dni, String usuario, String email, String clave, TipoEmpleado tipoEmpleado) {
+        empleados.add(new Empleado(nombre,apellido,dni,usuario,email,clave,tipoEmpleado));
+        guardarEmpleados();
     }
 
     public String contarEstadoHabitaciones(int tipoHabitacion) {
@@ -205,7 +203,7 @@ public class Hotel {
     public void agregarPasajero(String nombre, String apellido, int dni, String direccion) {
         Pasajero pasajero = new Pasajero(nombre, apellido, dni, direccion);
         pasajeros.add(pasajero);
-        CreadorAJSON.uploadJSON(archivoPasajeros, pasarListaDePasajerosAJSON());
+        guardarPasajeros();
     }
 
     public int obtenerNroHabitaciones() {

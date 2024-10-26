@@ -88,7 +88,7 @@ public class Main {
         String usuario;
         String email;
         String clave;
-        int tipoEmpleado;
+        String stringTipoEmpleado;
 
         nombre = definirNombreoApe("Nombre: ");
         apellido = definirNombreoApe("Apellido: ");
@@ -104,13 +104,11 @@ public class Main {
         if (!esPrimerUsuario) {
             System.out.println("Tipo de empleado: ");
             System.out.println(TipoEmpleado.retornarValoresDeEnum());
-            tipoEmpleado = Integer.parseInt(teclado.nextLine());
-            hotel.crearUsuario(nombre,apellido,dni,usuario,email,clave,tipoEmpleado);  // despues lo cambio
+            stringTipoEmpleado = teclado.nextLine();
+            hotel.crearEmpleado(nombre,apellido,dni,usuario,email,clave,TipoEmpleado.valueOf(stringTipoEmpleado.toUpperCase()));
         } else {
-            hotel.crearUsuario(nombre,apellido,dni,usuario,email,clave,1);
+            hotel.crearEmpleado(nombre,apellido,dni,usuario,email,clave,TipoEmpleado.ADMINISTRADOR);
         }
-
-        hotel.guardarEmpleados();
     }
 
     static public void menuGestionAdmin(Hotel hotel) {

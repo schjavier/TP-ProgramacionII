@@ -4,7 +4,7 @@ import Modelo.Habitaciones.EstadoHabitacion;
 
 public enum TipoEmpleado {
 
-    ADMINISTRADOR("Admin"),
+    ADMINISTRADOR("Administrador"),
     RECEPCIONISTA("Recepcionista");
 
     private String tipoEmpleado;
