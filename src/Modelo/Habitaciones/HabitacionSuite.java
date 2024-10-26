@@ -2,31 +2,36 @@ package Modelo.Habitaciones;
 
 import org.json.JSONObject;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class HabitacionSuite extends Habitacion implements TieneCocina {
-    private LocalDateTime ultimaRevisionCocina;
+    private LocalDate ultimaRevisionCocina;
+
+    public HabitacionSuite(int nroHabitacion, int capacidadMaxima, EstadoHabitacion estado, LocalDate ultimaRevisionCocina) {
+        super(nroHabitacion, capacidadMaxima, estado);
+        this.ultimaRevisionCocina = ultimaRevisionCocina;
+    }
 
     public HabitacionSuite(int capacidadMaxima) {
         super(capacidadMaxima);
-        this.ultimaRevisionCocina = LocalDateTime.now();
+        this.ultimaRevisionCocina = LocalDate.now();
     }
 
 
-    public LocalDateTime getUltimaRevisionCocina() {
+    public LocalDate getUltimaRevisionCocina() {
         return ultimaRevisionCocina;
     }
 
     @Override
     public void marcarMantenimientoHechoEnCocina() {
-        this.ultimaRevisionCocina = LocalDateTime.now();
+        this.ultimaRevisionCocina = LocalDate.now();
     }
 
     @Override
     public String toString() {
         return super.toString() + "Tipo: Suite\n" +
-                "Ultima revisión de la cocina: " + ultimaRevisionCocina.toLocalDate() + "\n";
+                "Ultima revisión de la cocina: " + ultimaRevisionCocina + "\n";
     }
 
     @Override

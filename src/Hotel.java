@@ -8,10 +8,12 @@ import Modelo.Persona.TipoEmpleado;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
 
 public class Hotel {
     private String nombre;
@@ -354,17 +356,49 @@ public class Hotel {
 
             for (int i = 0; i < standardArray.length(); i++) {
                 JSONObject jsonHabitacion = standardArray.getJSONObject(i);
-                habitacionesStandard.agregarHabitacion(new HabitacionStandard(jsonHabitacion.getInt("capacidadMaxima")));
+                HabitacionStandard nuevaHab = new HabitacionStandard(jsonHabitacion.getInt("nroHabitacion"),
+                        jsonHabitacion.getInt("capacidadMaxima"),
+                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"));
+
+                JSONArray ocupantes = jsonHabitacion.getJSONArray("ocupantes");
+                for (int j = 0; j < ocupantes.length(); j++) {
+                    nuevaHab.getOcupantes().add(ocupantes.getInt(j));
+                }
+
+                habitacionesStandard.agregarHabitacion(nuevaHab);
             }
 
             for (int i = 0; i < suiteArray.length(); i++) {
                 JSONObject jsonHabitacion = suiteArray.getJSONObject(i);
-                habitacionesSuite.agregarHabitacion(new HabitacionSuite(jsonHabitacion.getInt("capacidadMaxima")));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                HabitacionSuite nuevaHab = new HabitacionSuite(jsonHabitacion.getInt("nroHabitacion"),
+                        jsonHabitacion.getInt("capacidadMaxima"),
+                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"),
+                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionCocina"),formatter));
+
+                JSONArray ocupantes = jsonHabitacion.getJSONArray("ocupantes");
+                for (int j = 0; j < ocupantes.length(); j++) {
+                    nuevaHab.getOcupantes().add(ocupantes.getInt(j));
+                }
+
+                habitacionesSuite.agregarHabitacion(nuevaHab);
             }
 
             for (int i = 0; i < presidencialArray.length(); i++) {
                 JSONObject jsonHabitacion = presidencialArray.getJSONObject(i);
-                habitacionesPresidenciales.agregarHabitacion(new HabitacionPresidencial(jsonHabitacion.getInt("capacidadMaxima")));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                HabitacionPresidencial nuevaHab = new HabitacionPresidencial(jsonHabitacion.getInt("nroHabitacion"),
+                        jsonHabitacion.getInt("capacidadMaxima"),
+                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"),
+                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionCocina"),formatter),
+                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionJacuzzi"),formatter));
+
+                JSONArray ocupantes = jsonHabitacion.getJSONArray("ocupantes");
+                for (int j = 0; j < ocupantes.length(); j++) {
+                    nuevaHab.getOcupantes().add(ocupantes.getInt(j));
+                }
+
+                habitacionesPresidenciales.agregarHabitacion(nuevaHab);
             }
         } catch (IOException e) {
             System.out.println("Error al leer el archivo de habitaciones: " + e.getMessage());

@@ -1,5 +1,6 @@
 package Modelo.Habitaciones;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -11,8 +12,9 @@ abstract public class Habitacion {
     private EstadoHabitacion estado;
     private ArrayList<Integer> ocupantes;
 
-    public Habitacion(int capacidadMaxima, EstadoHabitacion estado) { // esto para que casos serviria?
-            this.nroHabitacion = ++contadorIdHabitacion;
+    public Habitacion(int nroHabitacion, int capacidadMaxima, EstadoHabitacion estado) {
+            ++contadorIdHabitacion;
+            this.nroHabitacion = nroHabitacion;
             this.capacidadMaxima = capacidadMaxima;
             this.estado = estado;
             this.ocupantes = new ArrayList<Integer>();
@@ -64,11 +66,16 @@ abstract public class Habitacion {
 
     public JSONObject toJson() {
         JSONObject habitacion = new JSONObject();
+        JSONArray ocupantesJSON = new JSONArray();
+
+        for (Integer ocupante : this.ocupantes) {
+            ocupantesJSON.put(ocupante);
+        }
 
         habitacion.put("nroHabitacion", this.nroHabitacion);
         habitacion.put("capacidadMaxima", this.capacidadMaxima);
         habitacion.put("estado", this.estado);
-        habitacion.put("ocupantes",this.ocupantes.toString());
+        habitacion.put("ocupantes", ocupantesJSON);
         return habitacion;
     }
 }
