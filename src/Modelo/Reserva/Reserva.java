@@ -17,11 +17,11 @@ public class Reserva {
     private ArrayList<Integer> pasajeros;
     private boolean activa;
     private int habitacion;
-    private LocalDateTime fechaInicio;
-    private LocalDateTime fechaFinal;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFinal;
     private int guardadoPor; // empleado id
 
-    public Reserva(int dniTitular, int habitacion, LocalDateTime fechaInicio, LocalDateTime fechaFinal, int guardadoPor) {
+    public Reserva(int dniTitular, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor) {
         this.id = ++contadorIdReserva;
         this.dniTitular = dniTitular;
         this.pasajeros = new ArrayList<>();
@@ -72,19 +72,19 @@ public class Reserva {
         this.activa = activa;
     }
 
-    public LocalDateTime getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(LocalDateTime fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio; // aca podria ponerse una excepcion
     }
 
-    public LocalDateTime getFechaFinal() {
+    public LocalDate getFechaFinal() {
         return fechaFinal;
     }
 
-    public void setFechaFinal(LocalDateTime fechaFinal) {
+    public void setFechaFinal(LocalDate fechaFinal) {
         this.fechaFinal = fechaFinal; // aca podria ponerse una excepcion
     }
 

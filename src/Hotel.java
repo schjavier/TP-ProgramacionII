@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -412,7 +413,7 @@ public class Hotel implements InterfacePersistecia {
      * @return Devuelve True si la reserva pudo generarse, False de otro modo.
      */
 
-    public boolean generarReserva(int dniTitular, int habitacion, LocalDateTime fechaInicio, LocalDateTime fechaFinal, int guardadoPor){
+    public boolean generarReserva(int dniTitular, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor){
         boolean respuesta = false;
         Reserva reserva = new Reserva(dniTitular, habitacion, fechaInicio, fechaFinal, guardadoPor);
 

@@ -1,5 +1,8 @@
 package Modelo.Persona;
 
+/**
+ * Enum que representa que tipo de permisos tiene el empleado.
+ */
 public enum TipoEmpleado {
 
     ADMINISTRADOR("Admin"),

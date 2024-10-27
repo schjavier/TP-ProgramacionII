@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Lista que contiene metodos basicos que se comparten entre todos los tipos de habitaciones.
+ * @param <T>
+ */
 abstract public class Habitaciones<T extends Habitacion> {
     private String nombrearchivo = "";
     private ArrayList<T> listaHabitaciones = new ArrayList<>();
@@ -22,12 +26,21 @@ abstract public class Habitaciones<T extends Habitacion> {
         return listaHabitaciones;
     }
 
+    /**
+     * Agrega una habitacion a la lista
+     * @param habitacion Habitacion que se creo
+     */
     public void agregarHabitacion(T habitacion)
     {
         listaHabitaciones.add(habitacion);
     }
 
 
+    /**
+     * Se elimina una habitacion segun el numero elegido. (NO ESTOY SEGURO SI TIENE SENTIDO TENER ESTO.)
+     * @param numHabitacion Numero elegido.
+     * @return retorna true si elimino algo.
+     */
     public boolean eliminarHabitacionSegunNumero(int numHabitacion)
     {
         return listaHabitaciones.removeIf(habitacion -> habitacion.getNroHabitacion() == numHabitacion);
