@@ -2,6 +2,10 @@ package Modelo.Persona;
 
 import org.json.JSONObject;
 
+
+/**
+ * Un pasajero que hace reservas y esta en habitaciones
+ */
 public class Pasajero extends Persona {
     private String domicilio;
 

@@ -1,6 +1,11 @@
 package Modelo.Reserva;
 
+import Modelo.Persona.Pasajero;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 // en gral creo que podrian ponerse algunos atributos finales
@@ -8,48 +13,48 @@ import java.util.ArrayList;
 public class Reserva {
     private static int contadorIdReserva = 0; // id auto incremental
     private int id;
-    private int referente; // dni de persona que es "dueño" de la reserva
+    private int dniTitular;
     private ArrayList<Integer> pasajeros;
-    private boolean activa = false; // porque activa?
+    private boolean activa;
     private int habitacion;
     private LocalDate fechaInicio;
     private LocalDate fechaFinal;
     private int guardadoPor; // empleado id
 
-    public Reserva(int referente, ArrayList<Integer> pasajeros, boolean activa, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor) {
+    public Reserva(int dniTitular, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor) {
         this.id = ++contadorIdReserva;
-        this.referente = referente;
-        this.pasajeros = pasajeros;
-        this.activa = activa;
+        this.dniTitular = dniTitular;
+        this.pasajeros = new ArrayList<>();
+        pasajeros.add(dniTitular);
+        this.activa = true;
         this.habitacion = habitacion;
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;
         this.guardadoPor = guardadoPor;
     }
 
-    public static int getContadorIdReserva() {
-        return contadorIdReserva;
-    }
+    // en la clase reserva agregarmos los pasajeros, con un metodo para eso.
 
     public int getId() {
         return id;
     }
 
-    public int getReferente() {
-        return referente;
+    public int getDniTitular() {
+        return dniTitular;
     }
 
-    public void setReferente(int referente) {
-        this.referente = referente;
+    public void setDniTitular(int dniTitular) {
+        this.dniTitular = dniTitular;
     }
 
     public ArrayList<Integer> getPasajeros() {
         return pasajeros;
     }
 
-    public void setPasajeros(ArrayList<Integer> pasajeros) {
-        this.pasajeros = pasajeros; // aca podria ponerse una excepcion si la reserva no esta activa
+    public void agregarPasajero(int dniPasajero){
+        this.pasajeros.add(dniPasajero);
     }
+
 
     public int getHabitacion() {
         return habitacion;
@@ -82,4 +87,38 @@ public class Reserva {
     public void setFechaFinal(LocalDate fechaFinal) {
         this.fechaFinal = fechaFinal; // aca podria ponerse una excepcion
     }
+
+    @Override
+    public String toString() {
+        return "Reserva {" +
+                "id=" + id +
+                ", dniTitular=" + dniTitular +
+                ", pasajeros=" + pasajeros +
+                ", activa=" + activa +
+                ", habitacion=" + habitacion +
+                ", fechaInicio=" + fechaInicio +
+                ", fechaFinal=" + fechaFinal +
+                '}';
+    }
+
+    public JSONObject toJson(){
+        JSONObject reserva = new JSONObject();
+        JSONArray dniPasajeros = new JSONArray();
+
+        reserva.put("Id", this.id);
+        reserva.put("DniTitular", this.dniTitular);
+
+        for (Integer dniPasajero : this.pasajeros){
+            dniPasajeros.put(dniPasajero);
+        }
+        reserva.put("Pasajeros", dniPasajeros);
+        reserva.put("Activa", this.activa);
+        reserva.put("Habitacion", this.habitacion);
+        reserva.put("FechaInicio", this.fechaInicio);
+        reserva.put("FechaFinal", this.fechaFinal);
+        reserva.put("GuardadoPor", this.guardadoPor);
+
+        return reserva;
+    }
+
 }

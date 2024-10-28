@@ -5,22 +5,30 @@ import Modelo.Habitaciones.*;
 import Modelo.Persona.Empleado;
 import Modelo.Persona.Pasajero;
 import Modelo.Persona.TipoEmpleado;
+import Modelo.Reserva.Reserva;
+import Modelo.Reserva.ReservaService;
+import Persistencia.InterfacePersistecia;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Hotel {
+public class Hotel implements InterfacePersistecia {
     private String nombre;
     private Empleado empleado_en_sistema = null;
 
     private final HabitacionesStandard habitacionesStandard = new HabitacionesStandard();
     private final HabitacionesSuite habitacionesSuite = new HabitacionesSuite();
     private final HabitacionesPresidenciales habitacionesPresidenciales = new HabitacionesPresidenciales();
+
     private final ArrayList<Pasajero> pasajeros = new ArrayList<>();
     private final ArrayList<Empleado> empleados = new ArrayList<>();
 
+    private final ArrayList<Reserva> reservas = new ArrayList<>();
+    private final ReservaService reservaService = new ReservaService();
 
     private final String archivopasajeros = "Pasajeros.json";
     private final String archivoempleados = "Empleados.json";
@@ -28,6 +36,7 @@ public class Hotel {
 
     public Hotel(String nombre) {
         this.nombre = nombre;
+
         try {
             cargarJSONPasajeros();
             cargarJSONEmpleados();
@@ -326,4 +335,140 @@ public class Hotel {
         return empleado_en_sistema.getDni();
     }
 
+
+    // Todo lo relativo a las reservas.
+
+    /**
+     *
+     * Busca reservas por dni.
+     *
+     * @param dni El dni del titular de la reserva
+     * @return true, si se encontro al menos una reserva con el dni asociado, false en otro caso.
+     */
+    public boolean buscarReservaPorTitular(int dni){
+        boolean respuesta = false;
+
+        for (Reserva reserva : reservas){
+            if (reserva.getDniTitular() == dni){
+                respuesta = true;
+            }
+        }
+        return respuesta;
+    }
+
+    /**
+     * Busca reservas activas por el dni del titular de la reservas.
+     *
+     * @param dni El dni del titular de la reserva
+     * @return True si encuentra una reserva activa con el ese dni, false en cualquier otro caso.
+     */
+
+    public boolean buscarReservaActivaPorTitular(int dni){
+        boolean respuesta = false;
+        for (Reserva reserva : reservas){
+            if (reserva.getDniTitular() == dni && reserva.isActiva()){
+                respuesta = true;
+            }
+        }
+        return respuesta;
+    }
+
+    /**
+     *
+     * Muestra un historico de reservas filtrado por el dni del titular
+     *
+     * @param dni El dni del titular de la reserva
+     * @return Un String con la informacion de las reservas que tuvo el titular a lo largo del tiempo.
+     */
+    public String historicoPorTitular(int dni){
+        StringBuilder respuesta = new StringBuilder("Reserva - Fecha Inicio - Fecha Final - Habitacion").append("\n");
+
+        for (Reserva reserva : reservas){
+            if (reserva.getDniTitular() == dni){
+                respuesta.append(reserva.getId())
+                        .append(" - ")
+                        .append(reserva.getFechaInicio())
+                        .append(" - ")
+                        .append(reserva.getFechaFinal())
+                        .append(" - ")
+                        .append(reserva.getHabitacion())
+                        .append("\n");
+            }
+        }
+
+        return respuesta.toString();
+    }
+
+
+    /**
+     *
+     * Genera una reserva nueva y la guarda en la lista de reservas.
+     *
+     * @param dniTitular int representando el dni del titular de la reserva
+     * @param habitacion numero de la habitacion de la reserva
+     * @param fechaInicio LocalDateTime para la fecha de inicio de la reserva
+     * @param fechaFinal LocalDateTime para el final de la reserva
+     * @param guardadoPor dni del empleado que guarda la reserva.
+     *
+     * @return Devuelve True si la reserva pudo generarse, False de otro modo.
+     */
+
+    public boolean generarReserva(int dniTitular, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor){
+        boolean respuesta = false;
+        Reserva reserva = new Reserva(dniTitular, habitacion, fechaInicio, fechaFinal, guardadoPor);
+
+
+        if (reservas.isEmpty()){
+            reservas.add(reserva);
+            respuesta = true;
+        } else if (!buscarReservaActivaPorTitular(dniTitular)){
+            reservas.add(reserva);
+            respuesta = true;
+        }
+        return respuesta;
+    }
+
+
+    /**
+     * Metodo que transforma la lista de reservas en un JsonArray
+     *
+     * @param reservas La lista de reservas
+     * @return devuelve la lsta de reservas convertida en Json como string.
+     */
+    public String listaReservasToJson(ArrayList<Reserva> reservas){
+
+        JSONArray reservasJson = new JSONArray(reservas);
+        for (Reserva reserva : reservas)
+        {
+            reservasJson.put(reserva.toJson());
+        }
+
+        return reservasJson.toString();
+
+    }
+
+    private boolean buscarReservaPorId(int idReserva) {
+        boolean respuesta = false;
+
+        for (Reserva reserva : reservas){
+            if (reserva.getId() == idReserva){
+                respuesta = true;
+            }
+
+        }
+        return respuesta;
+    }
+// Servicio
+    @Override
+    public boolean persistir(String contenido) {
+        return reservaService.persistir(contenido);
+    }
+
+    public boolean eliminarReserva(int id) {
+        return false;
+    }
+
+    public boolean modificarReserva(int id) {
+        return false;
+    }
 }
