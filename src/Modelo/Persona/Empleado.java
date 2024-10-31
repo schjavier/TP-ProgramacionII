@@ -2,6 +2,10 @@ package Modelo.Persona;
 
 import org.json.JSONObject;
 
+
+/**
+ * Un empleado del sistema.
+ */
 public class Empleado extends Persona {
     private static int contadorIdEmpleado = 0; // id auto incremental
     private int idEmpleado;
