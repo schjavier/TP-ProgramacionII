@@ -415,11 +415,6 @@ public class Hotel {
                         LocalDate.parse(jsonHabitacion.getString("ultimaRevisionJacuzzi"), formatter));
             }
 
-            JSONArray ocupantes = jsonHabitacion.getJSONArray("ocupantes");
-            for (int j = 0; j < ocupantes.length(); j++) {
-                nuevaHab.getOcupantes().add(ocupantes.getInt(j));
-            }
-
             if (tipoHabitacion == HabitacionStandard.class) {
                 habitacionesStandard.agregarHabitacion((HabitacionStandard) nuevaHab);
             } else if (tipoHabitacion == HabitacionSuite.class) {

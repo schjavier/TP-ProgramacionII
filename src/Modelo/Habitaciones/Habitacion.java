@@ -66,16 +66,10 @@ abstract public class Habitacion {
 
     public JSONObject toJson() {
         JSONObject habitacion = new JSONObject();
-        JSONArray ocupantesJSON = new JSONArray();
-
-        for (Integer ocupante : this.ocupantes) {
-            ocupantesJSON.put(ocupante);
-        }
 
         habitacion.put("nroHabitacion", this.nroHabitacion);
         habitacion.put("capacidadMaxima", this.capacidadMaxima);
         habitacion.put("estado", this.estado);
-        habitacion.put("ocupantes", ocupantesJSON);
         return habitacion;
     }
 }
