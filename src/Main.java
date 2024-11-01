@@ -4,6 +4,7 @@ import Modelo.Habitaciones.EstadoHabitacion;
 import Modelo.Habitaciones.TipoHabitacion;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -25,6 +26,8 @@ public class Main {
             System.out.println("5. Listar habitaciones de acuerdo a su tipo y estado");
             System.out.println("6. Obtener conteo total de habitaciones");
             System.out.println("7. Obtener un conteo de todas las habitaciones segun el estado");
+            System.out.println("8. Menu Reserva");
+
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -51,6 +54,9 @@ public class Main {
                     break;
                 case 7:
                     contarHabitacionesEstado(hotel);
+                    break;
+                case 8:
+                    menuReservas(hotel);
                     break;
                 case 0:
                     System.out.println("Saliendo...");
@@ -236,6 +242,49 @@ public class Main {
             }
         }
         System.out.println("No existe la habitacion ingresada");
+
     }
+
+    /**
+     * Muestra un menu para las reservas.
+     * @param hotel
+     */
+        public static void menuReservas(Hotel hotel){
+            int opcion = -1;
+            do {
+
+                System.out.println("Gestion de Reservas");
+                System.out.println("Que desea hacer?");
+                System.out.println("1 - Agregar una reserva");
+                System.out.println("2 - Eliminar una reserva");
+                System.out.println("3 - Modificar una Reserva Existente");
+                System.out.println("0 - Salir");
+
+                switch (opcion){
+                    case 1:
+                        System.out.println("Ingrese el DNI del titular de la reserva");
+                        int dniTitular = Integer.parseInt(teclado.nextLine());
+                        System.out.println("Ingrese el Nro. de Habitación de la reserva");
+                        int numeroHabitacion = Integer.parseInt(teclado.nextLine());
+                        System.out.println("Ingrese fecha ( yyyy-mm-dd ) de inicio de la reserva");
+
+                        LocalDate fechaInicio = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(teclado.nextLine()));
+                        System.out.println("Ingrese fecha ( yyyy-mm-dd ) de final de la reserva");
+                        LocalDate fechaFinal = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(teclado.nextLine()));
+                        int guardadoPor = hotel.retornarDniEmpleadoLoggeado();
+
+                        hotel.generarReserva(dniTitular, numeroHabitacion, fechaInicio, fechaFinal, guardadoPor);
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+
+                }
+
+            } while (opcion != 0);
+
+
+        }
 
 }

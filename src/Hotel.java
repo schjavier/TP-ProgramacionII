@@ -7,16 +7,16 @@ import Modelo.Persona.Pasajero;
 import Modelo.Persona.TipoEmpleado;
 import Modelo.Reserva.Reserva;
 import Modelo.Reserva.ReservaService;
-import Persistencia.InterfacePersistecia;
+import Persistencia.InterfacePersistencia;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Hotel implements InterfacePersistecia {
+public class Hotel implements InterfacePersistencia {
+
     private String nombre;
     private Empleado empleado_en_sistema = null;
 
@@ -40,6 +40,10 @@ public class Hotel implements InterfacePersistecia {
         try {
             cargarJSONPasajeros();
             cargarJSONEmpleados();
+
+            //aca va cargar JSONReservas();
+
+
         } catch (NullNameException e) {
             throw new NullNameException(e.getMessage());
         }
@@ -412,19 +416,20 @@ public class Hotel implements InterfacePersistecia {
      *
      * @return Devuelve True si la reserva pudo generarse, False de otro modo.
      */
-
     public boolean generarReserva(int dniTitular, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor){
         boolean respuesta = false;
+        boolean isValid = false;
         Reserva reserva = new Reserva(dniTitular, habitacion, fechaInicio, fechaFinal, guardadoPor);
+    try {
+        isValid = validarReserva(reserva);
+    } catch (ReservaExisteException | BadDataException ex) {
+        System.out.println(ex.getMessage());
 
-
-        if (reservas.isEmpty()){
-            reservas.add(reserva);
-            respuesta = true;
-        } else if (!buscarReservaActivaPorTitular(dniTitular)){
-            reservas.add(reserva);
-            respuesta = true;
-        }
+    }
+    if (isValid){
+        reservas.add(reserva);
+        respuesta = true;
+    }
         return respuesta;
     }
 
@@ -471,4 +476,29 @@ public class Hotel implements InterfacePersistecia {
     public boolean modificarReserva(int id) {
         return false;
     }
+
+    /**
+     * Valida la reserva, aca faltan unas validaciones pero no se como usar los datacheck de fechas!
+     *
+     * @param reserva
+     * @return
+     * @throws ReservaExisteException
+     * @throws BadDataException
+     */
+    public boolean validarReserva(Reserva reserva) throws ReservaExisteException, BadDataException {
+        boolean respuesta = false;
+        
+        if (buscarReservaActivaPorTitular(reserva.getDniTitular())){
+            throw new ReservaExisteException("Ya hay una reserva registrada con ese titular");
+        } else if (!VerificacionesDeDatos.fechaTieneSentido(reserva)){
+            throw new BadDataException("Las fechas contienen errores");
+
+        } else {
+            respuesta = true;
+        }
+
+        return respuesta;
+        
+    }
 }
+

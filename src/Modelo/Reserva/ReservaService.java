@@ -2,14 +2,14 @@ package Modelo.Reserva;
 
 import Exceptions.NullNameException;
 import JSONCreator.CreadorAJSON;
-import Persistencia.InterfacePersistecia;
+import Persistencia.InterfacePersistencia;
 
 /**
  *
  * Clase que se encargara de llevar y traer informacion desde los archivos a la memoria, y viceversa
  *
  */
-public class ReservaService implements InterfacePersistecia {
+public class ReservaService implements InterfacePersistencia {
 
     private final String nombreArchivo = "reservas.json";
 
@@ -18,8 +18,9 @@ public class ReservaService implements InterfacePersistecia {
 
 
     /**
-     * @param contenido
-     * @return
+     * @param contenido un string que representa el Contenido a presistir
+     * @return true si se puso persistir los datos, false de otra forma.
+     * @throws NullNameException
      */
     @Override
     public boolean persistir(String contenido) {
