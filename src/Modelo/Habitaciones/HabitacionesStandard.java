@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class HabitacionesStandard extends Habitaciones<HabitacionStandard>{
     public HabitacionesStandard() {
-        super();
+        super(TipoHabitacion.REGULAR);
     }
 
     /* por ahora no hago esto */

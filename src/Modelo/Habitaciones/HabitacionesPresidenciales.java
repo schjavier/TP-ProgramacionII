@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class HabitacionesPresidenciales extends Habitaciones<HabitacionPresidencial>{
     public HabitacionesPresidenciales() {
-        super();
+        super(TipoHabitacion.PRESIDENCIAL);
     }
 
     public void marcarTodasHabitacionesComoRevisadas() {

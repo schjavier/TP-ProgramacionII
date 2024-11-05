@@ -280,16 +280,8 @@ public class Hotel implements InterfacePersistecia {
     }
 
     public void guardarPasajeros() {
-        FileWriter archi;
         String arregloPasajeros = pasarListaDePasajerosAJSON();
-
-        try {
-            archi = new FileWriter(archivoPasajeros);
-            archi.write(arregloPasajeros);
-            archi.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Hubo un error escribiendo el archivo");
-        }
+        CreadorAJSON.uploadJSON(archivoPasajeros,arregloPasajeros);
     }
 
     public String pasarListaDePasajerosAJSON() {
@@ -349,16 +341,8 @@ public class Hotel implements InterfacePersistecia {
     }
 
     public void guardarEmpleados() {
-        FileWriter archi;
         String arregloEmpleados = pasarListaDeEmpleadosAJSON();
-
-        try {
-            archi = new FileWriter(archivoEmpleados);
-            archi.write(arregloEmpleados);
-            archi.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Hubo un error escribiendo el archivo");
-        }
+        CreadorAJSON.uploadJSON(archivoEmpleados,arregloEmpleados);
     }
 
     public JSONObject todasLasHabitacionesAJson() {
@@ -372,16 +356,8 @@ public class Hotel implements InterfacePersistecia {
     }
 
     public void guardarHabitaciones() {
-        FileWriter archi;
         String arregloHabitaciones = todasLasHabitacionesAJson().toString();
-
-        try {
-            archi = new FileWriter(archivoHabitaciones);
-            archi.write(arregloHabitaciones);
-            archi.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Hubo un error escribiendo el archivo");
-        }
+        CreadorAJSON.uploadJSON(archivoHabitaciones,arregloHabitaciones);
     }
 
     public void cargarJSONHabitaciones() {

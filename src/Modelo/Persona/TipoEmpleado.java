@@ -19,7 +19,7 @@ public enum TipoEmpleado {
     public static String retornarValoresDeEnum() {
         String todos = "";
         for (TipoEmpleado valor : TipoEmpleado.values()) {
-            todos = todos.concat(valor.ordinal()+1  + ". " + valor.getTipoEmpleado() + "\n");
+            todos = todos.concat(valor.getTipoEmpleado() + "\n");
         }
         return todos;
     }

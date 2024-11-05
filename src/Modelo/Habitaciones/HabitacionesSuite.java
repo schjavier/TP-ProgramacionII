@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class HabitacionesSuite extends Habitaciones<HabitacionSuite> {
     public HabitacionesSuite() {
-        super();
+        super(TipoHabitacion.SUITE);
     }
 
     public void marcarTodasHabitacionesComoRevisadas() {
