@@ -1,9 +1,7 @@
 package Exceptions;
 
 /**
- *
- * No deberia extender de Exception, para que aparezcan como chequedas!?
- * Le modifique el nombre para que tenga exception al final!
+ * Representa un error en selección de opcion. Ya sea en menu o de carga.
  */
 public class BadOptionException extends RuntimeException {
     public BadOptionException(String message) {

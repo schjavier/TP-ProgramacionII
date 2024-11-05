@@ -2,6 +2,9 @@ package Modelo.Persona;
 
 import org.json.JSONObject;
 
+/**
+ * Clase abstracta que representa una persona en el sistema, puede ser {@link Pasajero Pasajero} o {@link Empleado Empleado}
+ */
 abstract public class Persona {
     private String nombre;
     private String apellido;

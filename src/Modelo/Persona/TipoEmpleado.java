@@ -2,6 +2,9 @@ package Modelo.Persona;
 
 import Modelo.Habitaciones.EstadoHabitacion;
 
+/**
+ * Enum que representa que tipo de permisos tiene el empleado.
+ */
 public enum TipoEmpleado {
 
     ADMINISTRADOR("Administrador"),

@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+
 abstract public class Habitacion {
     private static int contadorIdHabitacion = 0; // id auto incremental
     private final int nroHabitacion;
