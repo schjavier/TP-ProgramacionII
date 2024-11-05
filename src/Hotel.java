@@ -40,8 +40,7 @@ public class Hotel implements InterfacePersistencia {
         try {
             cargarJSONPasajeros();
             cargarJSONEmpleados();
-
-            //aca va cargar JSONReservas();
+            cargarJSONReservas();
 
 
         } catch (NullNameException e) {
@@ -422,13 +421,14 @@ public class Hotel implements InterfacePersistencia {
         Reserva reserva = new Reserva(dniTitular, habitacion, fechaInicio, fechaFinal, guardadoPor);
     try {
         isValid = validarReserva(reserva);
-    } catch (ReservaExisteException | BadDataException ex) {
+    } catch (ReservaExisteException | BadDataException | ConflictoConFechasException ex) {
         System.out.println(ex.getMessage());
 
     }
     if (isValid){
         reservas.add(reserva);
         respuesta = true;
+        persistir(listaReservasToJson(reservas));
     }
         return respuesta;
     }
@@ -452,16 +452,22 @@ public class Hotel implements InterfacePersistencia {
 
     }
 
-    private boolean buscarReservaPorId(int idReserva) {
-        boolean respuesta = false;
+    /**
+     *
+     * @param idReserva entero que representa el id de la reserva a buscar.
+     * @return -1 si no encontro la reserva, si no devuelve el indice de la reserva buscada
+     */
+
+    public int buscarReservaPorId(int idReserva) {
+        int index = -1;
 
         for (Reserva reserva : reservas){
             if (reserva.getId() == idReserva){
-                respuesta = true;
+                index = reservas.indexOf(reserva);
             }
 
         }
-        return respuesta;
+        return index;
     }
 // Servicio
     @Override
@@ -470,29 +476,89 @@ public class Hotel implements InterfacePersistencia {
     }
 
     public boolean eliminarReserva(int id) {
-        return false;
+        boolean respuesta = false;
+        for (Reserva reserva : reservas){
+            if (reserva.getId() == id){
+                reservas.remove(reserva);
+                persistir(listaReservasToJson(reservas));
+                respuesta = true;
+            }
+        }
+        return respuesta;
     }
 
-    public boolean modificarReserva(int id) {
-        return false;
+    public boolean modificarTitularReserva(int id, int dniTitular) {
+        boolean respuesta = false;
+        if (buscarReservaPorId(id) != -1){
+            Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+            reservaAModificar.setDniTitular(dniTitular);
+            respuesta = true;
+        }
+        return respuesta;
+    }
+
+    public boolean agregarPasajeroAReserva(int id, int dniPasajero) {
+        boolean respuesta = false;
+        if (buscarReservaPorId(id) != -1){
+            Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+            reservaAModificar.getPasajeros().add(dniPasajero);
+            respuesta = true;
+        }
+        return respuesta;
+    }
+
+
+    public boolean cambiarFechaInicio(int id, LocalDate fechaInicio) {
+        boolean respuesta = false;
+        if (buscarReservaPorId(id) != -1){
+            Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+            reservaAModificar.setFechaInicio(fechaInicio);
+            respuesta = true;
+        }
+
+        return respuesta;
+    }
+
+    public boolean cambiarFechaFinal(int id, LocalDate fechaFinal) {
+        boolean respuesta = false;
+        if (buscarReservaPorId(id) != -1) {
+            Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+            reservaAModificar.setFechaFinal(fechaFinal);
+            respuesta = true;
+
+        }
+        return respuesta;
+    }
+
+    public boolean cambiarNroHabitacion(int id, int nroHabitacion) {
+        boolean respuesta = false;
+            if (buscarReservaPorId(id) != -1){
+                Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+                reservaAModificar.setHabitacion(nroHabitacion);
+                respuesta = true;
+            }
+        return respuesta;
     }
 
     /**
-     * Valida la reserva, aca faltan unas validaciones pero no se como usar los datacheck de fechas!
+     * Valida la reserva
      *
      * @param reserva
-     * @return
+     * @return true si la reserva es valida, false de otro modo.
      * @throws ReservaExisteException
      * @throws BadDataException
+     * @throws ConflictoConFechasException
+     *
      */
-    public boolean validarReserva(Reserva reserva) throws ReservaExisteException, BadDataException {
+    public boolean validarReserva(Reserva reserva) throws ReservaExisteException, BadDataException, ConflictoConFechasException {
         boolean respuesta = false;
         
         if (buscarReservaActivaPorTitular(reserva.getDniTitular())){
             throw new ReservaExisteException("Ya hay una reserva registrada con ese titular");
-        } else if (!VerificacionesDeDatos.fechaTieneSentido(reserva)){
+        } else if (!VerificacionesDeDatos.fechaTieneSentido(reserva)) {
             throw new BadDataException("Las fechas contienen errores");
-
+        }else if (verificarFecha(reserva)){
+            throw new ConflictoConFechasException("Hay problemas con las fechas!");
         } else {
             respuesta = true;
         }
@@ -500,5 +566,64 @@ public class Hotel implements InterfacePersistencia {
         return respuesta;
         
     }
+
+    public boolean verificarFecha(Reserva reservaNueva){
+        boolean respuesta = false;
+        for (Reserva reserva : reservas){
+            if (VerificacionesDeDatos.intentoReservaEstaDentroDeGuardada(reservaNueva, reserva) ||
+                    VerificacionesDeDatos.intentoReservaContieneUnaReservaGuardada(reservaNueva, reserva) ||
+                        VerificacionesDeDatos.intentoReservaInterseccionaConUnaGuardada(reservaNueva, reserva)){
+
+                respuesta = true;
+
+            }
+        }
+        return respuesta;
+    }
+
+    public void cargarJSONReservas() throws NullNameException{
+        try {
+            JSONArray jsonReservas = new JSONArray(CreadorAJSON.downloadJSON(reservaService.getNombreArchivo()));
+            for (int i = 0 ; i < jsonReservas.length(); i++){
+                JSONObject jReserva = jsonReservas.getJSONObject(i);
+
+                // creo que no es necesaria, la dejo por las dudas
+                int id = jReserva.getInt("id");
+
+                int dniTitular = jReserva.getInt("titular");
+
+                // creo que no es necesaria, la dejo por las dudas
+                boolean activa = jReserva.getBoolean("activa");
+
+                int nroHabitacion = jReserva.getInt("habitacion");
+                LocalDate fechaInicio = LocalDate.parse(jReserva.getString("fechaInicio"));
+                LocalDate fechaFinal = LocalDate.parse(jReserva.getString("fechaFinal"));
+                int guardadoPor = jReserva.getInt("guardadoPor");
+
+                Reserva reserva = new Reserva(dniTitular, nroHabitacion, fechaInicio, fechaFinal, guardadoPor);
+                reservas.add(reserva);
+            }
+
+        } catch (IOException ex){
+            reservaService.persistir("[]");
+            System.out.println("Creando Archivo....");
+        } catch (NullNameException ex){
+            throw new NullNameException(ex.getMessage());
+        }
+    }
+
+    public String mostrarReservaPorId(int id){
+        int index = buscarReservaPorId(id);
+        StringBuilder reserva =  new StringBuilder();
+        if (index != -1){
+            reserva.append(reservas.get(index).toString());
+        } else {
+            // deberia lanzar una excepcion aca??
+            System.out.println("La reserva no existe!");
+        }
+
+        return reserva.toString();
+    }
+
 }
 

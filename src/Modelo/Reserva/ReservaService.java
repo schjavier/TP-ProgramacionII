@@ -11,11 +11,14 @@ import Persistencia.InterfacePersistencia;
  */
 public class ReservaService implements InterfacePersistencia {
 
-    private final String nombreArchivo = "reservas.json";
+    private final String nombreArchivo = "Reservas.json";
 
     public ReservaService(){
     }
 
+    public String getNombreArchivo() {
+        return nombreArchivo;
+    }
 
     /**
      * @param contenido un string que representa el Contenido a presistir
