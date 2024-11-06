@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Main {
     public static Scanner teclado = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NullNameException, BadOptionException, BadDataException, UsuarioNoAutorizadoException {
         Hotel hotel = new Hotel("Hotel California");
         boolean continuar = true;
 
@@ -22,7 +22,7 @@ public class Main {
         }
     }
 
-    public static void menuInicio(Hotel hotel) {
+    public static void menuInicio(Hotel hotel) throws BadOptionException, NullNameException, UsuarioNoAutorizadoException, BadDataException {
         int opcion;
 
         do {
@@ -65,7 +65,7 @@ public class Main {
         } while (opcion != 0);
     }
 
-    static public void menuLogin(Hotel hotel) {
+    static public void menuLogin(Hotel hotel) throws PersonaNoExisteException, BadDataException, NullNameException {
         String username;
         String clave;
 
@@ -82,14 +82,14 @@ public class Main {
         hotel.intentarIniciarSesion(username,clave);
     }
 
-    static public void crearEmpleado(Hotel hotel, boolean esPrimerUsuario) {
+    static public void crearEmpleado(Hotel hotel, boolean esPrimerUsuario) throws NullNameException, BadDataException {
         String nombre;
         String apellido;
         int dni;
         String usuario;
         String email;
         String clave;
-        String stringTipoEmpleado;
+        int nroTipoEmpleado;
 
         nombre = definirNombreoApe("Nombre: ");
         apellido = definirNombreoApe("Apellido: ");
@@ -105,14 +105,18 @@ public class Main {
         if (!esPrimerUsuario) {
             System.out.println("Tipo de empleado: ");
             System.out.println(TipoEmpleado.retornarValoresDeEnum());
-            stringTipoEmpleado = teclado.nextLine();
-            hotel.crearEmpleado(nombre,apellido,dni,usuario,email,clave,TipoEmpleado.valueOf(stringTipoEmpleado.toUpperCase()));
+            nroTipoEmpleado = Integer.parseInt(teclado.nextLine());
+            if (nroTipoEmpleado < TipoEmpleado.values().length) {
+                hotel.crearEmpleado(nombre,apellido,dni,usuario,email,clave,TipoEmpleado.values()[nroTipoEmpleado-1]);
+            } else {
+                System.out.println("El numero no es valido, intente nuevamente");
+            }
         } else {
             hotel.crearEmpleado(nombre,apellido,dni,usuario,email,clave,TipoEmpleado.ADMINISTRADOR);
         }
     }
 
-    static public void menuGestionAdmin(Hotel hotel) {
+    static public void menuGestionAdmin(Hotel hotel) throws UsuarioNoAutorizadoException, NullNameException, BadOptionException, BadDataException {
         if (hotel.obtenerEmpleadoLogueado().getTipo() != TipoEmpleado.ADMINISTRADOR) {
             throw new UsuarioNoAutorizadoException("El usuario no tiene permisos para este menu");
         }
@@ -172,7 +176,7 @@ public class Main {
         } while (opcion != 0);
     }
 
-    static public void menuGestionRecepcionista(Hotel hotel) {
+    static public void menuGestionRecepcionista(Hotel hotel) throws UsuarioNoAutorizadoException, BadOptionException {
         if (hotel.obtenerEmpleadoLogueado().getTipo() != TipoEmpleado.RECEPCIONISTA) {
             throw new UsuarioNoAutorizadoException("El usuario no tiene permisos para este menu");
         }
@@ -220,7 +224,7 @@ public class Main {
         } while (opcion != 0);
     }
 
-    static public void agregarPasajero(Hotel hotel) {
+    static public void agregarPasajero(Hotel hotel) throws NullNameException {
         String nombre;
         String apellido;
         int dni;
@@ -273,7 +277,7 @@ public class Main {
         return dni;
     }
 
-    public static void crearHabitaciones(Hotel hotel) {
+    public static void crearHabitaciones(Hotel hotel) throws NullNameException {
         int cantHab = 0;
         int capMaxHab = 0;
         int tipoHab = 0;
@@ -314,41 +318,50 @@ public class Main {
     }
 
     public static void listarHabitacionesEstado(Hotel hotel) {
-        int tipoHab = 0;
-        String estadoSeleccionado;
+        int tipoHab;
+        int estadoSeleccionado;
 
         try {
             System.out.println("Ingrese el tipo de habitacion: ");
+            System.out.println(TipoHabitacion.retornarValoresDeEnum());
             tipoHab = Integer.parseInt(teclado.nextLine());
+
             System.out.println("Ingrese el estado: ");
-            estadoSeleccionado = teclado.nextLine();
-            System.out.println(hotel.listarSegunEstado(tipoHab, EstadoHabitacion.valueOf(estadoSeleccionado.toUpperCase())));
+            System.out.println(EstadoHabitacion.retornarValoresDeEnum());
+            estadoSeleccionado = Integer.parseInt(teclado.nextLine());
+
+            if (estadoSeleccionado < EstadoHabitacion.values().length) {
+                System.out.println(hotel.listarSegunEstado(tipoHab,EstadoHabitacion.values()[estadoSeleccionado - 1]));
+            } else {
+                System.out.println("El numero no es valido, intente nuevamente");
+            }
         } catch (BadOptionException e) {
             System.out.println("No existe el tipo de habitacion!");
-        } catch (IllegalArgumentException e) {
-            System.out.println("No existe el estado ingresado");
         }
     }
 
     public static void contarHabitacionesEstado(Hotel hotel) {
-        String estadoSeleccionado;
-        int totalHabitaciones = 0;
+        int estadoSeleccionado;
+        int totalHabitaciones;
 
-        try {
-            System.out.println("Ingrese el estado: ");
-            estadoSeleccionado = teclado.nextLine();
-            totalHabitaciones = hotel.obtenerNroHabitacionesSegunEstado(EstadoHabitacion.valueOf(estadoSeleccionado.toUpperCase()));
+        System.out.println("Ingrese el estado: ");
+        System.out.println(EstadoHabitacion.retornarValoresDeEnum());
+        estadoSeleccionado = Integer.parseInt(teclado.nextLine());
+
+        if (estadoSeleccionado < EstadoHabitacion.values().length) {
+            totalHabitaciones = hotel.obtenerNroHabitacionesSegunEstado(EstadoHabitacion.values()[estadoSeleccionado - 1]);
             System.out.println("Total de habitaciones: " + totalHabitaciones);
-        } catch (IllegalArgumentException e) {
-            System.out.println("No existe el estado ingresado");
+        } else {
+            System.out.println("El numero no es valido, intente nuevamente");
         }
+
     }
 
     /**
      * Muestra un menu para gestionar una habitacion segun el numero ingresado por teclado
      */
 
-    public static void gestionarHabitacion(Hotel hotel) throws HabitacionNoEncontradaException{
+    public static void gestionarHabitacion(Hotel hotel) throws HabitacionNoEncontradaException, BadOptionException {
         Habitacion prueba = null;
 
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");
@@ -368,7 +381,7 @@ public class Main {
         }
     }
 
-    public static void gestionarPersona(Hotel hotel) {
+    public static void gestionarPersona(Hotel hotel) throws NullNameException {
         try {
             System.out.println("Ingrese el numero de dni de la persona a gestionar: ");
             int dniPersona = Integer.parseInt(teclado.nextLine());
@@ -381,7 +394,7 @@ public class Main {
         }
     }
 
-    public static String definirUsuario(Hotel hotel) {
+    public static String definirUsuario(Hotel hotel) throws BadDataException {
         String username;
         boolean usuarioNoExiste = true;
 
@@ -395,7 +408,7 @@ public class Main {
         return username;
     }
 
-    public static void eliminarEmpleado(Hotel hotel) {
+    public static void eliminarEmpleado(Hotel hotel) throws NullNameException {
         int dniEmpleado = 0;
         boolean dniVerificado = false;
 

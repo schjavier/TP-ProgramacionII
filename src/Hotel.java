@@ -39,7 +39,7 @@ public class Hotel implements InterfacePersistecia {
     private final String archivoHabitaciones = "Habitaciones.json";
 
 
-    public Hotel(String nombre) {
+    public Hotel(String nombre) throws NullNameException {
         this.nombre = nombre;
 
         try {
@@ -55,7 +55,7 @@ public class Hotel implements InterfacePersistecia {
      * Permite crear muchas habitaciones a la vez. Se crean todas como DISPONIBLE.
      * @param tipoHabitacion Un numero del 1 al x siendo x el ultimo tipo de habitacion que haya
      */
-    public void crearHabitaciones(int cantidadHabitaciones, int capacidadMaxima, int tipoHabitacion) {
+    public void crearHabitaciones(int cantidadHabitaciones, int capacidadMaxima, int tipoHabitacion) throws BadOptionException, NullNameException {
         Habitaciones habitaciones = selectorDeTipoHabitacion(tipoHabitacion);
         for (int i = 0; i < cantidadHabitaciones; i++) {
             switch (tipoHabitacion) {
@@ -69,12 +69,12 @@ public class Hotel implements InterfacePersistecia {
         guardarHabitaciones();
     }
 
-    public void crearEmpleado(String nombre, String apellido, int dni, String usuario, String email, String clave, TipoEmpleado tipoEmpleado) {
+    public void crearEmpleado(String nombre, String apellido, int dni, String usuario, String email, String clave, TipoEmpleado tipoEmpleado) throws NullNameException {
         empleados.add(new Empleado(nombre,apellido,dni,usuario,email,clave,tipoEmpleado));
         guardarEmpleados();
     }
 
-    public String contarEstadoHabitaciones(int tipoHabitacion) {
+    public String contarEstadoHabitaciones(int tipoHabitacion) throws BadOptionException {
         return selectorDeTipoHabitacion(tipoHabitacion).contarCantidadHabitacionesSegunEstado();
     }
 
@@ -83,7 +83,7 @@ public class Hotel implements InterfacePersistecia {
                 .append(habitacionesPresidenciales.listarHabitaciones()));
     }
 
-    public StringBuilder listarHabitacionesSegunTipo(int tipoHabitacion) {
+    public StringBuilder listarHabitacionesSegunTipo(int tipoHabitacion) throws BadOptionException {
         return selectorDeTipoHabitacion(tipoHabitacion).listarHabitaciones();
     }
 
@@ -115,7 +115,7 @@ public class Hotel implements InterfacePersistecia {
         };
     }
 
-    public StringBuilder listarSegunEstado(int tipoHabitacion, EstadoHabitacion estado) {
+    public StringBuilder listarSegunEstado(int tipoHabitacion, EstadoHabitacion estado) throws BadOptionException {
         return selectorDeTipoHabitacion(tipoHabitacion).listarHabitacionesSegunEstado(estado);
     }
 
@@ -151,7 +151,7 @@ public class Hotel implements InterfacePersistecia {
         return existe;
     }
 
-    public Pasajero buscarPasajeroConEseDNI(int dni) throws PersonaNoExisteException {// para mostrarDatos de una o mas personas (puede ser de las reservas no?)
+    public Pasajero buscarPasajeroConEseDNI(int dni) throws PersonaNoExisteException, BadDataException{// para mostrarDatos de una o mas personas (puede ser de las reservas no?)
         VerificacionesDeDatos.verificarDni(dni);
         Pasajero persona = null;
         for (Pasajero pasajero : pasajeros) {
@@ -168,7 +168,7 @@ public class Hotel implements InterfacePersistecia {
         return persona;
     }
 
-    public Persona buscarPersonaPorDni(int dni) throws PersonaNoExisteException {
+    public Persona buscarPersonaPorDni(int dni) throws PersonaNoExisteException,BadDataException {
         VerificacionesDeDatos.verificarDni(dni);
 
         for (Empleado empleado : empleados) {
@@ -186,7 +186,7 @@ public class Hotel implements InterfacePersistecia {
         throw new PersonaNoExisteException("Persona con el DNI: " + dni + " no existe.");
     }
 
-    public boolean existeEmpleadoConEseDNI(int dni) {
+    public boolean existeEmpleadoConEseDNI(int dni) throws BadDataException {
         VerificacionesDeDatos.verificarDni(dni);
         boolean existe = false;
         for (Empleado empleado : empleados) {
@@ -208,7 +208,7 @@ public class Hotel implements InterfacePersistecia {
     }
 
 
-    public void agregarPasajero(String nombre, String apellido, int dni, String direccion) {
+    public void agregarPasajero(String nombre, String apellido, int dni, String direccion) throws NullNameException {
         Pasajero pasajero = new Pasajero(nombre, apellido, dni, direccion);
         pasajeros.add(pasajero);
         guardarPasajeros();
@@ -279,7 +279,7 @@ public class Hotel implements InterfacePersistecia {
         }
     }
 
-    public void guardarPasajeros() {
+    public void guardarPasajeros() throws NullNameException {
         String arregloPasajeros = pasarListaDePasajerosAJSON();
         CreadorAJSON.uploadJSON(archivoPasajeros,arregloPasajeros);
     }
@@ -340,7 +340,7 @@ public class Hotel implements InterfacePersistecia {
         return arregloEmpleados.toString();
     }
 
-    public void guardarEmpleados() {
+    public void guardarEmpleados() throws NullNameException {
         String arregloEmpleados = pasarListaDeEmpleadosAJSON();
         CreadorAJSON.uploadJSON(archivoEmpleados,arregloEmpleados);
     }
@@ -355,12 +355,12 @@ public class Hotel implements InterfacePersistecia {
         return habitaciones;
     }
 
-    public void guardarHabitaciones() {
+    public void guardarHabitaciones() throws NullNameException {
         String arregloHabitaciones = todasLasHabitacionesAJson().toString();
         CreadorAJSON.uploadJSON(archivoHabitaciones,arregloHabitaciones);
     }
 
-    public void cargarJSONHabitaciones() {
+    public void cargarJSONHabitaciones() throws NullNameException {
         try {
             JSONObject habitacionesJson = new JSONObject(CreadorAJSON.downloadJSON(archivoHabitaciones));
 
@@ -370,8 +370,6 @@ public class Hotel implements InterfacePersistecia {
 
         } catch (IOException e) {
             System.out.println("Error al leer el archivo de habitaciones: " + e.getMessage());
-        } catch (BadOptionException e) {
-            System.out.println("Error al cargar habitaciones: " + e.getMessage());
         }
     }
 
@@ -442,7 +440,7 @@ public class Hotel implements InterfacePersistecia {
         return empleadoEnSistema.getDni();
     }
 
-    public boolean eliminarEmpleadoPorElDni(int dni) {
+    public boolean eliminarEmpleadoPorElDni(int dni) throws NullNameException {
         for (Empleado empleado : empleados) {
             if (empleado.getDni() == dni) {
                 empleados.remove(empleado);
@@ -453,7 +451,7 @@ public class Hotel implements InterfacePersistecia {
         return false;
     }
 
-    public void hacerBackup() {
+    public void hacerBackup() throws NullNameException {
         guardarPasajeros();
         guardarEmpleados();
         guardarHabitaciones();

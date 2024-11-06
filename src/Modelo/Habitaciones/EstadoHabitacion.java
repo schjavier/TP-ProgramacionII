@@ -19,7 +19,7 @@ public enum EstadoHabitacion {
     public static String retornarValoresDeEnum() {
         String todos = "";
         for (EstadoHabitacion valor : EstadoHabitacion.values()) {
-            todos = todos.concat(valor.ordinal() + ". " + valor.getEstado() + "\n");
+            todos = todos.concat(valor.ordinal()+1 + ". " + valor.getEstado() + "\n");
         }
         return todos;
     }

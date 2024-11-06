@@ -43,7 +43,7 @@ public final class CreadorAJSON {
         return datos;
     }
 
-    public static void cleanJSON(String nombre) throws IOException {
+    public static void cleanJSON(String nombre) throws IOException, NullNameException {
         if (nombre == null) {
             throw new NullNameException("El nombre no puede ser nulo!");
         }
