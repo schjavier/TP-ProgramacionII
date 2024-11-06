@@ -52,6 +52,14 @@ public class Hotel implements InterfacePersistecia {
     }
 
     /**
+     * Devuelve el nombre asignado al hotel
+     * @return un String que representa el nombre del hotel
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
      * Permite crear muchas habitaciones a la vez. Se crean todas como DISPONIBLE.
      * @param tipoHabitacion Un numero del 1 al x siendo x el ultimo tipo de habitacion que haya
      */

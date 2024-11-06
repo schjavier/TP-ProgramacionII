@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
+
 public class Main {
     public static Scanner teclado = new Scanner(System.in);
 
@@ -23,7 +25,7 @@ public class Main {
     }
 
     public static void menuInicio(Hotel hotel) throws BadOptionException, NullNameException, UsuarioNoAutorizadoException, BadDataException {
-        int opcion;
+        int opcion = 0;
 
         do {
 
@@ -33,7 +35,14 @@ public class Main {
             System.out.println("0. Salir");
 
             System.out.println("Ingrese una opcion: ");
-            opcion = Integer.parseInt(teclado.nextLine());
+
+            try {
+                String numeroIngresado = teclado.nextLine();
+                esSoloNumeros(numeroIngresado);
+                opcion = Integer.parseInt(numeroIngresado);
+            } catch (BadDataException e) {
+                System.out.println("Solo se aceptan números!");
+            }
 
             switch (opcion) {
                 case 1:
@@ -42,7 +51,7 @@ public class Main {
                             menuLogin(hotel);
                         }
 
-                        System.out.println("Bienvenido " + hotel.obtenerEmpleadoLogueado().getNombre() + "!");
+                        System.out.println("Bienvenido " + hotel.obtenerEmpleadoLogueado().getNombre() + " a " + hotel.getNombre() + "!");
 
                         if (hotel.obtenerEmpleadoLogueado().getTipo() == TipoEmpleado.ADMINISTRADOR) {
                             menuGestionAdmin(hotel);
@@ -121,7 +130,7 @@ public class Main {
             throw new UsuarioNoAutorizadoException("El usuario no tiene permisos para este menu");
         }
 
-        int opcion;
+        int opcion = 0;
 
         do {
             System.out.println("\n--- Menu del administrador ---");
@@ -136,7 +145,13 @@ public class Main {
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
-            opcion = Integer.parseInt(teclado.nextLine());
+            try {
+                String numeroIngresado = teclado.nextLine();
+                esSoloNumeros(numeroIngresado);
+                opcion = Integer.parseInt(numeroIngresado);
+            } catch (BadDataException e) {
+                System.out.println("Solo se aceptan números!");
+            }
 
             switch (opcion) {
                 case 1:
@@ -181,7 +196,7 @@ public class Main {
             throw new UsuarioNoAutorizadoException("El usuario no tiene permisos para este menu");
         }
 
-        int opcion;
+        int opcion = 0;
 
         do {
             System.out.println("\n--- Menu del recepcionista ---");
@@ -193,7 +208,13 @@ public class Main {
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
-            opcion = Integer.parseInt(teclado.nextLine());
+            try {
+                String numeroIngresado = teclado.nextLine();
+                esSoloNumeros(numeroIngresado);
+                opcion = Integer.parseInt(numeroIngresado);
+            } catch (BadDataException e) {
+                System.out.println("Solo se aceptan números!");
+            }
 
             switch (opcion) {
                 case 1:

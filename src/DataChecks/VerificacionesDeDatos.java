@@ -1,6 +1,7 @@
 package DataChecks;
 
 import Exceptions.BadDataException;
+import Exceptions.BadOptionException;
 import Modelo.Reserva.Reserva;
 
 import java.time.Instant;
@@ -76,6 +77,19 @@ public final class VerificacionesDeDatos {
     static public boolean tieneNumeros(String palabra) throws BadDataException {
         if (palabra.matches(".*\\d.*")) {
             throw new BadDataException("El texto introducido no debe tener numeros");
+        }
+        return true;
+    }
+
+    /**
+     * Revisa si un {@code String} tiene numeros.
+     * @param numeros Numeros representa un texto que contener únicamente numeros para alimentar un Integer.parseInt().
+     * @return Un booleano que siempre retorna true por si necesita poner esto en un if.
+     * @throws BadDataException Si la palabra contiene cualquier otra cosa que no sea un numero.
+     */
+    static public boolean esSoloNumeros(String numeros) throws BadDataException {
+        if (!numeros.matches("[0-9]+")) {
+            throw new BadDataException("El texto contiene letras o está vacío");
         }
         return true;
     }

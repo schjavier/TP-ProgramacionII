@@ -1,7 +1,10 @@
+import Exceptions.BadDataException;
 import Modelo.Habitaciones.EstadoHabitacion;
 import Modelo.Habitaciones.Habitacion;
 
 import java.util.Scanner;
+
+import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
 
 public class GestionHabitacion {
 
@@ -9,7 +12,7 @@ public class GestionHabitacion {
         System.out.println(habitacion);
 
         Scanner scanner = new Scanner(System.in);
-        int opcion;
+        int opcion = 0;
 
         do {
             System.out.println("\n--- Habitacion " + habitacion.getNroHabitacion() + " ---");
@@ -20,7 +23,14 @@ public class GestionHabitacion {
             System.out.println("5. Ver resumen de la habitacion");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
-            opcion = Integer.parseInt(scanner.nextLine());
+
+            try {
+                String numeroIngresado = scanner.nextLine();
+                esSoloNumeros(numeroIngresado);
+                opcion = Integer.parseInt(numeroIngresado);
+            } catch (BadDataException e) {
+                System.out.println("Solo se aceptan números!");
+            }
 
             switch (opcion) {
                 case 1:

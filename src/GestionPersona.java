@@ -1,3 +1,4 @@
+import Exceptions.BadDataException;
 import Exceptions.BadOptionException;
 import Exceptions.PersonaExisteException;
 import Modelo.Persona.Empleado;
@@ -6,13 +7,15 @@ import Modelo.Persona.Persona;
 
 import java.util.Scanner;
 
+import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
+
 
 public class GestionPersona {
     static Scanner teclado = new Scanner(System.in);
 
     public static <T extends Persona> void mostrarMenu(T persona, Hotel hotel) {
 
-        int opcion;
+        int opcion = 0;
 
         do {
             mostrarOpcionesComunes();
@@ -21,8 +24,16 @@ public class GestionPersona {
             } else if (persona instanceof Pasajero) {
                 mostrarOpcionesPasajero();
             }
+
             System.out.print("Seleccione una opción: ");
-            opcion = Integer.parseInt(teclado.nextLine());
+
+            try {
+                String numeroIngresado = teclado.nextLine();
+                esSoloNumeros(numeroIngresado);
+                opcion = Integer.parseInt(numeroIngresado);
+            } catch (BadDataException e) {
+                System.out.println("Solo se aceptan números!");
+            }
 
             switch (opcion) {
                 case 0:
