@@ -25,6 +25,7 @@ public class GestionPersona {
                 mostrarOpcionesPasajero();
             }
 
+            System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
             try {
@@ -33,6 +34,7 @@ public class GestionPersona {
                 opcion = Integer.parseInt(numeroIngresado);
             } catch (BadDataException e) {
                 System.out.println("Solo se aceptan números!");
+                opcion = 0;
             }
 
             switch (opcion) {
@@ -82,12 +84,11 @@ public class GestionPersona {
         System.out.println("5. Cambiar usuario");
         System.out.println("6. Cambiar email");
         System.out.println("7. Cambiar clave");
-        System.out.println("0. Salir");
+
     }
 
     public static void mostrarOpcionesPasajero() {
         System.out.println("5. Cambiar domicilio");
-        System.out.println("0. Salir");
     }
 
     public static void cambiarNombre(Persona persona) {

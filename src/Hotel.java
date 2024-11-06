@@ -123,6 +123,17 @@ public class Hotel implements InterfacePersistecia {
         };
     }
 
+    public void revisarCocinasHabitaciones() throws NullNameException {
+        habitacionesSuite.marcarTodasHabitacionesComoRevisadas();
+        habitacionesPresidenciales.marcarTodasHabitacionesComoRevisadas();
+        guardarHabitaciones();
+    }
+
+    public void revisarJacuzzisHabitaciones() throws NullNameException {
+        habitacionesPresidenciales.marcarTodasHabitacionesComoRevisadasJacuzzi();
+        guardarHabitaciones();
+    }
+
     public StringBuilder listarSegunEstado(int tipoHabitacion, EstadoHabitacion estado) throws BadOptionException {
         return selectorDeTipoHabitacion(tipoHabitacion).listarHabitacionesSegunEstado(estado);
     }

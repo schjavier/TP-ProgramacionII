@@ -42,6 +42,7 @@ public class Main {
                 opcion = Integer.parseInt(numeroIngresado);
             } catch (BadDataException e) {
                 System.out.println("Solo se aceptan números!");
+                opcion = 0; //para prevenir comportamientos inesperados
             }
 
             switch (opcion) {
@@ -151,6 +152,7 @@ public class Main {
                 opcion = Integer.parseInt(numeroIngresado);
             } catch (BadDataException e) {
                 System.out.println("Solo se aceptan números!");
+                opcion = 0;
             }
 
             switch (opcion) {
@@ -191,7 +193,7 @@ public class Main {
         } while (opcion != 0);
     }
 
-    static public void menuGestionRecepcionista(Hotel hotel) throws UsuarioNoAutorizadoException, BadOptionException {
+    static public void menuGestionRecepcionista(Hotel hotel) throws UsuarioNoAutorizadoException, BadOptionException, NullNameException {
         if (hotel.obtenerEmpleadoLogueado().getTipo() != TipoEmpleado.RECEPCIONISTA) {
             throw new UsuarioNoAutorizadoException("El usuario no tiene permisos para este menu");
         }
@@ -205,6 +207,8 @@ public class Main {
             System.out.println("3. Listar habitaciones de acuerdo a su tipo y estado");
             System.out.println("4. Obtener conteo total de habitaciones");
             System.out.println("5. Obtener un conteo de todas las habitaciones segun el estado");
+            System.out.println("6. Revisar cocinas de las habitaciones");
+            System.out.println("7. Revisar jacuzzis de las habitaciones");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -214,6 +218,7 @@ public class Main {
                 opcion = Integer.parseInt(numeroIngresado);
             } catch (BadDataException e) {
                 System.out.println("Solo se aceptan números!");
+                opcion = 0;
             }
 
             switch (opcion) {
@@ -235,6 +240,12 @@ public class Main {
                     break;
                 case 5:
                     contarHabitacionesEstado(hotel);
+                    break;
+                case 6:
+                    revisarCocinasHabitaciones(hotel);
+                    break;
+                case 7:
+                    revisarJacuzzisHabitaciones(hotel);
                     break;
                 case 0:
                     System.out.println("Saliendo...");
@@ -382,7 +393,7 @@ public class Main {
      * Muestra un menu para gestionar una habitacion segun el numero ingresado por teclado
      */
 
-    public static void gestionarHabitacion(Hotel hotel) throws HabitacionNoEncontradaException, BadOptionException {
+    public static void gestionarHabitacion(Hotel hotel) throws HabitacionNoEncontradaException, BadOptionException, NullNameException {
         Habitacion prueba = null;
 
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");
@@ -399,6 +410,7 @@ public class Main {
             throw new HabitacionNoEncontradaException("No existe la habitacion ingresada");
         } else {
             GestionHabitacion.mostrarMenu(prueba);
+            hotel.hacerBackup();
         }
     }
 
@@ -450,6 +462,16 @@ public class Main {
         } catch (BadDataException e) {
             System.out.println("No es un dni");
         }
+    }
+
+    public static void revisarCocinasHabitaciones(Hotel hotel) throws NullNameException {
+        hotel.revisarCocinasHabitaciones();
+        System.out.println("Revisión de cocinas completa!");
+    }
+
+    public static void revisarJacuzzisHabitaciones(Hotel hotel) throws NullNameException {
+        hotel.revisarJacuzzisHabitaciones();
+        System.out.println("Revisión de jacuzzis completa!");
     }
 
 }
