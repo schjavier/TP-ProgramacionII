@@ -11,12 +11,6 @@ public class HabitacionesStandard extends Habitaciones<HabitacionStandard>{
         super(TipoHabitacion.REGULAR);
     }
 
-    /* por ahora no hago esto */
-    @Override
-    void leerArchivoYcargarAMemoria() throws IOException, NullNameException {
-
-    }
-
     public JSONArray habitacionesAJson() {
         JSONArray jsonArray = new JSONArray();
         for (HabitacionStandard habitacion : this.getListaHabitaciones()) {

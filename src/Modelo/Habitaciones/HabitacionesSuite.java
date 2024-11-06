@@ -17,12 +17,6 @@ public class HabitacionesSuite extends Habitaciones<HabitacionSuite> {
         }
     }
 
-    /* por ahora no hago esto */
-    @Override
-    void leerArchivoYcargarAMemoria() throws IOException, NullNameException {
-
-    }
-
     public JSONArray habitacionesAJson() {
         JSONArray jsonArray = new JSONArray();
         for (HabitacionSuite habitacion : this.getListaHabitaciones()) {

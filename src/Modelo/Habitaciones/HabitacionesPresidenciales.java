@@ -23,12 +23,6 @@ public class HabitacionesPresidenciales extends Habitaciones<HabitacionPresidenc
         }
     }
 
-    /* por ahora no hago esto */
-    @Override
-    void leerArchivoYcargarAMemoria() throws IOException, NullNameException {
-
-    }
-
     public JSONArray habitacionesAJson() {
         JSONArray jsonArray = new JSONArray();
         for (HabitacionPresidencial habitacion : this.getListaHabitaciones()) {

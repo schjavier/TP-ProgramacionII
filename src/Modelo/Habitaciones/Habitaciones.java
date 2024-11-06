@@ -144,6 +144,4 @@ abstract public class Habitaciones<T extends Habitacion> {
 
         return cantidad.toString();
     }
-
-    abstract void leerArchivoYcargarAMemoria() throws IOException, NullNameException;
 }
