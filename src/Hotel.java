@@ -590,7 +590,7 @@ public class Hotel implements InterfacePersistencia {
                 // creo que no es necesaria, la dejo por las dudas
                 int id = jReserva.getInt("id");
 
-                int dniTitular = jReserva.getInt("titular");
+                int dniTitular = jReserva.getInt("dniTitular");
 
                 // creo que no es necesaria, la dejo por las dudas
                 boolean activa = jReserva.getBoolean("activa");
@@ -612,14 +612,13 @@ public class Hotel implements InterfacePersistencia {
         }
     }
 
-    public String mostrarReservaPorId(int id){
+    public String mostrarReservaPorId(int id) throws ReservaNoExisteException{
         int index = buscarReservaPorId(id);
         StringBuilder reserva =  new StringBuilder();
         if (index != -1){
             reserva.append(reservas.get(index).toString());
         } else {
-            // deberia lanzar una excepcion aca??
-            System.out.println("La reserva no existe!");
+            throw new ReservaNoExisteException("La reserva no existe!");
         }
 
         return reserva.toString();

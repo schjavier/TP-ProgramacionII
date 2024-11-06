@@ -262,7 +262,7 @@ public class Main {
                 System.out.println("0 - Salir");
                 opcion = Integer.parseInt(teclado.nextLine());
 
-                switch (opcion){
+                switch (opcion) {
                     case 1:
                         System.out.println("Ingrese el DNI del titular de la reserva");
                         int dniTitular = Integer.parseInt(teclado.nextLine());
@@ -273,8 +273,13 @@ public class Main {
                         LocalDate fechaInicio = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(teclado.nextLine()));
                         System.out.println("Ingrese fecha ( yyyy-mm-dd ) de final de la reserva");
                         LocalDate fechaFinal = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(teclado.nextLine()));
-                        // aca me lanza una excepcion por que el empleado no esta logueado.
-                        int guardadoPor = hotel.retornarDniEmpleadoLoggeado();
+
+                        //todo
+                        // aca me lanza una excepcion por que el empleado no esta logueado
+                        // Probar cuando el este implentado el login! ya que no deberia fallar...
+
+                        int guardadoPor = 23432123;
+                                //hotel.retornarDniEmpleadoLoggeado();
 
                         hotel.generarReserva(dniTitular, numeroHabitacion, fechaInicio, fechaFinal, guardadoPor);
                         break;
@@ -285,54 +290,57 @@ public class Main {
                     case 3:
                         System.out.println("Ingrese el Id de la reserva que quiere modificar");
                         int id = Integer.parseInt(teclado.nextLine());
-                        // debo agarrar la excepcion!
                         int eleccion = -1;
                         do {
 
-                        System.out.println("Aqui esta la reserva: " + hotel.mostrarReservaPorId(id) + "que atributo quiere modificar?");
-                        System.out.println("1 - Cambiar el dni del titular");
-                        System.out.println("2 - Agregar un pasajero a la reserva");
-                        System.out.println("3 - Cambiar el numero de habitacion");
-                        System.out.println("4 - Cambiar fecha de inicio");
-                        System.out.println("5 - Cambiar fecha de finalización");
-                        System.out.println("0 - Salir");
-                        eleccion = Integer.parseInt(teclado.nextLine());
+                            try {
 
-                            switch (eleccion) {
-                                case 1:
-                                    System.out.println("ingrese el dni: ");
-                                    int nuevoDni = Integer.parseInt(teclado.nextLine());
-                                    hotel.modificarTitularReserva(id, nuevoDni);
-                                    break;
-                                case 2:
-                                    System.out.println("Ingrese el dni del pasajero");
-                                    int dniPasajero = Integer.parseInt(teclado.nextLine());
-                                    hotel.agregarPasajeroAReserva(id, dniPasajero);
-                                    break;
-                                case 3:
-                                    System.out.println("Ingrese el nuevo número de habitación");
-                                    int nroHabitacion = Integer.parseInt(teclado.nextLine());
-                                    hotel.cambiarNroHabitacion(id, nroHabitacion);
-                                    break;
-                                case 4:
-                                    System.out.println("Ingrese la nueva fecha de inico (yyyy-mm-dd)");
-                                    LocalDate nuevaFechaInicio = LocalDate.parse(teclado.nextLine());
-                                    hotel.cambiarFechaInicio(id, nuevaFechaInicio);
-                                    break;
-                                case 5:
-                                    System.out.println("Ingrese la nueva fecha de finalización (yyyy-mm-dd)");
-                                    LocalDate nuevaFechaFinal = LocalDate.parse(teclado.nextLine());
-                                    hotel.cambiarFechaInicio(id, nuevaFechaFinal);
-                                    break;
+                                System.out.println("Aqui esta la reserva: " + hotel.mostrarReservaPorId(id) + "\nQue atributo quiere modificar?");
+                                System.out.println("1 - Cambiar el dni del titular");
+                                System.out.println("2 - Agregar un pasajero a la reserva");
+                                System.out.println("3 - Cambiar el numero de habitacion");
+                                System.out.println("4 - Cambiar fecha de inicio");
+                                System.out.println("5 - Cambiar fecha de finalización");
+                                System.out.println("0 - Salir");
+                                eleccion = Integer.parseInt(teclado.nextLine());
+
+                                switch (eleccion) {
+                                    case 1:
+                                        System.out.println("ingrese el dni: ");
+                                        int nuevoDni = Integer.parseInt(teclado.nextLine());
+                                        hotel.modificarTitularReserva(id, nuevoDni);
+                                        break;
+                                    case 2:
+                                        System.out.println("Ingrese el dni del pasajero");
+                                        int dniPasajero = Integer.parseInt(teclado.nextLine());
+                                        hotel.agregarPasajeroAReserva(id, dniPasajero);
+                                        break;
+                                    case 3:
+                                        System.out.println("Ingrese el nuevo número de habitación");
+                                        int nroHabitacion = Integer.parseInt(teclado.nextLine());
+                                        hotel.cambiarNroHabitacion(id, nroHabitacion);
+                                        break;
+                                    case 4:
+                                        System.out.println("Ingrese la nueva fecha de inico (yyyy-mm-dd)");
+                                        LocalDate nuevaFechaInicio = LocalDate.parse(teclado.nextLine());
+                                        hotel.cambiarFechaInicio(id, nuevaFechaInicio);
+                                        break;
+                                    case 5:
+                                        System.out.println("Ingrese la nueva fecha de finalización (yyyy-mm-dd)");
+                                        LocalDate nuevaFechaFinal = LocalDate.parse(teclado.nextLine());
+                                        hotel.cambiarFechaInicio(id, nuevaFechaFinal);
+                                        break;
 
                                 }
-                            } while (eleccion != 0);
 
+                            } catch (ReservaNoExisteException ex) {
+                                System.out.println(ex.getMessage());
+                            }
 
-                        break;
+                            break;
 
+                        }while (eleccion != 0) ;
                 }
-
             } while (opcion != 0);
 
 

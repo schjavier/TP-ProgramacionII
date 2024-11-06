@@ -105,18 +105,18 @@ public class Reserva {
         JSONObject reserva = new JSONObject();
         JSONArray dniPasajeros = new JSONArray();
 
-        reserva.put("Id", this.id);
-        reserva.put("DniTitular", this.dniTitular);
+        reserva.put("id", this.id);
+        reserva.put("dniTitular", this.dniTitular);
 
         for (Integer dniPasajero : this.pasajeros){
             dniPasajeros.put(dniPasajero);
         }
-        reserva.put("Pasajeros", dniPasajeros);
-        reserva.put("Activa", this.activa);
-        reserva.put("Habitacion", this.habitacion);
-        reserva.put("FechaInicio", this.fechaInicio);
-        reserva.put("FechaFinal", this.fechaFinal);
-        reserva.put("GuardadoPor", this.guardadoPor);
+        reserva.put("pasajeros", dniPasajeros);
+        reserva.put("activa", this.activa);
+        reserva.put("habitacion", this.habitacion);
+        reserva.put("fechaInicio", this.fechaInicio);
+        reserva.put("fechaFinal", this.fechaFinal);
+        reserva.put("guardadoPor", this.guardadoPor);
 
         return reserva;
     }
