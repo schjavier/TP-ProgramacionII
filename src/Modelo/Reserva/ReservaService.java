@@ -4,6 +4,8 @@ import Exceptions.NullNameException;
 import JSONCreator.CreadorAJSON;
 import Persistencia.InterfacePersistencia;
 
+import java.io.IOException;
+
 /**
  *
  * Clase que se encargara de llevar y traer informacion desde los archivos a la memoria, y viceversa
@@ -30,9 +32,9 @@ public class ReservaService implements InterfacePersistencia {
         boolean respuesta = false;
         try {
             CreadorAJSON.uploadJSON(nombreArchivo, contenido);
-
-        } catch (NullNameException ex){
-            ex.getMessage();
+        } catch (IOException e)
+        {
+            System.out.println("Error en persistir reserva!");
         }
 
         return respuesta;

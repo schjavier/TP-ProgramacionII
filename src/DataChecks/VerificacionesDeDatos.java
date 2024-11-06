@@ -100,9 +100,12 @@ public final class VerificacionesDeDatos {
     public static boolean intentoReservaEstaDentroDeGuardada(Reserva intento, Reserva guardada) //
     {
         boolean respuesta = false;
-        if(intento.getFechaInicio().isAfter(guardada.getFechaInicio()) && intento.getFechaFinal().isBefore(guardada.getFechaFinal()))
+        if(intento.getHabitacion() == guardada.getHabitacion())
         {
-            respuesta = true;
+            if(intento.getFechaInicio().isAfter(guardada.getFechaInicio()) && intento.getFechaFinal().isBefore(guardada.getFechaFinal()))
+            {
+                respuesta = true;
+            }
         }
         return respuesta;
     }
@@ -204,4 +207,13 @@ public final class VerificacionesDeDatos {
         return true;
     }
 
+    public static boolean fechaAntesDeHoy(LocalDate intento)
+    {
+        boolean antesDeHoy = false;
+        if(intento.isBefore(LocalDate.now()))
+        {
+            antesDeHoy = true;
+        }
+        return antesDeHoy;
+    }
 }

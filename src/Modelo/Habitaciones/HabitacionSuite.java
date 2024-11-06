@@ -19,4 +19,11 @@ public class HabitacionSuite extends Habitacion implements TieneCocina {
     public void marcarMantenimientoHechoEnCocina() {
         this.ultimaRevisionCocina = LocalDateTime.now();
     }
+
+    @Override
+    public String toString() {
+        return "Habitacion Suite: \n" + super.toString() +
+                "Ultima revision cocina=" + ultimaRevisionCocina +
+                '}';
+    }
 }

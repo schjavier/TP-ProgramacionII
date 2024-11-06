@@ -22,4 +22,11 @@ public class HabitacionPresidencial extends Habitacion implements TieneCocina {
         this.ultimaRevisionJacuzzi = LocalDateTime.now();
     }
 
+    @Override
+    public String toString() {
+        return "Habitacion Presidencial: \n" + super.toString() +
+                "Ultima revision cocina=" + ultimaRevisionCocina +
+                ", Ultima revision jacuzzi=" + ultimaRevisionJacuzzi +
+                '}';
+    }
 }

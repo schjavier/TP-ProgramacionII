@@ -33,6 +33,16 @@ public class Reserva {
         this.guardadoPor = guardadoPor;
     }
 
+    public Reserva(int dniTitular, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor)
+    {
+        this.dniTitular = dniTitular;
+        this.pasajeros = new ArrayList<>();
+        pasajeros.add(dniTitular);
+        this.fechaInicio = fechaInicio;
+        this.fechaFinal = fechaFinal;
+        this.guardadoPor = guardadoPor;
+    }
+
     // en la clase reserva agregarmos los pasajeros, con un metodo para eso.
 
     public int getId() {
@@ -86,6 +96,22 @@ public class Reserva {
 
     public void setFechaFinal(LocalDate fechaFinal) {
         this.fechaFinal = fechaFinal; // aca podria ponerse una excepcion
+    }
+
+    public void agregarPersonaAReserva(Integer dni)
+    {
+        pasajeros.add(dni);
+    }
+
+    public int getCantidadPersonasEnReserva()
+    {
+        return pasajeros.size();
+    }
+
+    public void asignarHabitacionAReservaYLlenarDatosFaltantes(int numhabitacion)
+    {
+        this.id = ++contadorIdReserva;
+        setHabitacion(numhabitacion);
     }
 
     @Override

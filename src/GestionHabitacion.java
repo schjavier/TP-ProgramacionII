@@ -9,6 +9,7 @@ public class GestionHabitacion {
         Scanner scanner = new Scanner(System.in);
         int opcion;
 
+        System.out.println(habitacion);
         do {
             System.out.println("\n--- Habitacion " + habitacion.getNroHabitacion() + " ---");
             System.out.println("1. Ver estado de la habitación");

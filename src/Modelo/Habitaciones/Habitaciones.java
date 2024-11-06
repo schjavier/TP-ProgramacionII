@@ -103,7 +103,7 @@ abstract public class Habitaciones<T extends Habitacion> {
      * @return
      * @throws HabitacionNoEncontradaException
      */
-    public T traerHabitacionSegunId(int numHabitacion) throws HabitacionNoEncontradaException
+    public T traerHabitacionSegunId(int numHabitacion)
     {
         T room = null;
         for(T habitacion : listaHabitaciones)
@@ -112,11 +112,6 @@ abstract public class Habitaciones<T extends Habitacion> {
             {
                 room = habitacion;
             }
-        }
-
-        if(room == null)
-        {
-            throw new HabitacionNoEncontradaException("No hay ninguna habitación con ese numero");
         }
 
         return room;
@@ -171,5 +166,12 @@ abstract public class Habitaciones<T extends Habitacion> {
         return nombrearchivo;
     }
 
+    public ArrayList<T> retornarLista()
+    {
+        return listaHabitaciones;
+    }
+
+
     abstract void leerArchivoYcargarAMemoria() throws IOException, NullNameException;
+
 }
