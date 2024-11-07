@@ -1,11 +1,5 @@
 package Modelo.Habitaciones;
 
-import Exceptions.HabitacionNoEncontradaException;
-import Exceptions.NullNameException;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 

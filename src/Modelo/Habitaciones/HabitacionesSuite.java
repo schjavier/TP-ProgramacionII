@@ -1,10 +1,7 @@
 package Modelo.Habitaciones;
 
-import Exceptions.NullNameException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 public class HabitacionesSuite extends Habitaciones<HabitacionSuite> {
     public HabitacionesSuite() {

@@ -1,8 +1,6 @@
 package JSONCreator;
 
-
 import Exceptions.NullNameException;
-
 import java.io.*;
 
 public final class CreadorAJSON {

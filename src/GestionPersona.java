@@ -4,9 +4,7 @@ import Exceptions.PersonaExisteException;
 import Modelo.Persona.Empleado;
 import Modelo.Persona.Pasajero;
 import Modelo.Persona.Persona;
-
 import java.util.Scanner;
-
 import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
 
 

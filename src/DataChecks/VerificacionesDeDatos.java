@@ -1,10 +1,7 @@
 package DataChecks;
 
 import Exceptions.BadDataException;
-import Exceptions.BadOptionException;
 import Modelo.Reserva.Reserva;
-
-import java.time.Instant;
 import java.time.LocalDate;
 
 public final class VerificacionesDeDatos {
