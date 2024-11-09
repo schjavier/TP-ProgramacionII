@@ -1,6 +1,6 @@
 package Persistencia;
 
-public interface InterfacePersistecia {
+public interface InterfacePersistencia {
 
     boolean persistir(String contenido);
 

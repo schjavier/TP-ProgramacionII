@@ -42,4 +42,11 @@ public class HabitacionSuite extends Habitacion implements TieneCocina {
         habitacion.put("ultimaRevisionCocina", ultimaRevisionCocina.format(formatter));
         return habitacion;
     }
+
+    @Override
+    public String toString() {
+        return "Habitacion Suite: \n" + super.toString() +
+                "Ultima revision cocina=" + ultimaRevisionCocina +
+                '}';
+    }
 }

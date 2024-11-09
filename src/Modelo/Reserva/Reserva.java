@@ -31,6 +31,16 @@ public class Reserva {
         this.guardadoPor = guardadoPor;
     }
 
+    public Reserva(int dniTitular, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor)
+    {
+        this.dniTitular = dniTitular;
+        this.pasajeros = new ArrayList<>();
+        pasajeros.add(dniTitular);
+        this.fechaInicio = fechaInicio;
+        this.fechaFinal = fechaFinal;
+        this.guardadoPor = guardadoPor;
+    }
+
     // en la clase reserva agregarmos los pasajeros, con un metodo para eso.
 
     public int getId() {
@@ -86,6 +96,22 @@ public class Reserva {
         this.fechaFinal = fechaFinal; // aca podria ponerse una excepcion
     }
 
+    public void agregarPersonaAReserva(Integer dni)
+    {
+        pasajeros.add(dni);
+    }
+
+    public int getCantidadPersonasEnReserva()
+    {
+        return pasajeros.size();
+    }
+
+    public void asignarHabitacionAReservaYLlenarDatosFaltantes(int numhabitacion)
+    {
+        this.id = ++contadorIdReserva;
+        setHabitacion(numhabitacion);
+    }
+
     @Override
     public String toString() {
         return "Reserva {" +
@@ -103,18 +129,18 @@ public class Reserva {
         JSONObject reserva = new JSONObject();
         JSONArray dniPasajeros = new JSONArray();
 
-        reserva.put("Id", this.id);
-        reserva.put("DniTitular", this.dniTitular);
+        reserva.put("id", this.id);
+        reserva.put("dniTitular", this.dniTitular);
 
         for (Integer dniPasajero : this.pasajeros){
             dniPasajeros.put(dniPasajero);
         }
-        reserva.put("Pasajeros", dniPasajeros);
-        reserva.put("Activa", this.activa);
-        reserva.put("Habitacion", this.habitacion);
-        reserva.put("FechaInicio", this.fechaInicio);
-        reserva.put("FechaFinal", this.fechaFinal);
-        reserva.put("GuardadoPor", this.guardadoPor);
+        reserva.put("pasajeros", dniPasajeros);
+        reserva.put("activa", this.activa);
+        reserva.put("habitacion", this.habitacion);
+        reserva.put("fechaInicio", this.fechaInicio);
+        reserva.put("fechaFinal", this.fechaFinal);
+        reserva.put("guardadoPor", this.guardadoPor);
 
         return reserva;
     }

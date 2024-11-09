@@ -1,5 +1,9 @@
 package Modelo.Habitaciones;
 
+import Exceptions.HabitacionNoEncontradaException;
+import Exceptions.NullNameException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -138,4 +142,17 @@ abstract public class Habitaciones<T extends Habitacion> {
 
         return cantidad.toString();
     }
+
+    public String getNombrearchivo() {
+        return nombrearchivo;
+    }
+
+    public ArrayList<T> retornarLista()
+    {
+        return listaHabitaciones;
+    }
+
+
+    abstract void leerArchivoYcargarAMemoria() throws IOException, NullNameException;
+
 }

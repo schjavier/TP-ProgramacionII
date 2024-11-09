@@ -13,6 +13,7 @@ public class GestionHabitacion {
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;
 
+        System.out.println(habitacion);
         do {
             System.out.println("\n--- Habitacion " + habitacion.getNroHabitacion() + " ---");
             mostrarOpcionesComunes();
