@@ -4,21 +4,22 @@ import JSONCreator.CreadorAJSON;
 import Modelo.Habitaciones.*;
 import Modelo.Persona.Empleado;
 import Modelo.Persona.Pasajero;
+import Modelo.Persona.Persona;
 import Modelo.Persona.TipoEmpleado;
 import Modelo.Reserva.Reserva;
 import Modelo.Reserva.ReservaService;
-import Persistencia.InterfacePersistecia;
+import Persistencia.InterfacePersistencia;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class Hotel implements InterfacePersistecia {
+public class Hotel implements InterfacePersistencia {
+
     private String nombre;
-    private Empleado empleado_en_sistema = null;
+    private Empleado empleadoEnSistema = null;
 
     private final HabitacionesStandard habitacionesStandard = new HabitacionesStandard();
     private final HabitacionesSuite habitacionesSuite = new HabitacionesSuite();
@@ -30,8 +31,9 @@ public class Hotel implements InterfacePersistecia {
     private final ArrayList<Reserva> reservas = new ArrayList<>();
     private final ReservaService reservaService = new ReservaService();
 
-    private final String archivopasajeros = "Pasajeros.json";
-    private final String archivoempleados = "Empleados.json";
+    private final String archivoPasajeros = "Pasajeros.json";
+    private final String archivoEmpleados = "Empleados.json";
+    private final String archivoHabitaciones = "Habitaciones.json";
 
 
     public Hotel(String nombre) {
@@ -40,29 +42,57 @@ public class Hotel implements InterfacePersistecia {
         try {
             cargarJSONPasajeros();
             cargarJSONEmpleados();
+            cargarJSONHabitaciones();
+            cargarJSONReservas();
         } catch (NullNameException e) {
-            throw new NullNameException(e.getMessage());
+            System.out.println("Nombre nulo.");
         }
+    }
+
+    /**
+     * Devuelve el nombre asignado al hotel
+     * @return un String que representa el nombre del hotel
+     */
+    public String getNombre() {
+        return nombre;
     }
 
     /**
      * Permite crear muchas habitaciones a la vez. Se crean todas como DISPONIBLE.
      * @param tipoHabitacion Un numero del 1 al x siendo x el ultimo tipo de habitacion que haya
      */
-    public void crearHabitaciones(int cantidadHabitaciones, int capacidadMaxima, int tipoHabitacion) {
-        Habitaciones habitaciones = selectorDeTipoHabitacion(tipoHabitacion);
-        for (int i = 0; i < cantidadHabitaciones; i++) {
-            switch (tipoHabitacion) {
-                case 1 -> habitaciones.agregarHabitacion(new HabitacionStandard(capacidadMaxima));
-                case 2 -> habitaciones.agregarHabitacion(new HabitacionSuite(capacidadMaxima));
-                case 3 -> habitaciones.agregarHabitacion(new HabitacionPresidencial(capacidadMaxima));
-                default -> throw new BadOptionException("Elegir una opcion correcta!!");
+    public void crearHabitaciones(int cantidadHabitaciones, int capacidadMaxima, int tipoHabitacion) throws BadOptionException{
+        Habitaciones habitaciones = null;
+        try {
+            habitaciones = selectorDeTipoHabitacion(tipoHabitacion);
+
+            for (int i = 0; i < cantidadHabitaciones; i++) {
+                switch (tipoHabitacion) {
+                    case 1 -> habitaciones.agregarHabitacion(new HabitacionStandard(capacidadMaxima));
+                    case 2 -> habitaciones.agregarHabitacion(new HabitacionSuite(capacidadMaxima));
+                    case 3 -> habitaciones.agregarHabitacion(new HabitacionPresidencial(capacidadMaxima));
+                }
             }
+        } catch (BadOptionException e) {
+            throw new BadOptionException("Ese tipo de habitacion no existe!");
         }
+
+        guardarHabitaciones();
+    }
+
+    public void crearEmpleado(String nombre, String apellido, int dni, String usuario, String email, String clave, TipoEmpleado tipoEmpleado) throws NullNameException {
+        empleados.add(new Empleado(nombre,apellido,dni,usuario,email,clave,tipoEmpleado));
+        guardarEmpleados();
     }
 
     public String contarEstadoHabitaciones(int tipohabitacion) {
-        return selectorDeTipoHabitacion(tipohabitacion).contarCantidadHabitacionesSegunEstado();
+        String resp = "";
+        try {
+            resp = selectorDeTipoHabitacion(tipohabitacion).contarCantidadHabitacionesSegunEstado();
+        } catch (BadOptionException e) {
+            resp = e.getMessage();
+        }
+        return resp;
     }
 
     public StringBuilder listarHabitaciones() {
@@ -71,7 +101,13 @@ public class Hotel implements InterfacePersistecia {
     }
 
     public StringBuilder listarHabitacionesSegunTipo(int tipohabitacion) {
-        return selectorDeTipoHabitacion(tipohabitacion).listarHabitaciones();
+        StringBuilder todos = new StringBuilder();
+        try {
+            todos = selectorDeTipoHabitacion(tipohabitacion).listarHabitaciones();
+        } catch (BadOptionException e) {
+            todos.append(e.getMessage());
+        }
+        return todos;
     }
 
     //Que elimine habitaciones solo con el numero
@@ -89,12 +125,12 @@ public class Hotel implements InterfacePersistecia {
 
 
     /**
-     * @param tipohabitacion Un numero del 1 al x siendo x el ultimo tipo de habitacion que haya
+     * @param tipoHabitacion Un numero del 1 al x siendo x el ultimo tipo de habitacion que haya
      * @return La lista que en la que se trabajara
      * @throws BadOptionException En el caso de que el id de tipo habitacion (lista) no este dentro del switch
      */
-    public Habitaciones selectorDeTipoHabitacion(int tipohabitacion) throws BadOptionException {
-        return switch (tipohabitacion) {
+    public Habitaciones selectorDeTipoHabitacion(int tipoHabitacion) throws BadOptionException {
+        return switch (tipoHabitacion) {
             case 1 -> habitacionesStandard;
             case 2 -> habitacionesSuite;
             case 3 -> habitacionesPresidenciales;
@@ -102,12 +138,47 @@ public class Hotel implements InterfacePersistecia {
         };
     }
 
-    public StringBuilder listarSegunEstado(int tipohabitacion, EstadoHabitacion estado) {
-        return selectorDeTipoHabitacion(tipohabitacion).listarHabitacionesSegunEstado(estado);
+    public void revisarCocinasHabitaciones() throws NullNameException {
+        habitacionesSuite.marcarTodasHabitacionesComoRevisadas();
+        habitacionesPresidenciales.marcarTodasHabitacionesComoRevisadas();
+        guardarHabitaciones();
     }
 
-    public boolean existePasajeroConEseDNI(int dni) throws BadDataException // para hacer reservas o alguna otra cosa
-    {
+    public void revisarJacuzzisHabitaciones() throws NullNameException {
+        habitacionesPresidenciales.marcarTodasHabitacionesComoRevisadasJacuzzi();
+        guardarHabitaciones();
+    }
+
+    public StringBuilder listarSegunEstado(int tipohabitacion, EstadoHabitacion estado) {
+        StringBuilder todos = new StringBuilder();
+        try {
+            todos = selectorDeTipoHabitacion(tipohabitacion).listarHabitacionesSegunEstado(estado);
+        } catch (BadOptionException e) {
+            todos.append(e.getMessage());
+        }
+        return todos;
+    }
+
+    public int obtenerCantidadEmpleados() {
+        return empleados.size();
+    }
+
+    public StringBuilder verEmpleados() {
+        StringBuilder resultado = new StringBuilder("Lista de empleados: \n\n");
+
+        for (Empleado empleado: empleados) {
+            resultado.append(empleado.toString());
+            resultado.append("\n");
+        }
+
+        return resultado;
+    }
+
+    public ArrayList<Pasajero> obtenerPasajeros() {
+        return pasajeros;
+    }
+
+    public boolean existePasajeroConEseDNI(int dni) throws BadDataException { // para hacer reservas o alguna otra cosa
         VerificacionesDeDatos.verificarDni(dni);
 
         boolean existe = false;
@@ -120,7 +191,7 @@ public class Hotel implements InterfacePersistecia {
         return existe;
     }
 
-    public Pasajero buscarPasajeroConEseDNI(int dni) throws PersonaNoExisteException // para mostrarDatos de una o mas personas (puede ser de las reservas no?)
+    public Pasajero buscarPasajeroConEseDNI(int dni) throws PersonaNoExisteException, BadDataException // para mostrarDatos de una o mas personas (puede ser de las reservas no?)
     {
         VerificacionesDeDatos.verificarDni(dni);
         Pasajero persona = null;
@@ -132,13 +203,31 @@ public class Hotel implements InterfacePersistecia {
         }
 
         if (persona == null) {
-            throw new PersonaNoExisteException("Persona con el DNI: " + dni + " no existe, por favor cargar persona con ese dni de nuevo.");
+            throw new PersonaNoExisteException("Persona con el DNI: " + dni + " no existe, por favor cargar persona con ese dni");
         }
 
         return persona;
     }
 
-    public boolean existeEmpleadoConEseDNI(int dni) {
+    public Persona buscarPersonaPorDni(int dni) throws PersonaNoExisteException,BadDataException {
+        VerificacionesDeDatos.verificarDni(dni);
+
+        for (Empleado empleado : empleados) {
+            if (empleado.getDni() == dni) {
+                return empleado;
+            }
+        }
+
+        for (Pasajero pasajero : pasajeros) {
+            if (pasajero.getDni() == dni) {
+                return pasajero;
+            }
+        }
+
+        throw new PersonaNoExisteException("Persona con el DNI: " + dni + " no existe.");
+    }
+
+    public boolean existeEmpleadoConEseDNI(int dni) throws BadDataException {
         VerificacionesDeDatos.verificarDni(dni);
         boolean existe = false;
         for (Empleado empleado : empleados) {
@@ -151,7 +240,7 @@ public class Hotel implements InterfacePersistecia {
     }
 
 
-    public void verSiElDniEstaCargardo(int dni) throws PersonaExisteException, BadDataException {
+    public void verSiElDniEstaCargado(int dni) throws PersonaExisteException, BadDataException {
         VerificacionesDeDatos.verificarDni(dni);
 
         if (existeEmpleadoConEseDNI(dni) || existePasajeroConEseDNI(dni)) {
@@ -163,7 +252,11 @@ public class Hotel implements InterfacePersistecia {
     public void agregarPasajero(String nombre, String apellido, int dni, String direccion) {
         Pasajero pasajero = new Pasajero(nombre, apellido, dni, direccion);
         pasajeros.add(pasajero);
-        CreadorAJSON.uploadJSON(archivopasajeros,pasarListaDePersonasAJSON());
+        try {
+            guardarPasajeros();
+        } catch (IOException e) {
+            System.out.println("Error en archivo!");
+        }
     }
 
     public int obtenerNroHabitaciones() {
@@ -203,66 +296,75 @@ public class Hotel implements InterfacePersistecia {
         return total;
     }
 
-    public void cargarJSONPasajeros() throws NullNameException
-    {
+    public void cargarJSONPasajeros() throws NullNameException {
         try {
-            JSONArray pasajerosjson = new JSONArray(CreadorAJSON.downloadJSON(archivopasajeros));
+            JSONArray pasajerosJson = new JSONArray(CreadorAJSON.downloadJSON(archivoPasajeros));
 
-            for(int i = 0;i<pasajerosjson.length();i++)
-            {
-                JSONObject jsonpasajero = pasajerosjson.getJSONObject(i);
-                String nombre = jsonpasajero.getString("Nombre");
-                String apellido = jsonpasajero.getString("Apellido");
-                int dni = jsonpasajero.getInt("Dni");
-                String domicilio = jsonpasajero.getString("Domicilio");
+            for (int i = 0; i < pasajerosJson.length(); i++) {
+                JSONObject jsonPasajero = pasajerosJson.getJSONObject(i);
+                String nombre = jsonPasajero.getString("Nombre");
+                String apellido = jsonPasajero.getString("Apellido");
+                int dni = jsonPasajero.getInt("Dni");
+                String domicilio = jsonPasajero.getString("Domicilio");
 
                 try {
                     VerificacionesDeDatos.verificarDni(dni);
-                    Pasajero pasajeronew = new Pasajero(nombre,apellido,dni,domicilio);
-                    pasajeros.add(pasajeronew);
+                    Pasajero pasajeroNew = new Pasajero(nombre, apellido, dni, domicilio);
+                    pasajeros.add(pasajeroNew);
                 } catch (BadDataException e) {
                     System.out.println("Error en persona" + nombre + " " + apellido + e.getMessage());
                 }
             }
 
         } catch (IOException e) {
-            CreadorAJSON.uploadJSON(archivopasajeros,"[]");
+            try {
+                CreadorAJSON.uploadJSON(archivoPasajeros, "[]");
+            } catch (IOException ex) {
+                System.out.println("Error en archivo pasajeros!");
+            }
             System.out.println("Creando archivo...");
-        } catch (NullNameException e)
-        {
-            throw new NullNameException(e.getMessage());
         }
     }
 
-    public String pasarListaDePersonasAJSON()
-    {
-        JSONArray arreglopasajeros = new JSONArray();
-        for(Pasajero pasajero : pasajeros)
-        {
-            arreglopasajeros.put(pasajero.toJSON());
-        }
-        return arreglopasajeros.toString();
+    public void guardarPasajeros() throws NullNameException {
+        String arregloPasajeros = pasarListaDePasajerosAJSON();
+        CreadorAJSON.uploadJSON(archivoPasajeros,arregloPasajeros);
     }
 
-    public void cargarJSONEmpleados() throws NullNameException
-    {
+    public String pasarListaDePasajerosAJSON() {
+        JSONArray arregloPasajeros = new JSONArray();
+        for (Pasajero pasajero : pasajeros) {
+            arregloPasajeros.put(pasajero.toJSON());
+        }
+        return arregloPasajeros.toString();
+    }
+
+    public boolean existeUsuario(String username) {
+        for (Empleado empleado : empleados) {
+            if (empleado.getUsuario().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void cargarJSONEmpleados() throws NullNameException {
         try {
-            JSONArray empleosjson = new JSONArray(CreadorAJSON.downloadJSON(archivoempleados));
-            for(int i = 0;i<empleosjson.length();i++)
-            {
-                JSONObject jsonpasajero = empleosjson.getJSONObject(i);
-                String nombre = jsonpasajero.getString("Nombre");
-                String apellido = jsonpasajero.getString("Apellido");
-                int dni = jsonpasajero.getInt("Dni");
+            JSONArray empleadosJson = new JSONArray(CreadorAJSON.downloadJSON(archivoEmpleados));
+            for (int i = 0; i < empleadosJson.length(); i++) {
+                JSONObject jsonEmpleados = empleadosJson.getJSONObject(i);
+                String nombre = jsonEmpleados.getString("Nombre");
+                String apellido = jsonEmpleados.getString("Apellido");
+                int dni = jsonEmpleados.getInt("Dni");
 
-                String usuario = jsonpasajero.getString("Usuario");
-                String clave = jsonpasajero.getString("Clave");
-                String email = jsonpasajero.getString("Email");
-                TipoEmpleado tipohabitacion = jsonpasajero.getEnum(TipoEmpleado.class,"TipoEmpleado");
+                String usuario = jsonEmpleados.getString("Usuario");
+                String email = jsonEmpleados.getString("Email");
+                String clave = jsonEmpleados.getString("Clave");
+                TipoEmpleado tipoEmpleado = jsonEmpleados.getEnum(TipoEmpleado.class, "TipoEmpleado");
 
                 try {
                     VerificacionesDeDatos.verificarDni(dni);
-                    Empleado empleado = new Empleado(nombre,apellido,dni,usuario,clave,email,tipohabitacion);
+                    Empleado empleado = new Empleado(nombre, apellido, dni, usuario, email, clave, tipoEmpleado);
                     empleados.add(empleado);
                 } catch (BadDataException e) {
                     System.out.println("Error en persona" + nombre + " " + apellido + e.getMessage());
@@ -270,69 +372,138 @@ public class Hotel implements InterfacePersistecia {
             }
 
         } catch (IOException e) {
-            CreadorAJSON.uploadJSON(archivoempleados,"[]");
+            try {
+                CreadorAJSON.uploadJSON(archivoEmpleados, "[]");
+            } catch (IOException ex) {
+                System.out.println("Error en archivo empleados!");
+            }
             System.out.println("Creando archivo...");
-        } catch (NullNameException e)
-        {
-            throw new NullNameException(e.getMessage());
         }
     }
 
-    public String pasarListaDeEmpleadosAJSON()
-    {
-        JSONArray arregloempleados = new JSONArray();
-        for(Empleado empleado : empleados)
-        {
-            arregloempleados.put(empleado.toJSON());
+    public String pasarListaDeEmpleadosAJSON() {
+        JSONArray arregloEmpleados = new JSONArray();
+        for (Empleado empleado : empleados) {
+            arregloEmpleados.put(empleado.toJSON());
         }
-        System.out.println(arregloempleados.toString());
-        return arregloempleados.toString();
+        return arregloEmpleados.toString();
     }
 
+    public void guardarEmpleados() throws NullNameException {
+        String arregloEmpleados = pasarListaDeEmpleadosAJSON();
+        CreadorAJSON.uploadJSON(archivoEmpleados,arregloEmpleados);
+    }
 
-    /*los mismo seria para las habitaciones y sus tipos :)*/
+    public JSONObject todasLasHabitacionesAJson() {
+        JSONObject habitaciones = new JSONObject();
 
-    // iniciar secion (talvez)
+        habitaciones.put("habitacionesStandard",habitacionesStandard.habitacionesAJson());
+        habitaciones.put("habitacionesSuite",habitacionesSuite.habitacionesAJson());
+        habitaciones.put("habitacionesPresidenciales",habitacionesPresidenciales.habitacionesAJson());
 
-    public void intentarIniciarSesion(String username, String clave) throws PersonaExisteException
-    {
-        Empleado empleadologin = null;
+        return habitaciones;
+    }
 
-        for(Empleado empleado : empleados)
-        {
-            if(empleado.getClave().equals(clave) && empleado.getUsuario().equals(clave))
-            {
-                empleadologin = empleado;
+    public void guardarHabitaciones() throws NullNameException {
+        String arregloHabitaciones = todasLasHabitacionesAJson().toString();
+        CreadorAJSON.uploadJSON(archivoHabitaciones,arregloHabitaciones);
+    }
+
+    public void cargarJSONHabitaciones() throws NullNameException {
+        try {
+            JSONObject habitacionesJson = new JSONObject(CreadorAJSON.downloadJSON(archivoHabitaciones));
+
+            cargarHabitacionesDesdeJSON(habitacionesJson.getJSONArray("habitacionesStandard"), HabitacionStandard.class);
+            cargarHabitacionesDesdeJSON(habitacionesJson.getJSONArray("habitacionesSuite"), HabitacionSuite.class);
+            cargarHabitacionesDesdeJSON(habitacionesJson.getJSONArray("habitacionesPresidenciales"), HabitacionPresidencial.class);
+
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo de habitaciones: " + e.getMessage());
+        }
+    }
+
+    private <T extends Habitacion> void cargarHabitacionesDesdeJSON(JSONArray habitacionesArray, Class<T> tipoHabitacion) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        for (int i = 0; i < habitacionesArray.length(); i++) {
+            JSONObject jsonHabitacion = habitacionesArray.getJSONObject(i);
+            T nuevaHab = null;
+
+            if (tipoHabitacion == HabitacionStandard.class) {
+                nuevaHab = (T) new HabitacionStandard(jsonHabitacion.getInt("nroHabitacion"),
+                        jsonHabitacion.getInt("capacidadMaxima"),
+                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"));
+            } else if (tipoHabitacion == HabitacionSuite.class) {
+                nuevaHab = (T) new HabitacionSuite(jsonHabitacion.getInt("nroHabitacion"),
+                        jsonHabitacion.getInt("capacidadMaxima"),
+                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"),
+                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionCocina"), formatter));
+            } else if (tipoHabitacion == HabitacionPresidencial.class) {
+                nuevaHab = (T) new HabitacionPresidencial(jsonHabitacion.getInt("nroHabitacion"),
+                        jsonHabitacion.getInt("capacidadMaxima"),
+                        jsonHabitacion.getEnum(EstadoHabitacion.class, "estado"),
+                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionCocina"), formatter),
+                        LocalDate.parse(jsonHabitacion.getString("ultimaRevisionJacuzzi"), formatter));
+            }
+
+            if (tipoHabitacion == HabitacionStandard.class) {
+                habitacionesStandard.agregarHabitacion((HabitacionStandard) nuevaHab);
+            } else if (tipoHabitacion == HabitacionSuite.class) {
+                habitacionesSuite.agregarHabitacion((HabitacionSuite) nuevaHab);
+            } else if (tipoHabitacion == HabitacionPresidencial.class) {
+                habitacionesPresidenciales.agregarHabitacion((HabitacionPresidencial) nuevaHab);
+            }
+        }
+        }
+
+    public void intentarIniciarSesion(String username, String clave) throws PersonaNoExisteException {
+        Empleado credencialesEmpleado = null;
+
+        for (Empleado empleado : empleados) {
+            if (empleado.getClave().equals(clave) && empleado.getUsuario().equals(username)) {
+                credencialesEmpleado = empleado;
                 break;
             }
         }
 
-        if(empleadologin == null)
-        {
+        if (credencialesEmpleado == null) {
             throw new PersonaNoExisteException("El usuario no existe!");
         }
 
-        empleado_en_sistema = empleadologin;
+        empleadoEnSistema = credencialesEmpleado;
     }
 
-    public void logOut()
-    {
-        empleado_en_sistema = null;
+    public void logOut() {
+        empleadoEnSistema = null;
     }
 
-    public TipoEmpleado buscarPermisoDeUsuario()
-    {
-        return empleado_en_sistema.getTipo();
+    public TipoEmpleado buscarPermisoDeUsuario() {
+        return empleadoEnSistema.getTipo();
     }
 
-    public Empleado retornarEmpleadoLoggeado()
-    {
-        return empleado_en_sistema;
+    public Empleado obtenerEmpleadoLogueado() {
+        return empleadoEnSistema;
     }
 
-    public int retornarDniEmpleadoLoggeado()
-    {
-        return empleado_en_sistema.getDni();
+    public int obtenerDniEmpleadoLogueado() {
+        return empleadoEnSistema.getDni();
+    }
+
+    public boolean eliminarEmpleadoPorElDni(int dni) throws NullNameException {
+        for (Empleado empleado : empleados) {
+            if (empleado.getDni() == dni) {
+                empleados.remove(empleado);
+                guardarEmpleados();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void hacerBackup() throws NullNameException {
+        guardarPasajeros();
+        guardarEmpleados();
+        guardarHabitaciones();
     }
 
 
@@ -401,30 +572,24 @@ public class Hotel implements InterfacePersistecia {
 
 
     /**
-     *
-     * Genera una reserva nueva y la guarda en la lista de reservas.
-     *
-     * @param dniTitular int representando el dni del titular de la reserva
-     * @param habitacion numero de la habitacion de la reserva
-     * @param fechaInicio LocalDateTime para la fecha de inicio de la reserva
-     * @param fechaFinal LocalDateTime para el final de la reserva
-     * @param guardadoPor dni del empleado que guarda la reserva.
-     *
-     * @return Devuelve True si la reserva pudo generarse, False de otro modo.
+     * Genera uan reserva
+     * @param reserva Reserva completa.
+     * @return respuesta, si se agrega o no.
      */
-
-    public boolean generarReserva(int dniTitular, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor){
+    public boolean generarReserva(Reserva reserva/*int dniTitular, int habitacion, LocalDate fechaInicio, LocalDate fechaFinal, int guardadoPor*/){
         boolean respuesta = false;
-        Reserva reserva = new Reserva(dniTitular, habitacion, fechaInicio, fechaFinal, guardadoPor);
-
-
-        if (reservas.isEmpty()){
-            reservas.add(reserva);
-            respuesta = true;
-        } else if (!buscarReservaActivaPorTitular(dniTitular)){
-            reservas.add(reserva);
-            respuesta = true;
-        }
+        boolean isValid = false;
+        /*Reserva reserva = new Reserva(dniTitular, habitacion, fechaInicio, fechaFinal, guardadoPor);*/
+    try {
+        isValid = validarReserva(reserva);
+    } catch (ReservaExisteException ex) {
+        System.out.println(ex.getMessage());
+    }
+    if (isValid){
+        reservas.add(reserva);
+        respuesta = true;
+        persistir(listaReservasToJson(reservas));
+    }
         return respuesta;
     }
 
@@ -447,16 +612,22 @@ public class Hotel implements InterfacePersistecia {
 
     }
 
-    private boolean buscarReservaPorId(int idReserva) {
-        boolean respuesta = false;
+    /**
+     *
+     * @param idReserva entero que representa el id de la reserva a buscar.
+     * @return -1 si no encontro la reserva, si no devuelve el indice de la reserva buscada
+     */
+
+    public int buscarReservaPorId(int idReserva) {
+        int index = -1;
 
         for (Reserva reserva : reservas){
             if (reserva.getId() == idReserva){
-                respuesta = true;
+                index = reservas.indexOf(reserva);
             }
 
         }
-        return respuesta;
+        return index;
     }
 // Servicio
     @Override
@@ -465,10 +636,193 @@ public class Hotel implements InterfacePersistecia {
     }
 
     public boolean eliminarReserva(int id) {
-        return false;
+        boolean respuesta = false;
+        for (Reserva reserva : reservas){
+            if (reserva.getId() == id){
+                reservas.remove(reserva);
+                persistir(listaReservasToJson(reservas));
+                respuesta = true;
+            }
+        }
+        return respuesta;
     }
 
-    public boolean modificarReserva(int id) {
-        return false;
+    public boolean modificarTitularReserva(int id, int dniTitular) {
+        boolean respuesta = false;
+        if (buscarReservaPorId(id) != -1){
+            Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+            reservaAModificar.setDniTitular(dniTitular);
+            respuesta = true;
+        }
+        return respuesta;
     }
+
+    public boolean agregarPasajeroAReserva(int id, int dniPasajero) {
+        boolean respuesta = false;
+        if (buscarReservaPorId(id) != -1){
+            Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+            reservaAModificar.getPasajeros().add(dniPasajero);
+            respuesta = true;
+        }
+        return respuesta;
+    }
+
+
+    public boolean cambiarFechaInicio(int id, LocalDate fechaInicio) {
+        boolean respuesta = false;
+        if (buscarReservaPorId(id) != -1){
+            Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+            reservaAModificar.setFechaInicio(fechaInicio);
+            respuesta = true;
+        }
+
+        return respuesta;
+    }
+
+    public boolean cambiarFechaFinal(int id, LocalDate fechaFinal) {
+        boolean respuesta = false;
+        if (buscarReservaPorId(id) != -1) {
+            Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+            reservaAModificar.setFechaFinal(fechaFinal);
+            respuesta = true;
+
+        }
+        return respuesta;
+    }
+
+    public boolean cambiarNroHabitacion(int id, int nroHabitacion) {
+        boolean respuesta = false;
+            if (buscarReservaPorId(id) != -1){
+                Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
+                reservaAModificar.setHabitacion(nroHabitacion);
+                respuesta = true;
+            }
+        return respuesta;
+    }
+
+    /**
+     * Valida la reserva
+     *
+     * @param reserva
+     * @return true si la reserva es valida, false de otro modo.
+     * @throws ReservaExisteException
+     */
+    public boolean validarReserva(Reserva reserva) throws ReservaExisteException {
+        boolean respuesta = false;
+
+        if (buscarReservaActivaPorTitular(reserva.getDniTitular())){
+            throw new ReservaExisteException("Ya hay una reserva registrada con ese titular");
+        } else {
+            respuesta = true;
+        }
+
+        return respuesta;
+
+    }
+
+    /*NO SE SI ESTE METODO SIRVE MAS...*/
+    /*
+    public boolean verificarFecha(Reserva reservaNueva){
+        boolean respuesta = false;
+        for (Reserva reserva : reservas){
+            if (VerificacionesDeDatos.intentoReservaEstaDentroDeGuardada(reservaNueva, reserva) || VerificacionesDeDatos.intentoReservaContieneUnaReservaGuardada(reservaNueva, reserva) || VerificacionesDeDatos.intentoReservaInterseccionaConUnaGuardada(reservaNueva, reserva)){
+                respuesta = true;
+            }
+        }
+        return respuesta;
+    }*/
+
+    public void cargarJSONReservas() throws NullNameException{
+        try {
+            JSONArray jsonReservas = new JSONArray(CreadorAJSON.downloadJSON(reservaService.getNombreArchivo()));
+            for (int i = 0 ; i < jsonReservas.length(); i++){
+                JSONObject jReserva = jsonReservas.getJSONObject(i);
+
+                // creo que no es necesaria, la dejo por las dudas
+                int id = jReserva.getInt("id");
+
+                int dniTitular = jReserva.getInt("dniTitular");
+
+                // creo que no es necesaria, la dejo por las dudas
+                boolean activa = jReserva.getBoolean("activa");
+
+                int nroHabitacion = jReserva.getInt("habitacion");
+                LocalDate fechaInicio = LocalDate.parse(jReserva.getString("fechaInicio"));
+                LocalDate fechaFinal = LocalDate.parse(jReserva.getString("fechaFinal"));
+                int guardadoPor = jReserva.getInt("guardadoPor");
+
+                Reserva reserva = new Reserva(dniTitular, nroHabitacion, fechaInicio, fechaFinal, guardadoPor);
+                reservas.add(reserva);
+            }
+
+        } catch (IOException ex) {
+            reservaService.persistir("[]");
+            System.out.println("Creando Archivo....");
+        }
+    }
+
+    public String mostrarReservaPorId(int id) throws ReservaNoExisteException{
+        int index = buscarReservaPorId(id);
+        StringBuilder reserva =  new StringBuilder();
+        if (index != -1){
+            reserva.append(reservas.get(index).toString());
+        } else {
+            throw new ReservaNoExisteException("La reserva no existe!");
+        }
+
+        return reserva.toString();
+    }
+
+    public ArrayList<Integer> verHabitacionesDisponibles(Reserva intento) throws HabitacionNoEncontradaException
+    {
+        ArrayList<Integer> numerosdehabitacionesdisp = new ArrayList<>();
+        for(int i = 1; i <= TipoHabitacion.values().length;i++)
+        {
+            try {
+                Habitaciones habitaciones = selectorDeTipoHabitacion(i);
+                ArrayList<Habitacion> habitacionesencollection = habitaciones.retornarLista();
+
+                for(int j = 0; j < habitacionesencollection.size();i++)
+                {
+                    if(habitacionesencollection.get(j).getCapacidadMaxima() >= intento.getCantidadPersonasEnReserva())
+                    {
+                        int numerodehabitacion = habitacionesencollection.get(j).getNroHabitacion();
+
+                        if(verSiHabitacionEstaDisponible(intento,numerodehabitacion))
+                        {
+                            numerosdehabitacionesdisp.add(numerodehabitacion);
+                        }
+                    }
+                }
+            } catch (BadOptionException e) {
+                System.out.println("Error!!!!");
+            }
+        }
+
+        if(numerosdehabitacionesdisp.isEmpty())
+        {
+            throw new HabitacionNoEncontradaException("No hay habitaciones disponibles segun requisitos. Saliendo...");
+        }
+
+        return numerosdehabitacionesdisp;
+    }
+
+    public boolean verSiHabitacionEstaDisponible(Reserva intento, int numhabitacion)
+    {
+        boolean disponible = true;
+        for(Reserva reserva : reservas) // tendriamos que hacer reservas activas?
+        {
+            if(numhabitacion == reserva.getHabitacion())
+            {
+                if (VerificacionesDeDatos.intentoReservaEstaDentroDeGuardada(intento, reserva) || VerificacionesDeDatos.intentoReservaContieneUnaReservaGuardada(intento, reserva) || VerificacionesDeDatos.intentoReservaInterseccionaConUnaGuardada(intento, reserva)){
+                    disponible = false;
+                    break;
+                }
+            }
+        }
+        return disponible;
+    }
+
+
 }
+

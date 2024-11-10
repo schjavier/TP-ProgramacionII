@@ -63,25 +63,24 @@ public class Empleado extends Persona {
     public String toString() {
         return super.toString() +
                 "idEmpleado: " + idEmpleado + '\n' +
-                "usuario: " + usuario + '\n' +
-                "clave: " + clave + '\n' +
-                "email: " + email + '\n' +
-                "tipo: " + tipo.getTipoempleado();
+                "Usuario: " + usuario + '\n' +
+                "Clave: " + clave + '\n' +
+                "Email: " + email + '\n' +
+                "Tipo: " + tipo.getTipoEmpleado() + "\n";
     }
 
-    public JSONObject toJSON()
-    {
+    public JSONObject toJSON() {
         JSONObject empleado = new JSONObject();
         // datos base
-        empleado.put("Nombre",getNombre());
-        empleado.put("Apellido",getApellido());
-        empleado.put("Dni",getDni());
+        empleado.put("Nombre", getNombre());
+        empleado.put("Apellido", getApellido());
+        empleado.put("Dni", getDni());
 
         // datos del empleado
-        empleado.put("Usuario",getUsuario());
-        empleado.put("Clave",getClave());
-        empleado.put("Email",getEmail());
-        empleado.put("TipoEmpleado",tipo);
+        empleado.put("Usuario", getUsuario());
+        empleado.put("Clave", getClave());
+        empleado.put("Email", getEmail());
+        empleado.put("TipoEmpleado", tipo);
         return empleado;
     }
 

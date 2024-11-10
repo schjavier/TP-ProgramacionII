@@ -2,33 +2,39 @@ package Modelo.Reserva;
 
 import Exceptions.NullNameException;
 import JSONCreator.CreadorAJSON;
-import Persistencia.InterfacePersistecia;
+import Persistencia.InterfacePersistencia;
+
+import java.io.IOException;
 
 /**
  *
  * Clase que se encargara de llevar y traer informacion desde los archivos a la memoria, y viceversa
  *
  */
-public class ReservaService implements InterfacePersistecia {
+public class ReservaService implements InterfacePersistencia {
 
-    private final String nombreArchivo = "reservas.json";
+    private final String nombreArchivo = "Reservas.json";
 
     public ReservaService(){
     }
 
+    public String getNombreArchivo() {
+        return nombreArchivo;
+    }
 
     /**
-     * @param contenido
-     * @return
+     * @param contenido un string que representa el Contenido a presistir
+     * @return true si se puso persistir los datos, false de otra forma.
+     * @throws NullNameException
      */
     @Override
     public boolean persistir(String contenido) {
         boolean respuesta = false;
         try {
             CreadorAJSON.uploadJSON(nombreArchivo, contenido);
-
-        } catch (NullNameException ex){
-            ex.getMessage();
+        } catch (IOException e)
+        {
+            System.out.println("Error en persistir reserva!");
         }
 
         return respuesta;

@@ -2,8 +2,6 @@ package DataChecks;
 
 import Exceptions.BadDataException;
 import Modelo.Reserva.Reserva;
-
-import java.time.Instant;
 import java.time.LocalDate;
 
 public final class VerificacionesDeDatos {
@@ -14,28 +12,22 @@ public final class VerificacionesDeDatos {
      */
     private VerificacionesDeDatos() {}
 
-
     /**
      * Verifica si el dni es valido.
      * @param dni El dni de la persona cargado por teclado. (No verifica si tiene letras, no es necesario en este caso).
      * @return Un booleano Siempre es true si es correcto, por si se necesita poner esto en un if.
      * @throws BadDataException Si el dni no tiene 8 caracteres, se lanza un mensaje segun el problema.
      */
-    static public boolean verificarDni(int dni) throws BadDataException
-    {
+    static public boolean verificarDni(int dni) throws BadDataException {
         boolean result = true;
         String err = "";
 
-
         String dnicheck = String.valueOf(dni);
 
-
-        if(dnicheck.length() != 8)
-        {
+        if (dnicheck.length() != 8) {
             result = false;
             err = err.concat("Ese dni no es valido porque:\n");
-            if(dnicheck.length() < 8)
-            {
+            if (dnicheck.length() < 8) {
                 err = err.concat("- El dni es muy corto!");
             } else {
                 err = err.concat("- El dni es muy largo!");
@@ -53,19 +45,16 @@ public final class VerificacionesDeDatos {
      * @return Un booleano Siempre es true si es correcto, por si se necesita poner esto en un if.
      * @throws BadDataException Si el dni no tiene 8 caracteres, se lanza un mensaje segun el problema.
      */
-    static public boolean verificarDni(Integer dni) throws BadDataException
-    {
+    static public boolean verificarDni(Integer dni) throws BadDataException {
         boolean result = true;
         String err = "";
 
         String dnicheck = dni.toString();
 
-        if(dnicheck.length() != 8)
-        {
+        if (dnicheck.length() != 8) {
             result = false;
             err = err.concat("Ese dni no es valido porque:\n");
-            if(dnicheck.length() < 8)
-            {
+            if (dnicheck.length() < 8) {
                 err = err.concat("- El dni es muy corto!");
             } else {
                 err = err.concat("- El dni es muy largo!");
@@ -82,11 +71,22 @@ public final class VerificacionesDeDatos {
      * @return Un booleano que siempre retorna true por si enecesita poner esto en un if.
      * @throws BadDataException Si la palabra tiene un numero, se lanza esto.
      */
-    static public boolean tieneNumeros(String palabra) throws BadDataException
-    {
-        if(palabra.matches(".*\\d.*"))
-        {
+    static public boolean tieneNumeros(String palabra) throws BadDataException {
+        if (palabra.matches(".*\\d.*")) {
             throw new BadDataException("El texto introducido no debe tener numeros");
+        }
+        return true;
+    }
+
+    /**
+     * Revisa si un {@code String} tiene numeros.
+     * @param numeros Numeros representa un texto que contener únicamente numeros para alimentar un Integer.parseInt().
+     * @return Un booleano que siempre retorna true por si necesita poner esto en un if.
+     * @throws BadDataException Si la palabra contiene cualquier otra cosa que no sea un numero.
+     */
+    static public boolean esSoloNumeros(String numeros) throws BadDataException {
+        if (!numeros.matches("[0-9]+")) {
+            throw new BadDataException("El texto contiene letras o está vacío");
         }
         return true;
     }
@@ -100,9 +100,12 @@ public final class VerificacionesDeDatos {
     public static boolean intentoReservaEstaDentroDeGuardada(Reserva intento, Reserva guardada) //
     {
         boolean respuesta = false;
-        if(intento.getFechaInicio().isAfter(guardada.getFechaInicio()) && intento.getFechaFinal().isBefore(guardada.getFechaFinal()))
+        if(intento.getHabitacion() == guardada.getHabitacion())
         {
-            respuesta = true;
+            if(intento.getFechaInicio().isAfter(guardada.getFechaInicio()) && intento.getFechaFinal().isBefore(guardada.getFechaFinal()))
+            {
+                respuesta = true;
+            }
         }
         return respuesta;
     }
@@ -204,4 +207,13 @@ public final class VerificacionesDeDatos {
         return true;
     }
 
+    public static boolean fechaAntesDeHoy(LocalDate intento)
+    {
+        boolean antesDeHoy = false;
+        if(intento.isBefore(LocalDate.now()))
+        {
+            antesDeHoy = true;
+        }
+        return antesDeHoy;
+    }
 }

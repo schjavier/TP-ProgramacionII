@@ -1,21 +1,13 @@
 package JSONCreator;
 
-
-import Exceptions.NullNameException;
-
 import java.io.*;
 
 public final class CreadorAJSON {
 
     private CreadorAJSON() {}
 
-    public static void uploadJSON(String nombre, String contenido) throws NullNameException
+    public static void uploadJSON(String nombre, String contenido) throws IOException
     {
-        if(nombre == null)
-        {
-            throw new NullNameException("No puede tener un nombre nulo");
-        }
-
         try {
             File archivo = new File("src/Persistencia/" + nombre);
             BufferedWriter salida = new BufferedWriter(new FileWriter(archivo,false));
@@ -23,17 +15,12 @@ public final class CreadorAJSON {
             salida.flush();
             salida.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
     }
 
-    public static String downloadJSON(String nombre) throws NullNameException, IOException
+    public static String downloadJSON(String nombre) throws IOException
     {
-        if(nombre == null)
-        {
-            throw new NullNameException("El nombre no puede ser nulo!");
-        }
-
         String datos;
 
         try {
@@ -49,11 +36,6 @@ public final class CreadorAJSON {
 
     public static void cleanJSON(String nombre) throws IOException
     {
-        if(nombre == null)
-        {
-            throw new NullNameException("El nombre no puede ser nulo!");
-        }
-
         try {
             File archivo = new File("src/Persistencia/" + nombre);
             BufferedWriter escritura = new BufferedWriter(new FileWriter(archivo,false));

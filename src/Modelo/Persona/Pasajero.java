@@ -28,8 +28,6 @@ public class Pasajero extends Persona {
                 "domicilio: " + domicilio;
     }
 
-
-
     public JSONObject toJSON()
     {
         JSONObject persona = new JSONObject();
