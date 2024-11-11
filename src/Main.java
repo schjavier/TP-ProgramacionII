@@ -175,25 +175,6 @@ public class Main {
                     } catch (HabitacionNoEncontradaException e) {
                         System.out.println("La habitacion no pudo ser encontrada o no existe");
                     }
-                    try {
-//                        System.out.println("Ingrese el numero de la habitacion a gestionar: ");
-//                        int numerohabi = teclado.nextInt();
-
-                        try {
-                            gestionarHabitacion(hotel);
-
-                            //numerohabi); Queda comentado por que generaba conflicto! El numero de habitacion se pide
-                            // dentro del metodo...
-
-                        } catch (HabitacionNoEncontradaException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    } catch (InputMismatchException e)
-                    {
-                        System.out.println("Debe ser un numero entero!");
-                    } finally {
-                        teclado.nextLine();
-                    }
                     break;
                 case 3:
                     eliminarHabitacion(hotel);

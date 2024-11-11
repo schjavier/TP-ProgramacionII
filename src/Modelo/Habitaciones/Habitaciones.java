@@ -78,17 +78,6 @@ abstract public class Habitaciones<T extends Habitacion> {
     }
 
     /**
-     * Metodo que asigna a todas las habitaciones el estado pasado por parametro
-     * @param estado
-     */
-    public void asignarEstadoAtodas(EstadoHabitacion estado) {
-        for (T habitacion : listaHabitaciones) {
-            habitacion.setEstado(estado);
-        }
-    }
-
-
-    /**
      *
      * @param numHabitacion
      * @return
@@ -103,57 +92,10 @@ abstract public class Habitaciones<T extends Habitacion> {
         return room;
     }
 
-    /**
-     *  Si creo que seria lo mejor hacer un static id
-     * @param numhabitacion
-     * @return
-     */
-    public boolean verSiElNumeroEstaDisponible(int numhabitacion) // esto es para hacer que sean unicas (creo que puede ser un static id, haciendo esto innecesario)
-    {
-        boolean respuesta = true;
-        for (T habitacion : listaHabitaciones) {
-            if (habitacion.getNroHabitacion() == numhabitacion) {
-                respuesta = false;
-                break;
-            }
-        }
-        return respuesta;
-    }
-
-    /**
-     * Juan cruz me dijo una vez que no esta bueno devolver un map,
-     * por que desde el map se pueden modificar las cosas,
-     * entonces no se aplicaria el encapsulamiento de manera correcta.
-     * @return
-     */
-    public String contarCantidadHabitacionesSegunEstado() {
-        HashMap<EstadoHabitacion, Integer> cantidad = new HashMap<>();
-
-        for (EstadoHabitacion valor : EstadoHabitacion.values()) {
-            cantidad.put(valor, 0);
-        }
-
-        for (T habitacion : listaHabitaciones) {
-            EstadoHabitacion estado = habitacion.getEstado();
-            cantidad.put(estado, cantidad.get(estado) + 1);
-        }
-
-        System.out.println(cantidad);
-
-        return cantidad.toString();
-    }
-
-    public String getNombrearchivo() {
-        return nombrearchivo;
-    }
 
     public ArrayList<T> retornarLista()
     {
         return listaHabitaciones;
     }
-
-//Este metodo estaba generadno conflictos! pero no se usa! quedo de antes verdad??
-
-//    abstract void leerArchivoYcargarAMemoria() throws IOException, NullNameException;
 
 }

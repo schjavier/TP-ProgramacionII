@@ -89,29 +89,9 @@ public class Hotel implements InterfacePersistencia {
         guardarEmpleados();
     }
 
-    public String contarEstadoHabitaciones(int tipohabitacion) {
-        String resp = "";
-        try {
-            resp = selectorDeTipoHabitacion(tipohabitacion).contarCantidadHabitacionesSegunEstado();
-        } catch (BadOptionException e) {
-            resp = e.getMessage();
-        }
-        return resp;
-    }
-
     public StringBuilder listarHabitaciones() {
         return habitacionesStandard.listarHabitaciones().append(habitacionesSuite.listarHabitaciones()
                 .append(habitacionesPresidenciales.listarHabitaciones()));
-    }
-
-    public StringBuilder listarHabitacionesSegunTipo(int tipohabitacion) {
-        StringBuilder todos = new StringBuilder();
-        try {
-            todos = selectorDeTipoHabitacion(tipohabitacion).listarHabitaciones();
-        } catch (BadOptionException e) {
-            todos.append(e.getMessage());
-        }
-        return todos;
     }
 
     //Que elimine habitaciones solo con el numero

@@ -18,22 +18,17 @@ public class HabitacionSuite extends Habitacion implements TieneCocina {
         this.ultimaRevisionCocina = LocalDate.now();
     }
 
-
-    public LocalDate getUltimaRevisionCocina() {
-        return ultimaRevisionCocina;
-    }
-
     @Override
     public void marcarMantenimientoHechoEnCocina() {
         this.ultimaRevisionCocina = LocalDate.now();
     }
 
 
-//    @Override
-//    public String toString() {
-//        return super.toString() + "Tipo: Suite\n" +
-//                "Ultima revisión de la cocina: " + ultimaRevisionCocina + "\n";
-//    }
+    @Override
+    public String toString() {
+        return super.toString() + "Tipo: Suite\n" +
+                "Ultima revisión de la cocina: " + ultimaRevisionCocina + "\n";
+    }
 
     @Override
     public JSONObject toJson() {
@@ -42,12 +37,5 @@ public class HabitacionSuite extends Habitacion implements TieneCocina {
         habitacion.put("tipoHabitacion", "suite");
         habitacion.put("ultimaRevisionCocina", ultimaRevisionCocina.format(formatter));
         return habitacion;
-    }
-
-    @Override
-    public String toString() {
-        return "Habitacion Suite: \n" + super.toString() +
-                "Ultima revision cocina=" + ultimaRevisionCocina +
-                '}';
     }
 }
