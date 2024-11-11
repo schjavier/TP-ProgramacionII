@@ -219,6 +219,7 @@ public class Main {
             System.out.println("5. Obtener un conteo de todas las habitaciones segun el estado");
             System.out.println("6. Revisar cocinas de las habitaciones");
             System.out.println("7. Revisar jacuzzis de las habitaciones");
+            System.out.println("8. Gestionar reservas");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -256,6 +257,9 @@ public class Main {
                     break;
                 case 7:
                     revisarJacuzzisHabitaciones(hotel);
+                    break;
+                case 8:
+                    menuReservas(hotel);
                     break;
                 case 0:
                     System.out.println("Saliendo...");
@@ -511,13 +515,20 @@ public class Main {
         int opcion = -1;
         do {
 
-            System.out.println("Gestion de Reservas");
-            System.out.println("Que desea hacer?");
-            System.out.println("1 - Agregar una reserva");
-            System.out.println("2 - Eliminar una reserva");
-            System.out.println("3 - Modificar una Reserva Existente");
-            System.out.println("0 - Salir");
-            opcion = Integer.parseInt(teclado.nextLine());
+            System.out.println("\n--- Gestión reservas ---");
+            System.out.println("Ingrese una opción: ");
+            System.out.println("1. Agregar una reserva");
+            System.out.println("2. Eliminar una reserva");
+            System.out.println("3. Modificar una Reserva Existente");
+            System.out.println("0. Salir");
+            try {
+                String numeroIngresado = teclado.nextLine();
+                esSoloNumeros(numeroIngresado);
+                opcion = Integer.parseInt(numeroIngresado);
+            } catch (BadDataException e) {
+                System.out.println("Solo se aceptan números!");
+                opcion = 0; //para prevenir comportamientos inesperados
+            }
 
             switch (opcion) {
                 case 1:
@@ -539,14 +550,21 @@ public class Main {
 
                         try {
 
-                            System.out.println("Aqui esta la reserva: " + hotel.mostrarReservaPorId(id) + "\nQue atributo quiere modificar?");
-                            System.out.println("1 - Cambiar el dni del titular");
-                            System.out.println("2 - Agregar un pasajero a la reserva");
-                            System.out.println("3 - Cambiar el numero de habitacion");
-                            System.out.println("4 - Cambiar fecha de inicio");
-                            System.out.println("5 - Cambiar fecha de finalización");
-                            System.out.println("0 - Salir");
-                            eleccion = Integer.parseInt(teclado.nextLine());
+                            System.out.println("Reserva: " + hotel.mostrarReservaPorId(id) + "\nSeleccione una opción");
+                            System.out.println("1. Cambiar el dni del titular");
+                            System.out.println("2. Agregar un pasajero a la reserva");
+                            System.out.println("3. Cambiar el numero de habitacion");
+                            System.out.println("4. Cambiar fecha de inicio");
+                            System.out.println("5. Cambiar fecha de finalización");
+                            System.out.println("0. Salir");
+                            try {
+                                String numeroIngresado = teclado.nextLine();
+                                esSoloNumeros(numeroIngresado);
+                                eleccion = Integer.parseInt(numeroIngresado);
+                            } catch (BadDataException e) {
+                                System.out.println("Solo se aceptan números!");
+                                eleccion = 0; //para prevenir comportamientos inesperados
+                            }
 
                             switch (eleccion) {
                                 case 1:
