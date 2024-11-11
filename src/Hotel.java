@@ -77,7 +77,11 @@ public class Hotel implements InterfacePersistencia {
             throw new BadOptionException("Ese tipo de habitacion no existe!");
         }
 
-        guardarHabitaciones();
+        try {
+            guardarHabitaciones();
+        } catch (NullNameException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     public void crearEmpleado(String nombre, String apellido, int dni, String usuario, String email, String clave, TipoEmpleado tipoEmpleado) throws NullNameException {
@@ -254,7 +258,8 @@ public class Hotel implements InterfacePersistencia {
         pasajeros.add(pasajero);
         try {
             guardarPasajeros();
-        } catch (IOException e) {
+            // cambie el tipo de la excepcion a atrapar! Era IOException
+        } catch (NullNameException ex){
             System.out.println("Error en archivo!");
         }
     }
@@ -328,7 +333,12 @@ public class Hotel implements InterfacePersistencia {
 
     public void guardarPasajeros() throws NullNameException {
         String arregloPasajeros = pasarListaDePasajerosAJSON();
-        CreadorAJSON.uploadJSON(archivoPasajeros,arregloPasajeros);
+        try {
+            CreadorAJSON.uploadJSON(archivoPasajeros,arregloPasajeros);
+
+        } catch (IOException ex){
+            System.out.println(ex.getMessage());
+        }
     }
 
     public String pasarListaDePasajerosAJSON() {
@@ -391,7 +401,12 @@ public class Hotel implements InterfacePersistencia {
 
     public void guardarEmpleados() throws NullNameException {
         String arregloEmpleados = pasarListaDeEmpleadosAJSON();
-        CreadorAJSON.uploadJSON(archivoEmpleados,arregloEmpleados);
+
+        try {
+            CreadorAJSON.uploadJSON(archivoEmpleados,arregloEmpleados);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     public JSONObject todasLasHabitacionesAJson() {
@@ -406,7 +421,12 @@ public class Hotel implements InterfacePersistencia {
 
     public void guardarHabitaciones() throws NullNameException {
         String arregloHabitaciones = todasLasHabitacionesAJson().toString();
-        CreadorAJSON.uploadJSON(archivoHabitaciones,arregloHabitaciones);
+
+        try {
+            CreadorAJSON.uploadJSON(archivoHabitaciones,arregloHabitaciones);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     public void cargarJSONHabitaciones() throws NullNameException {

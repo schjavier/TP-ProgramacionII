@@ -24,8 +24,13 @@ public class Main {
         boolean continuar = true;
 
         while(continuar) {
-            menuInicio(hotel);
-            continuar = false;
+            try {
+                menuInicio(hotel);
+                continuar = false;
+
+            } catch (BadOptionException | BadDataException | UsuarioNoAutorizadoException | NullNameException ex){
+                System.out.println(ex.getMessage());
+            }
         }
     }
 
@@ -171,10 +176,15 @@ public class Main {
                         System.out.println("La habitacion no pudo ser encontrada o no existe");
                     }
                     try {
-                        System.out.println("Ingrese el numero de la habitacion a gestionar: ");
-                        int numerohabi = teclado.nextInt();
+//                        System.out.println("Ingrese el numero de la habitacion a gestionar: ");
+//                        int numerohabi = teclado.nextInt();
+
                         try {
-                            gestionarHabitacion(hotel,numerohabi);
+                            gestionarHabitacion(hotel);
+
+                            //numerohabi); Queda comentado por que generaba conflicto! El numero de habitacion se pide
+                            // dentro del metodo...
+
                         } catch (HabitacionNoEncontradaException e) {
                             System.out.println(e.getMessage());
                         }
@@ -383,6 +393,10 @@ public class Main {
         hotel.eliminarHabitacion(nroHab);
     }
 
+    // Me parece que en este metodo de abajo, no se si iria el bloque try...
+    // no encontre el metodo que lanza la exception.
+
+
     public static void listarHabitacionesEstado(Hotel hotel) {
         int tipoHab;
         int estadoSeleccionado;
@@ -401,7 +415,7 @@ public class Main {
             } else {
                 System.out.println("El numero no es valido, intente nuevamente");
             }
-        } catch (BadOptionException e) {
+        } catch (Exception ex) {
             System.out.println("No existe el tipo de habitacion!");
         }
     }
@@ -672,7 +686,8 @@ public class Main {
 
         intentoreserva.asignarHabitacionAReservaYLlenarDatosFaltantes(numeroHabitacion);
 
-        hotel.generarReserva(dniTitular, numeroHabitacion, fechaInicio, fechaFinal, guardadoPor,dnipasajeros);
+        // aca le mande la reserva para que la genere...
+        hotel.generarReserva(intentoreserva);
     }
 
 
