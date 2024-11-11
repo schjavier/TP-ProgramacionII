@@ -28,11 +28,12 @@ public class HabitacionSuite extends Habitacion implements TieneCocina {
         this.ultimaRevisionCocina = LocalDate.now();
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + "Tipo: Suite\n" +
-                "Ultima revisión de la cocina: " + ultimaRevisionCocina + "\n";
-    }
+
+//    @Override
+//    public String toString() {
+//        return super.toString() + "Tipo: Suite\n" +
+//                "Ultima revisión de la cocina: " + ultimaRevisionCocina + "\n";
+//    }
 
     @Override
     public JSONObject toJson() {

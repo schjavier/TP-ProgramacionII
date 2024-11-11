@@ -152,7 +152,8 @@ abstract public class Habitaciones<T extends Habitacion> {
         return listaHabitaciones;
     }
 
+//Este metodo estaba generadno conflictos! pero no se usa! quedo de antes verdad??
 
-    abstract void leerArchivoYcargarAMemoria() throws IOException, NullNameException;
+//    abstract void leerArchivoYcargarAMemoria() throws IOException, NullNameException;
 
 }
