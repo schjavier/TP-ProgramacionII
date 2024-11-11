@@ -98,4 +98,15 @@ abstract public class Habitaciones<T extends Habitacion> {
         return listaHabitaciones;
     }
 
+    public void limpiarPersonasDeHabitaciones()
+    {
+        for (T habitacion : listaHabitaciones) {
+            if(habitacion.getNroOcupantes() != 0)
+            {
+                habitacion.removerPersonas();
+                habitacion.setEstado(EstadoHabitacion.DISPONIBLE);
+            }
+        }
+    }
+
 }

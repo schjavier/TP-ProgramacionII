@@ -21,7 +21,7 @@ public class HabitacionStandard extends Habitacion { // la dejo vacia asi cuando
     @Override
     public JSONObject toJson() {
         JSONObject habitacion = super.toJson();
-        habitacion.put("tipoHabitacion", "standard");
+        habitacion.put("tipoHabitacion", TipoHabitacion.REGULAR);
         return habitacion;
     }
 

@@ -40,7 +40,7 @@ public class HabitacionPresidencial extends Habitacion implements TieneCocina {
     public JSONObject toJson() {
         JSONObject habitacion = super.toJson();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        habitacion.put("tipoHabitacion", "presidencial");
+        habitacion.put("tipoHabitacion", TipoHabitacion.PRESIDENCIAL);
         habitacion.put("ultimaRevisionCocina", ultimaRevisionCocina.format(formatter));
         habitacion.put("ultimaRevisionJacuzzi", ultimaRevisionJacuzzi.format(formatter));
         return habitacion;

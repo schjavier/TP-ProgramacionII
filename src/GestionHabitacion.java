@@ -8,7 +8,6 @@ import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
 public class GestionHabitacion {
 
     public static <T extends Habitacion> void mostrarMenu(T habitacion) {
-        System.out.println(habitacion);
 
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;

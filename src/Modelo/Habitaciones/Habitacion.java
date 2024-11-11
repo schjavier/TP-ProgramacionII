@@ -54,6 +54,16 @@ abstract public class Habitacion {
         return capacidadMaxima;
     }
 
+    public void agregarPersonaAHabitacion(int dni)
+    {
+        ocupantes.add(dni);
+    }
+
+    public void removerPersonas()
+    {
+        ocupantes.clear();
+    }
+
     @Override
     public String toString() {
         return "Habitacion " + nroHabitacion + '\n' +
