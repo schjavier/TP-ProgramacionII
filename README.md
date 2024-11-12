@@ -1,4 +1,7 @@
 
+
+ ![Banner del trabajo](https://raw.githubusercontent.com/schjavier/TP-ProgramacionII/b565cbd4cdd20dcb7db48ff3e53e92de7a336480/banner_tp.png)
+
 # Trabajo Práctico Final - Programación II (TUP)
 Trabajo final integrador de la materia Programación 2 de la Tecnicatura Universitaria en Programación de la UTN FRMDP.
 
@@ -19,7 +22,6 @@ El tema del proyecto es: _sistema de gestión hotelera_
 - Menú para administradores: 
     - Creación de habitaciones de 3 tipos
     - Gestión de habitación por ID
-    - Eliminación de habitación por ID
     - Creación de otros usuarios
     - Visualización de empleados en sistema
     - Eliminación de empleado por DNI
@@ -37,6 +39,7 @@ El tema del proyecto es: _sistema de gestión hotelera_
         - Eliminar reservas
         - Modificar reservas por ID
         - Ver reservas hechas por un DNI
+        - Ver información de los pasajeros en reserva
 - Excepciones personalizadas
 - 3 tipos de habitación:
     - Standard
