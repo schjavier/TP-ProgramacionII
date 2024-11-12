@@ -32,12 +32,10 @@ public class ReservaService implements InterfacePersistencia {
         boolean respuesta = false;
         try {
             CreadorAJSON.uploadJSON(nombreArchivo, contenido);
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             System.out.println("Error en persistir reserva!");
         }
 
         return respuesta;
     }
-
 }

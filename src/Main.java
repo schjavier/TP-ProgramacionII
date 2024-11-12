@@ -3,7 +3,6 @@ import Exceptions.*;
 import Modelo.Habitaciones.EstadoHabitacion;
 import Modelo.Habitaciones.Habitacion;
 import Modelo.Habitaciones.TipoHabitacion;
-import Modelo.Persona.Persona;
 import Modelo.Reserva.Reserva;
 
 import java.time.LocalDate;
@@ -14,7 +13,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
-import static DataChecks.VerificacionesDeDatos.verificarDni;
 
 public class Main {
     public static Scanner teclado = new Scanner(System.in);
@@ -270,22 +268,6 @@ public class Main {
         } while (opcion != 0);
     }
 
-    static public void agregarPasajero(Hotel hotel) throws NullNameException {
-        String nombre;
-        String apellido;
-        int dni;
-        String direccion;
-
-        nombre = definirNombreoApe("Nombre");
-        apellido = definirNombreoApe("Apellido");
-        dni = definirDni(hotel);
-        teclado.nextLine();
-        System.out.println("Direccion");
-        direccion = teclado.nextLine();
-
-        hotel.agregarPasajero(nombre, apellido, dni, direccion);
-    }
-
     static public void agregarPasajero(Hotel hotel,int dni) throws BadDataException, PersonaExisteException {
 
         if(hotel.existeEmpleadoConEseDNI(dni)) // check en caso de que el dni sea de un empleado.
@@ -383,30 +365,22 @@ public class Main {
         hotel.eliminarHabitacion(nroHab);
     }
 
-    // Me parece que en este metodo de abajo, no se si iria el bloque try...
-    // no encontre el metodo que lanza la exception.
-
-
     public static void listarHabitacionesEstado(Hotel hotel) {
         int tipoHab;
         int estadoSeleccionado;
 
-        try {
-            System.out.println("Ingrese el tipo de habitacion: ");
-            System.out.println(TipoHabitacion.retornarValoresDeEnum());
-            tipoHab = Integer.parseInt(teclado.nextLine());
+        System.out.println("Ingrese el tipo de habitacion: ");
+        System.out.println(TipoHabitacion.retornarValoresDeEnum());
+        tipoHab = Integer.parseInt(teclado.nextLine());
 
-            System.out.println("Ingrese el estado: ");
-            System.out.println(EstadoHabitacion.retornarValoresDeEnum());
-            estadoSeleccionado = Integer.parseInt(teclado.nextLine());
+        System.out.println("Ingrese el estado: ");
+        System.out.println(EstadoHabitacion.retornarValoresDeEnum());
+        estadoSeleccionado = Integer.parseInt(teclado.nextLine());
 
-            if (estadoSeleccionado < EstadoHabitacion.values().length) {
-                System.out.println(hotel.listarSegunEstado(tipoHab,EstadoHabitacion.values()[estadoSeleccionado - 1]));
-            } else {
-                System.out.println("El numero no es valido, intente nuevamente");
-            }
-        } catch (Exception ex) {
-            System.out.println("No existe el tipo de habitacion!");
+        if (estadoSeleccionado < EstadoHabitacion.values().length) {
+            System.out.println(hotel.listarSegunEstado(tipoHab, EstadoHabitacion.values()[estadoSeleccionado - 1]));
+        } else {
+            System.out.println("El numero no es valido, intente nuevamente");
         }
     }
 
@@ -567,7 +541,7 @@ public class Main {
                     do {
                         try {
                             Reserva reservaEncontrada = hotel.buscarReservaSegunId(id_reserva);
-                            System.out.println("Reserva: " + reservaEncontrada + "\nSeleccione una opción");
+                            System.out.println(reservaEncontrada + "\nSeleccione una opción");
                             System.out.println("1. Cambiar el dni del titular");
                             System.out.println("2. Agregar un pasajero a la reserva");
                             System.out.println("3. Cambiar el numero de habitacion");
@@ -638,15 +612,13 @@ public class Main {
 
     }
 
-    public static void agregarReserva(Hotel hotel) throws HabitacionNoEncontradaException, BadDataException, ReservaExisteException, PersonaExisteException
-    {
+    public static void agregarReserva(Hotel hotel) throws HabitacionNoEncontradaException, BadDataException, ReservaExisteException, PersonaExisteException {
         int dniTitular = 0;
         LocalDate fechaInicio = null;
         LocalDate fechaFinal = null;
 
-        dniTitular = agregarPersonaAReservaCreando(hotel,"titular");
-        if(hotel.buscarReservaActivaPorTitular(dniTitular))
-        {
+        dniTitular = agregarPersonaAReservaCreando(hotel, "titular");
+        if (hotel.buscarReservaActivaPorTitular(dniTitular)) {
             throw new ReservaExisteException("Ya hay una reserva activa para esta persona!");
         }
 
@@ -654,35 +626,30 @@ public class Main {
         fechaFinal = asignarFechaAEvento("final");
 
 
+        Reserva intentoReserva = new Reserva(dniTitular, fechaInicio, fechaFinal, hotel.obtenerDniEmpleadoLogueado());
+        VerificacionesDeDatos.fechaTieneSentido(intentoReserva);
 
-
-        Reserva intentoreserva = new Reserva(dniTitular,fechaInicio,fechaFinal,hotel.obtenerDniEmpleadoLogueado());
-        VerificacionesDeDatos.fechaTieneSentido(intentoreserva);
-
-        boolean seguiragregandopersonas = true;
-        while(seguiragregandopersonas)
-        {
+        boolean seguirAgregandoPersonas = true;
+        while (seguirAgregandoPersonas) {
             int eleccion = -1;
             System.out.println("Hay alguien mas a quien agregar??");
-            System.out.println("1- Si");
+            System.out.println("1. Si");
             System.out.println("Cualquier otro numero para no.");
 
             try {
                 eleccion = teclado.nextInt();
                 if (eleccion == 1) {
-                    intentoreserva.agregarPersonaAReserva(agregarPersonaAReservaCreando(hotel,"pasajero"));
+                    intentoReserva.agregarPersonaAReserva(agregarPersonaAReservaCreando(hotel, "pasajero"));
                 } else {
-                    seguiragregandopersonas = false;
+                    seguirAgregandoPersonas = false;
                 }
-            } catch (InputMismatchException e)
-            {
+            } catch (InputMismatchException e) {
                 System.out.println("Por favor usar numeros!!");
             }
         }
 
-        System.out.println("Pasajeros:" + intentoreserva.getPasajeros());
-        for(Integer dni : intentoreserva.getPasajeros())
-        {
+        System.out.println("Pasajeros:" + intentoReserva.getPasajeros());
+        for (Integer dni : intentoReserva.getPasajeros()) {
             try {
                 System.out.println(hotel.buscarPasajeroConEseDNI(dni));
             } catch (PersonaNoExisteException e) {
@@ -691,13 +658,12 @@ public class Main {
             System.out.println("---");
         }
 
-        System.out.println("Cantidad:" + intentoreserva.getCantidadPersonasEnReserva());
-        int numeroHabitacion = selectorDeHabitacionDisponible(hotel,intentoreserva);
+        System.out.println("Cantidad:" + intentoReserva.getCantidadPersonasEnReserva());
+        int numeroHabitacion = selectorDeHabitacionDisponible(hotel, intentoReserva);
 
 
-
-        intentoreserva.asignarHabitacionAReservaYLlenarDatosFaltantes(numeroHabitacion);
-        hotel.generarReserva(intentoreserva);
+        intentoReserva.asignarHabitacionAReservaYLlenarDatosFaltantes(numeroHabitacion);
+        hotel.generarReserva(intentoReserva);
     }
 
 
@@ -708,12 +674,10 @@ public class Main {
      * @return
      * @throws PersonaExisteException En el caso de que la persona que se quiere hacer la reserva, sea un empleado, se expulsara inmediato.
      */
-    public static int agregarPersonaAReservaCreando(Hotel hotel, String tipo) throws PersonaExisteException
-    {
+    public static int agregarPersonaAReservaCreando(Hotel hotel, String tipo) throws PersonaExisteException {
         boolean personaexiste = false;
         int dniPersona = 0;
-        while(!personaexiste)
-        {
+        while (!personaexiste) {
             try {
                 System.out.println("Ingrese el DNI del " + tipo + " de la reserva");
                 dniPersona = Integer.parseInt(teclado.nextLine());
@@ -738,36 +702,30 @@ public class Main {
      * Asigna una fecha al inicio o final de reserva
      * @return Retorna objeto LocalDate
      */
-    public static LocalDate asignarFechaAEvento(String tipo)
-    {
+    public static LocalDate asignarFechaAEvento(String tipo) {
         LocalDate fecha = null;
         boolean fechavalida = false;
-        while(!fechavalida)
-        {
+        while (!fechavalida) {
             try {
                 System.out.println("Ingrese fecha ( yyyy-mm-dd ) de " + tipo + " de la reserva");
 
                 String fechainiciostring = teclado.nextLine();
                 fecha = LocalDate.parse(fechainiciostring);
 
-                if(VerificacionesDeDatos.fechaAntesDeHoy(fecha))
-                {
+                if (VerificacionesDeDatos.fechaAntesDeHoy(fecha)) {
                     throw new BadDataException("La fecha de inicio no puede ser antes de hoy!");
                 }
                 fechavalida = true;
-            } catch (DateTimeParseException e)
-            {
+            } catch (DateTimeParseException e) {
                 System.out.println("La fecha esta incorrectamente escrita! (Usar guiones, no simbolo menos.)");
-            } catch (BadDataException e)
-            {
+            } catch (BadDataException e) {
                 System.out.println(e.getMessage());
             }
         }
         return fecha;
     }
 
-    static public int selectorDeHabitacionDisponible(Hotel hotel,Reserva intentoreserva) throws HabitacionNoEncontradaException
-    {
+    static public int selectorDeHabitacionDisponible(Hotel hotel, Reserva intentoreserva) throws HabitacionNoEncontradaException {
         ArrayList<Integer> numerosDeHabitacion;
         try {
             numerosDeHabitacion = hotel.verHabitacionesDisponibles(intentoreserva);
@@ -777,11 +735,9 @@ public class Main {
 
         boolean correcto = false;
         int numeroHabitacion = 0;
-        while(!correcto)
-        {
+        while (!correcto) {
             System.out.println("Ingrese el Nro. de Habitación de la reserva");
-            for (Integer num : numerosDeHabitacion)
-            {
+            for (Integer num : numerosDeHabitacion) {
                 System.out.println(hotel.traerDatosDeHabitacionSegunNum(num));
             }
             System.out.println("Por favor, seleccionar una de las habitaciones listadas. ");
@@ -790,19 +746,15 @@ public class Main {
             try {
                 numeroHabitacion = teclado.nextInt();
 
-                if(numerosDeHabitacion.contains(numeroHabitacion))
-                {
+                if (numerosDeHabitacion.contains(numeroHabitacion)) {
                     correcto = true;
-                } else
-                {
+                } else {
                     System.out.println("Debe ser uno de los numeros incluidos");
                 }
-            } catch (InputMismatchException e)
-            {
+            } catch (InputMismatchException e) {
                 System.out.println("Por favor usar numeros!");
             }
         }
         return numeroHabitacion;
     }
-
 }

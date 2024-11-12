@@ -11,6 +11,7 @@ import Modelo.Reserva.ReservaService;
 import Persistencia.InterfacePersistencia;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -51,6 +52,7 @@ public class Hotel implements InterfacePersistencia {
 
     /**
      * Devuelve el nombre asignado al hotel
+     *
      * @return un String que representa el nombre del hotel
      */
     public String getNombre() {
@@ -59,9 +61,10 @@ public class Hotel implements InterfacePersistencia {
 
     /**
      * Permite crear muchas habitaciones a la vez. Se crean todas como DISPONIBLE.
+     *
      * @param tipoHabitacion Un numero del 1 al x siendo x el ultimo tipo de habitacion que haya
      */
-    public void crearHabitaciones(int cantidadHabitaciones, int capacidadMaxima, int tipoHabitacion) throws BadOptionException{
+    public void crearHabitaciones(int cantidadHabitaciones, int capacidadMaxima, int tipoHabitacion) throws BadOptionException {
         Habitaciones habitaciones = null;
         try {
             habitaciones = selectorDeTipoHabitacion(tipoHabitacion);
@@ -85,7 +88,7 @@ public class Hotel implements InterfacePersistencia {
     }
 
     public void crearEmpleado(String nombre, String apellido, int dni, String usuario, String email, String clave, TipoEmpleado tipoEmpleado) throws NullNameException {
-        empleados.add(new Empleado(nombre,apellido,dni,usuario,email,clave,tipoEmpleado));
+        empleados.add(new Empleado(nombre, apellido, dni, usuario, email, clave, tipoEmpleado));
         guardarEmpleados();
     }
 
@@ -100,7 +103,7 @@ public class Hotel implements InterfacePersistencia {
             return true;
         } else if (habitacionesSuite.eliminarHabitacionSegunNumero(habitacion)) {
             return true;
-        } else if (habitacionesPresidenciales.eliminarHabitacionSegunNumero(habitacion)){
+        } else if (habitacionesPresidenciales.eliminarHabitacionSegunNumero(habitacion)) {
             return true;
         } else {
             return false;
@@ -150,7 +153,7 @@ public class Hotel implements InterfacePersistencia {
     public StringBuilder verEmpleados() {
         StringBuilder resultado = new StringBuilder("Lista de empleados: \n\n");
 
-        for (Empleado empleado: empleados) {
+        for (Empleado empleado : empleados) {
             resultado.append(empleado.toString());
             resultado.append("\n");
         }
@@ -189,7 +192,7 @@ public class Hotel implements InterfacePersistencia {
         return persona;
     }
 
-    public Persona buscarPersonaPorDni(int dni) throws PersonaNoExisteException,BadDataException {
+    public Persona buscarPersonaPorDni(int dni) throws PersonaNoExisteException, BadDataException {
         VerificacionesDeDatos.verificarDni(dni);
 
         for (Empleado empleado : empleados) {
@@ -234,7 +237,7 @@ public class Hotel implements InterfacePersistencia {
         pasajeros.add(pasajero);
         try {
             guardarPasajeros();
-        } catch (NullNameException ex){
+        } catch (NullNameException ex) {
             System.out.println("Error en archivo!");
         }
     }
@@ -309,9 +312,9 @@ public class Hotel implements InterfacePersistencia {
     public void guardarPasajeros() throws NullNameException {
         String arregloPasajeros = pasarListaDePasajerosAJSON();
         try {
-            CreadorAJSON.uploadJSON(archivoPasajeros,arregloPasajeros);
+            CreadorAJSON.uploadJSON(archivoPasajeros, arregloPasajeros);
 
-        } catch (IOException ex){
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -378,7 +381,7 @@ public class Hotel implements InterfacePersistencia {
         String arregloEmpleados = pasarListaDeEmpleadosAJSON();
 
         try {
-            CreadorAJSON.uploadJSON(archivoEmpleados,arregloEmpleados);
+            CreadorAJSON.uploadJSON(archivoEmpleados, arregloEmpleados);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -387,9 +390,9 @@ public class Hotel implements InterfacePersistencia {
     public JSONObject todasLasHabitacionesAJson() {
         JSONObject habitaciones = new JSONObject();
 
-        habitaciones.put("habitacionesStandard",habitacionesStandard.habitacionesAJson());
-        habitaciones.put("habitacionesSuite",habitacionesSuite.habitacionesAJson());
-        habitaciones.put("habitacionesPresidenciales",habitacionesPresidenciales.habitacionesAJson());
+        habitaciones.put("habitacionesStandard", habitacionesStandard.habitacionesAJson());
+        habitaciones.put("habitacionesSuite", habitacionesSuite.habitacionesAJson());
+        habitaciones.put("habitacionesPresidenciales", habitacionesPresidenciales.habitacionesAJson());
 
         return habitaciones;
     }
@@ -398,7 +401,7 @@ public class Hotel implements InterfacePersistencia {
         String arregloHabitaciones = todasLasHabitacionesAJson().toString();
 
         try {
-            CreadorAJSON.uploadJSON(archivoHabitaciones,arregloHabitaciones);
+            CreadorAJSON.uploadJSON(archivoHabitaciones, arregloHabitaciones);
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -449,7 +452,7 @@ public class Hotel implements InterfacePersistencia {
                 habitacionesPresidenciales.agregarHabitacion((HabitacionPresidencial) nuevaHab);
             }
         }
-        }
+    }
 
     public void intentarIniciarSesion(String username, String clave) throws PersonaNoExisteException {
         Empleado credencialesEmpleado = null;
@@ -506,17 +509,16 @@ public class Hotel implements InterfacePersistencia {
     // Todo lo relativo a las reservas.
 
     /**
-     *
      * Busca reservas por dni.
      *
      * @param dni El dni del titular de la reserva
      * @return true, si se encontro al menos una reserva con el dni asociado, false en otro caso.
      */
-    public boolean buscarReservaPorTitular(int dni){
+    public boolean buscarReservaPorTitular(int dni) {
         boolean respuesta = false;
 
-        for (Reserva reserva : reservas){
-            if (reserva.getDniTitular() == dni){
+        for (Reserva reserva : reservas) {
+            if (reserva.getDniTitular() == dni) {
                 respuesta = true;
             }
         }
@@ -530,10 +532,10 @@ public class Hotel implements InterfacePersistencia {
      * @return True si encuentra una reserva activa con el ese dni, false en cualquier otro caso.
      */
 
-    public boolean buscarReservaActivaPorTitular(int dni){
+    public boolean buscarReservaActivaPorTitular(int dni) {
         boolean respuesta = false;
-        for (Reserva reserva : reservas){
-            if (reserva.getDniTitular() == dni && reserva.isActiva()){
+        for (Reserva reserva : reservas) {
+            if (reserva.getDniTitular() == dni && reserva.isActiva()) {
                 respuesta = true;
             }
         }
@@ -541,17 +543,16 @@ public class Hotel implements InterfacePersistencia {
     }
 
     /**
-     *
      * Muestra un historico de reservas filtrado por el dni del titular
      *
      * @param dni El dni del titular de la reserva
      * @return Un String con la informacion de las reservas que tuvo el titular a lo largo del tiempo.
      */
-    public String historicoPorTitular(int dni){
+    public String historicoPorTitular(int dni) {
         StringBuilder respuesta = new StringBuilder("Reserva - Fecha Inicio - Fecha Final - Habitacion").append("\n");
 
-        for (Reserva reserva : reservas){
-            if (reserva.getDniTitular() == dni){
+        for (Reserva reserva : reservas) {
+            if (reserva.getDniTitular() == dni) {
                 respuesta.append(reserva.getId())
                         .append(" - ")
                         .append(reserva.getFechaInicio())
@@ -569,10 +570,11 @@ public class Hotel implements InterfacePersistencia {
 
     /**
      * Genera una reserva
+     *
      * @param reserva Reserva completa.
      * @return respuesta, si se agrega o no.
      */
-    public void generarReserva(Reserva reserva){
+    public void generarReserva(Reserva reserva) {
         reservas.add(reserva);
         actualizarHabitacionesEnModificacionEnReserva();
         persistir(listaReservasToJson(reservas));
@@ -585,11 +587,10 @@ public class Hotel implements InterfacePersistencia {
      * @param reservas La lista de reservas
      * @return devuelve la lsta de reservas convertida en Json como string.
      */
-    public String listaReservasToJson(ArrayList<Reserva> reservas){
+    public String listaReservasToJson(ArrayList<Reserva> reservas) {
 
         JSONArray reservasJson = new JSONArray(reservas);
-        for (Reserva reserva : reservas)
-        {
+        for (Reserva reserva : reservas) {
             reservasJson.put(reserva.toJson());
         }
 
@@ -598,41 +599,32 @@ public class Hotel implements InterfacePersistencia {
     }
 
 
-// Servicio
+    // Servicio
     @Override
     public boolean persistir(String contenido) {
         return reservaService.persistir(contenido);
     }
 
-    public Reserva buscarReservaSegunId(int id) throws ReservaNoExisteException
-    {
+    public Reserva buscarReservaSegunId(int id) throws ReservaNoExisteException {
         Reserva busqueda = null;
-        for(Reserva reserva : reservas)
-        {
-            if(reserva.getId() == id)
-            {
+        for (Reserva reserva : reservas) {
+            if (reserva.getId() == id) {
                 busqueda = reserva;
             }
         }
 
 
-        if(busqueda == null)
-        {
+        if (busqueda == null) {
             throw new ReservaNoExisteException("La reserva no existe con ese id!");
         }
 
         return busqueda;
     }
 
-    public String mostrarReservaPorId(int id) throws ReservaNoExisteException{
-        Reserva reserva = buscarReservaSegunId(id);
-        return reserva.toString();
-    }
-
     public boolean eliminarReserva(int id) {
         boolean respuesta = false;
-        for (Reserva reserva : reservas){
-            if (reserva.getId() == id){
+        for (Reserva reserva : reservas) {
+            if (reserva.getId() == id) {
                 reservas.remove(reserva);
                 persistir(listaReservasToJson(reservas));
                 respuesta = true;
@@ -642,14 +634,12 @@ public class Hotel implements InterfacePersistencia {
         return respuesta;
     }
 
-    public boolean modificarTitularReserva(int id, int dniTitular) throws ReservaNoExisteException, ReservaExisteException, BadDataException
-    {
+    public boolean modificarTitularReserva(int id, int dniTitular) throws ReservaNoExisteException, ReservaExisteException, BadDataException {
         boolean respuesta = false;
         VerificacionesDeDatos.verificarDni(dniTitular);
 
         Reserva reservaAModificar = buscarReservaSegunId(id);
-        if(buscarReservaActivaPorTitular(dniTitular))
-        {
+        if (buscarReservaActivaPorTitular(dniTitular)) {
             throw new ReservaExisteException("Esa persona ya tiene una reserva guardada!");
         }
         reservaAModificar.setDniTitular(dniTitular);
@@ -663,8 +653,7 @@ public class Hotel implements InterfacePersistencia {
         Reserva reservaAModificar = buscarReservaSegunId(id);
         Habitacion habitacionreserva = buscarHabitacionPorNumero(reservaAModificar.getHabitacion());
 
-        if(habitacionreserva.getCapacidadMaxima() < reservaAModificar.getCantidadPersonasEnReserva()+1)
-        {
+        if (habitacionreserva.getCapacidadMaxima() < reservaAModificar.getCantidadPersonasEnReserva() + 1) {
             throw new MuchasPersonasException("Las personas excederian la capacidad de la habitación");
         }
 
@@ -672,29 +661,6 @@ public class Hotel implements InterfacePersistencia {
         respuesta = true;
         return respuesta;
     }
-
-    /* // TODO : Revisar si se puede cambiar la fecha segun las otras reservas, o si tiene sentido.
-    public boolean cambiarFechaInicio(int id, LocalDate fechaInicio) throws ReservaNoExisteException {
-        boolean respuesta = false;
-        Reserva reservaAModificar = buscarReservaSegunId(id);
-        reservaAModificar.setFechaInicio(fechaInicio);
-        respuesta = true;
-
-        return respuesta;
-    }
-
-    // TODO : Revisar si se puede cambiar la fecha segun las otras reservas, o si tiene sentido.
-    public boolean cambiarFechaFinal(int id, LocalDate fechaFinal) throws ReservaNoExisteException {
-        boolean respuesta = false;
-        if (buscarReservaPorId(id) != -1) {
-            Reserva reservaAModificar = reservas.get(buscarReservaPorId(id));
-            reservaAModificar.setFechaFinal(fechaFinal);
-            respuesta = true;
-
-        }
-        return respuesta;
-    }*/
-
 
     public boolean cambiarNroHabitacionDeReserva(int id, int nroHabitacion) throws ReservaNoExisteException {
         boolean respuesta = false;
@@ -705,10 +671,10 @@ public class Hotel implements InterfacePersistencia {
     }
 
 
-    public void cargarJSONReservas() throws NullNameException{
+    public void cargarJSONReservas() throws NullNameException {
         try {
             JSONArray jsonReservas = new JSONArray(CreadorAJSON.downloadJSON(reservaService.getNombreArchivo()));
-            for (int i = 0 ; i < jsonReservas.length(); i++){
+            for (int i = 0; i < jsonReservas.length(); i++) {
                 JSONObject jReserva = jsonReservas.getJSONObject(i);
 
                 int dniTitular = jReserva.getInt("dniTitular");
@@ -722,35 +688,29 @@ public class Hotel implements InterfacePersistencia {
 
                 Reserva reserva = new Reserva(dniTitular, nroHabitacion, fechaInicio, fechaFinal, guardadoPor);
 
-                if(VerificacionesDeDatos.reservaEsActiva(reserva))
-                {
+                if (VerificacionesDeDatos.reservaEsActiva(reserva)) {
                     reserva.setActiva(true);
-                } else
-                {
+                } else {
                     reserva.setActiva(false);
                 }
 
 
-                for(int cantidadpersonas = 0;cantidadpersonas<pasajeros.length();cantidadpersonas++)
-                {
+                for (int cantidadpersonas = 0; cantidadpersonas < pasajeros.length(); cantidadpersonas++) {
                     int dnipersona = pasajeros.getInt(cantidadpersonas);
                     reserva.agregarPersonaAReserva(dnipersona);
                 }
 
-                if(VerificacionesDeDatos.reservaEstaPasandoAhora(reserva))
-                {
+                if (VerificacionesDeDatos.reservaEstaPasandoAhora(reserva)) {
                     Habitacion habitacionguardada = null;
 
                     try {
                         habitacionguardada = buscarHabitacionPorNumero(reserva.getHabitacion());
                         habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
-                        for(int p = 0; p < pasajeros.length();p++)
-                        {
+                        for (int p = 0; p < pasajeros.length(); p++) {
                             int dnipersona = pasajeros.getInt(p);
                             habitacionguardada.agregarPersonaAHabitacion(dnipersona);
                         }
-                    } catch (HabitacionNoEncontradaException e)
-                    {
+                    } catch (HabitacionNoEncontradaException e) {
                         System.out.println("Error en busqueda de habitacion en carga de datos [RESERVA]");
                     }
                 }
@@ -765,23 +725,18 @@ public class Hotel implements InterfacePersistencia {
     }
 
 
-    public ArrayList<Integer> verHabitacionesDisponibles(Reserva intento) throws HabitacionNoEncontradaException
-    {
+    public ArrayList<Integer> verHabitacionesDisponibles(Reserva intento) throws HabitacionNoEncontradaException {
         ArrayList<Integer> numerosdehabitacionesdisp = new ArrayList<>();
-        for(int i = 1; i <= 3;i++)
-        {
+        for (int i = 1; i <= 3; i++) {
             try {
                 Habitaciones habitaciones = selectorDeTipoHabitacion(i);
                 ArrayList<Habitacion> habitacionesencollection = habitaciones.retornarLista();
 
-                for(int j = 0; j < habitacionesencollection.size();j++)
-                {
-                    if(habitacionesencollection.get(j).getCapacidadMaxima() >= intento.getCantidadPersonasEnReserva() && habitacionesencollection.get(j).getEstado() != EstadoHabitacion.MANTENIMIENTO)
-                    {
+                for (int j = 0; j < habitacionesencollection.size(); j++) {
+                    if (habitacionesencollection.get(j).getCapacidadMaxima() >= intento.getCantidadPersonasEnReserva() && habitacionesencollection.get(j).getEstado() != EstadoHabitacion.MANTENIMIENTO) {
                         int numerodehabitacion = habitacionesencollection.get(j).getNroHabitacion();
 
-                        if(verSiHabitacionEstaDisponible(intento,numerodehabitacion))
-                        {
+                        if (verSiHabitacionEstaDisponible(intento, numerodehabitacion)) {
                             numerosdehabitacionesdisp.add(numerodehabitacion);
                         }
                     }
@@ -791,22 +746,18 @@ public class Hotel implements InterfacePersistencia {
             }
         }
 
-        if(numerosdehabitacionesdisp.isEmpty())
-        {
+        if (numerosdehabitacionesdisp.isEmpty()) {
             throw new HabitacionNoEncontradaException("No hay habitaciones disponibles segun requisitos. Saliendo...");
         }
 
         return numerosdehabitacionesdisp;
     }
 
-    public boolean verSiHabitacionEstaDisponible(Reserva intento, int numhabitacion)
-    {
+    public boolean verSiHabitacionEstaDisponible(Reserva intento, int numhabitacion) {
         boolean disponible = true;
-        for(Reserva reserva : reservas)
-        {
-            if(numhabitacion == reserva.getHabitacion() && reserva.isActiva())
-            {
-                if (VerificacionesDeDatos.intentoReservaEstaDentroDeGuardada(intento, reserva) || VerificacionesDeDatos.intentoReservaContieneUnaReservaGuardada(intento, reserva) || VerificacionesDeDatos.intentoReservaInterseccionaConUnaGuardada(intento, reserva)){
+        for (Reserva reserva : reservas) {
+            if (numhabitacion == reserva.getHabitacion() && reserva.isActiva()) {
+                if (VerificacionesDeDatos.intentoReservaEstaDentroDeGuardada(intento, reserva) || VerificacionesDeDatos.intentoReservaContieneUnaReservaGuardada(intento, reserva) || VerificacionesDeDatos.intentoReservaInterseccionaConUnaGuardada(intento, reserva)) {
                     disponible = false;
                     break;
                 }
@@ -815,8 +766,7 @@ public class Hotel implements InterfacePersistencia {
         return disponible;
     }
 
-    public String traerDatosDeHabitacionSegunNum(int numeroHabitacion)
-    {
+    public String traerDatosDeHabitacionSegunNum(int numeroHabitacion) {
         String info = "";
         try {
             info = info.concat(buscarHabitacionPorNumero(numeroHabitacion).toString());
@@ -826,8 +776,7 @@ public class Hotel implements InterfacePersistencia {
         return info;
     }
 
-    public Habitacion buscarHabitacionPorNumero(int numeroHabitacion) throws HabitacionNoEncontradaException
-    {
+    public Habitacion buscarHabitacionPorNumero(int numeroHabitacion) throws HabitacionNoEncontradaException {
         Habitacion prueba = null;
         for (int i = 1; i <= 3; i++) { // 3 es el nro de tipos de habitacion que existen
             try {
@@ -835,14 +784,12 @@ public class Hotel implements InterfacePersistencia {
                 if (prueba != null) {
                     break;
                 }
-            } catch (BadOptionException e)
-            {
+            } catch (BadOptionException e) {
                 System.out.println("Error en busqueda!");
             }
         }
 
-        if(prueba == null)
-        {
+        if (prueba == null) {
             throw new HabitacionNoEncontradaException("No existe esa habitacion con ese numero");
         }
 
@@ -852,10 +799,8 @@ public class Hotel implements InterfacePersistencia {
     /**
      * Limpia las personas de las habitaciones de las 3 listas, y se inserta las personas de nuevo en caso de que una reserva siga vigente.
      */
-    public void actualizarHabitacionesEnModificacionEnReserva()
-    {
-        for(int i = 1; i <= 3;i++)
-        {
+    public void actualizarHabitacionesEnModificacionEnReserva() {
+        for (int i = 1; i <= 3; i++) {
             try {
                 Habitaciones habitaciones = selectorDeTipoHabitacion(i);
                 habitaciones.limpiarPersonasDeHabitaciones();
@@ -864,21 +809,17 @@ public class Hotel implements InterfacePersistencia {
             }
         }
 
-        for(Reserva reserva : reservas)
-        {
-            if(VerificacionesDeDatos.reservaEstaPasandoAhora(reserva))
-            {
+        for (Reserva reserva : reservas) {
+            if (VerificacionesDeDatos.reservaEstaPasandoAhora(reserva)) {
                 Habitacion habitacionguardada = null;
 
                 try {
                     habitacionguardada = buscarHabitacionPorNumero(reserva.getHabitacion());
                     habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
-                    for(Integer dnipersona : reserva.getPasajeros())
-                    {
+                    for (Integer dnipersona : reserva.getPasajeros()) {
                         habitacionguardada.agregarPersonaAHabitacion(dnipersona);
                     }
-                } catch (HabitacionNoEncontradaException e)
-                {
+                } catch (HabitacionNoEncontradaException e) {
                     System.out.println("Error en busqueda de habitacion en carga de datos [RESERVA]");
                 }
             }

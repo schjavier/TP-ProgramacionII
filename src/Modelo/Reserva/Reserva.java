@@ -113,15 +113,13 @@ public class Reserva {
 
     @Override
     public String toString() {
-        return "Reserva {" +
-                "id=" + id +
-                ", dniTitular=" + dniTitular +
-                ", pasajeros=" + pasajeros +
-                ", activa=" + activa +
-                ", habitacion=" + habitacion +
-                ", fechaInicio=" + fechaInicio +
-                ", fechaFinal=" + fechaFinal +
-                '}';
+        return "Reserva: " + id + "\n" +
+                "DNI titular: " + dniTitular + "\n" +
+                "DNIs pasajeros: " + pasajeros + "\n" +
+                "Activa? " + activa + "\n" +
+                "Nro. habitacion: " + habitacion + "\n" +
+                "Fecha de inicio: " + fechaInicio + "\n" +
+                "Fecha de finalizacion: " + fechaFinal + "\n";
     }
 
     public JSONObject toJson(){
