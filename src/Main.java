@@ -150,7 +150,7 @@ public class Main {
             System.out.println("5. Ver lista de empleados");
             System.out.println("6. Gestionar un empleado");
             System.out.println("7. Eliminar un empleado");
-            System.out.println("8. Hacer backup preventivo");
+            System.out.println("8. Persistir estado actual del sistema");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -505,6 +505,7 @@ public class Main {
             System.out.println("2. Eliminar una reserva");
             System.out.println("3. Modificar una Reserva Existente");
             System.out.println("4. Ver reservas hechas por titular");
+            System.out.println("5. Mostrar informacion de una reserva por su ID");
             System.out.println("0. Salir");
             try {
                 String numeroIngresado = teclado.nextLine();
@@ -605,6 +606,25 @@ public class Main {
                         System.out.println(hotel.historicoPorTitular(nroDni));
                     } catch (PersonaNoExisteException | BadDataException e) {
                         System.out.println(e.getMessage());
+                    }
+                case 5:
+                    id_reserva = -1;
+                    System.out.println("Ingrese el Id de la reserva que quiere visualizar: ");
+                    try {
+                        String numeroIngresado = teclado.nextLine();
+                        esSoloNumeros(numeroIngresado);
+                        id_reserva = Integer.parseInt(numeroIngresado);
+                        try {
+                            Reserva reservaEncontrada = hotel.buscarReservaSegunId(id_reserva);
+                            System.out.println(reservaEncontrada);
+                            System.out.println(hotel.obtenerInfoPasajerosEnReserva(reservaEncontrada));
+                        } catch (ReservaNoExisteException e) {
+                            System.out.println("La reserva ingresada no existe o no pudo ser encontrada");
+                        } catch (PersonaNoExisteException e) {
+                            System.out.println("Una de las personas de la reserva no se encuentra cargada en el sistema");
+                        }
+                    } catch (BadDataException e) {
+                        System.out.println("Solo se aceptan números!");
                     }
             }
         } while (opcion != 0);

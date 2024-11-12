@@ -774,5 +774,15 @@ public class Hotel {
             }
         }
     }
+
+    public String obtenerInfoPasajerosEnReserva(Reserva reserva) throws BadDataException, PersonaNoExisteException {
+        StringBuilder resultado = new StringBuilder("--- Info pasajeros ---\n\n");
+
+        for (Integer dniPasajero : reserva.getPasajeros()) {
+            resultado.append(buscarPasajeroConEseDNI(dniPasajero)).append("\n\n");
+        }
+
+        return resultado.toString();
+    }
 }
 
