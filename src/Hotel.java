@@ -568,7 +568,7 @@ public class Hotel implements InterfacePersistencia {
 
 
     /**
-     * Genera uan reserva
+     * Genera una reserva
      * @param reserva Reserva completa.
      * @return respuesta, si se agrega o no.
      */

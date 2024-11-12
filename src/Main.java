@@ -3,6 +3,7 @@ import Exceptions.*;
 import Modelo.Habitaciones.EstadoHabitacion;
 import Modelo.Habitaciones.Habitacion;
 import Modelo.Habitaciones.TipoHabitacion;
+import Modelo.Persona.Persona;
 import Modelo.Reserva.Reserva;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
+import static DataChecks.VerificacionesDeDatos.verificarDni;
 
 public class Main {
     public static Scanner teclado = new Scanner(System.in);
@@ -528,6 +530,7 @@ public class Main {
             System.out.println("1. Agregar una reserva");
             System.out.println("2. Eliminar una reserva");
             System.out.println("3. Modificar una Reserva Existente");
+            System.out.println("4. Ver reservas hechas por titular");
             System.out.println("0. Salir");
             try {
                 String numeroIngresado = teclado.nextLine();
@@ -557,8 +560,7 @@ public class Main {
                         String numeroIngresado = teclado.nextLine();
                         esSoloNumeros(numeroIngresado);
                         id_reserva = Integer.parseInt(numeroIngresado);
-                    } catch (BadDataException e)
-                    {
+                    } catch (BadDataException e) {
                         System.out.println(e.getMessage());
                     }
                     int eleccion = -1;
@@ -586,47 +588,31 @@ public class Main {
                                 case 1:
                                     System.out.println("ingrese el dni: ");
                                     try {
-                                        int nuevoDni = agregarPersonaAReservaCreando(hotel,"Titular");
+                                        int nuevoDni = agregarPersonaAReservaCreando(hotel, "Titular");
                                         hotel.modificarTitularReserva(id_reserva, nuevoDni);
-                                    } catch (PersonaExisteException | ReservaExisteException | BadDataException e)
-                                    {
+                                    } catch (PersonaExisteException | ReservaExisteException | BadDataException e) {
                                         System.out.println(e.getMessage());
                                     }
                                     break;
                                 case 2:
                                     System.out.println("Ingrese el dni del pasajero");
                                     try {
-                                        int dniPasajero = agregarPersonaAReservaCreando(hotel,"Titular");
+                                        int dniPasajero = agregarPersonaAReservaCreando(hotel, "Titular");
                                         hotel.agregarPasajeroAReserva(id_reserva, dniPasajero);
-                                    } catch (PersonaExisteException | HabitacionNoEncontradaException | ReservaNoExisteException e)
-                                    {
+                                    } catch (PersonaExisteException | HabitacionNoEncontradaException |
+                                             ReservaNoExisteException e) {
                                         System.out.println(e.getMessage());
                                     }
 
                                     break;
                                 case 3:
                                     try {
-                                        int numerohabinew = selectorDeHabitacionDisponible(hotel,reservaEncontrada);
-                                        hotel.cambiarNroHabitacionDeReserva(id_reserva,numerohabinew);
-                                    } catch (HabitacionNoEncontradaException e)
-                                    {
+                                        int numerohabinew = selectorDeHabitacionDisponible(hotel, reservaEncontrada);
+                                        hotel.cambiarNroHabitacionDeReserva(id_reserva, numerohabinew);
+                                    } catch (HabitacionNoEncontradaException e) {
                                         System.out.println(e.getMessage());
                                     }
                                     break;
-                                case 4:
-                                    /* REVISAR TODO-S para ver que hay que hacer
-                                    System.out.println("Ingrese la nueva fecha de inico (yyyy-mm-dd)");
-                                    LocalDate nuevaFechaInicio = LocalDate.parse(teclado.nextLine());
-                                    hotel.cambiarFechaInicio(id_reserva, nuevaFechaInicio);
-                                    break;*/
-                                case 5:
-                                    /*
-                                    REVISAR TODO-S para ver que hay que hacer
-                                    System.out.println("Ingrese la nueva fecha de finalización (yyyy-mm-dd)");
-                                    LocalDate nuevaFechaFinal = LocalDate.parse(teclado.nextLine());
-                                    hotel.cambiarFechaInicio(id_reserva, nuevaFechaFinal);
-                                    break;*/
-
                             }
 
                         } catch (ReservaNoExisteException ex) {
@@ -635,7 +621,17 @@ public class Main {
 
                         break;
 
-                    }while (eleccion != 0) ;
+                    } while (eleccion != 0);
+                    break;
+                case 4:
+                    System.out.println("Ingrese el numero de DNI de la persona que quiere conocer sus reservas: ");
+                    try {
+                        int nroDni = Integer.parseInt(teclado.nextLine());
+                        hotel.buscarPersonaPorDni(nroDni); // para que tire exception si la persona no existe
+                        System.out.println(hotel.historicoPorTitular(nroDni));
+                    } catch (PersonaNoExisteException | BadDataException e) {
+                        System.out.println(e.getMessage());
+                    }
             }
         } while (opcion != 0);
 
