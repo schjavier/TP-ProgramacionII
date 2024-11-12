@@ -2,13 +2,9 @@ import DataChecks.VerificacionesDeDatos;
 import Exceptions.*;
 import JSONCreator.CreadorAJSON;
 import Modelo.Habitaciones.*;
-import Modelo.Persona.Empleado;
-import Modelo.Persona.Pasajero;
-import Modelo.Persona.Persona;
-import Modelo.Persona.TipoEmpleado;
+import Modelo.Persona.*;
 import Modelo.Reserva.Reserva;
 import Modelo.Reserva.ReservaService;
-import Persistencia.InterfacePersistencia;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -17,7 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class Hotel implements InterfacePersistencia {
+public class Hotel {
 
     private String nombre;
     private Empleado empleadoEnSistema = null;
@@ -25,16 +21,16 @@ public class Hotel implements InterfacePersistencia {
     private final HabitacionesStandard habitacionesStandard = new HabitacionesStandard();
     private final HabitacionesSuite habitacionesSuite = new HabitacionesSuite();
     private final HabitacionesPresidenciales habitacionesPresidenciales = new HabitacionesPresidenciales();
+    private final HabitacionService habitacionesService = new HabitacionService();
 
     private final ArrayList<Pasajero> pasajeros = new ArrayList<>();
+    private final PasajeroService pasajeroService = new PasajeroService();
+
     private final ArrayList<Empleado> empleados = new ArrayList<>();
+    private final EmpleadoService empleadoService = new EmpleadoService();
 
     private final ArrayList<Reserva> reservas = new ArrayList<>();
     private final ReservaService reservaService = new ReservaService();
-
-    private final String archivoPasajeros = "Pasajeros.json";
-    private final String archivoEmpleados = "Empleados.json";
-    private final String archivoHabitaciones = "Habitaciones.json";
 
 
     public Hotel(String nombre) {
@@ -80,16 +76,12 @@ public class Hotel implements InterfacePersistencia {
             throw new BadOptionException("Ese tipo de habitacion no existe!");
         }
 
-        try {
-            guardarHabitaciones();
-        } catch (NullNameException ex) {
-            System.out.println(ex.getMessage());
-        }
+        habitacionesService.persistir(todasLasHabitacionesAJSON());
     }
 
     public void crearEmpleado(String nombre, String apellido, int dni, String usuario, String email, String clave, TipoEmpleado tipoEmpleado) throws NullNameException {
         empleados.add(new Empleado(nombre, apellido, dni, usuario, email, clave, tipoEmpleado));
-        guardarEmpleados();
+        empleadoService.persistir(pasarListaDeEmpleadosAJSON());
     }
 
     public StringBuilder listarHabitaciones() {
@@ -128,12 +120,12 @@ public class Hotel implements InterfacePersistencia {
     public void revisarCocinasHabitaciones() throws NullNameException {
         habitacionesSuite.marcarTodasHabitacionesComoRevisadas();
         habitacionesPresidenciales.marcarTodasHabitacionesComoRevisadas();
-        guardarHabitaciones();
+        habitacionesService.persistir(todasLasHabitacionesAJSON());
     }
 
     public void revisarJacuzzisHabitaciones() throws NullNameException {
         habitacionesPresidenciales.marcarTodasHabitacionesComoRevisadasJacuzzi();
-        guardarHabitaciones();
+        habitacionesService.persistir(todasLasHabitacionesAJSON());
     }
 
     public StringBuilder listarSegunEstado(int tipohabitacion, EstadoHabitacion estado) {
@@ -235,11 +227,7 @@ public class Hotel implements InterfacePersistencia {
     public void agregarPasajero(String nombre, String apellido, int dni, String direccion) {
         Pasajero pasajero = new Pasajero(nombre, apellido, dni, direccion);
         pasajeros.add(pasajero);
-        try {
-            guardarPasajeros();
-        } catch (NullNameException ex) {
-            System.out.println("Error en archivo!");
-        }
+        pasajeroService.persistir(pasarListaDePasajerosAJSON());
     }
 
     public int obtenerNroHabitaciones() {
@@ -281,7 +269,7 @@ public class Hotel implements InterfacePersistencia {
 
     public void cargarJSONPasajeros() throws NullNameException {
         try {
-            JSONArray pasajerosJson = new JSONArray(CreadorAJSON.downloadJSON(archivoPasajeros));
+            JSONArray pasajerosJson = new JSONArray(CreadorAJSON.downloadJSON(pasajeroService.getNombreArchivo()));
 
             for (int i = 0; i < pasajerosJson.length(); i++) {
                 JSONObject jsonPasajero = pasajerosJson.getJSONObject(i);
@@ -301,21 +289,11 @@ public class Hotel implements InterfacePersistencia {
 
         } catch (IOException e) {
             try {
-                CreadorAJSON.uploadJSON(archivoPasajeros, "[]");
+                CreadorAJSON.uploadJSON(pasajeroService.getNombreArchivo(), "[]");
             } catch (IOException ex) {
                 System.out.println("Error en archivo pasajeros!");
             }
             System.out.println("Creando archivo...");
-        }
-    }
-
-    public void guardarPasajeros() throws NullNameException {
-        String arregloPasajeros = pasarListaDePasajerosAJSON();
-        try {
-            CreadorAJSON.uploadJSON(archivoPasajeros, arregloPasajeros);
-
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
         }
     }
 
@@ -338,7 +316,7 @@ public class Hotel implements InterfacePersistencia {
 
     public void cargarJSONEmpleados() throws NullNameException {
         try {
-            JSONArray empleadosJson = new JSONArray(CreadorAJSON.downloadJSON(archivoEmpleados));
+            JSONArray empleadosJson = new JSONArray(CreadorAJSON.downloadJSON(empleadoService.getNombreArchivo()));
             for (int i = 0; i < empleadosJson.length(); i++) {
                 JSONObject jsonEmpleados = empleadosJson.getJSONObject(i);
                 String nombre = jsonEmpleados.getString("Nombre");
@@ -361,7 +339,7 @@ public class Hotel implements InterfacePersistencia {
 
         } catch (IOException e) {
             try {
-                CreadorAJSON.uploadJSON(archivoEmpleados, "[]");
+                CreadorAJSON.uploadJSON(empleadoService.getNombreArchivo(), "[]");
             } catch (IOException ex) {
                 System.out.println("Error en archivo empleados!");
             }
@@ -377,39 +355,19 @@ public class Hotel implements InterfacePersistencia {
         return arregloEmpleados.toString();
     }
 
-    public void guardarEmpleados() throws NullNameException {
-        String arregloEmpleados = pasarListaDeEmpleadosAJSON();
-
-        try {
-            CreadorAJSON.uploadJSON(archivoEmpleados, arregloEmpleados);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    public JSONObject todasLasHabitacionesAJson() {
+    public String todasLasHabitacionesAJSON() {
         JSONObject habitaciones = new JSONObject();
 
         habitaciones.put("habitacionesStandard", habitacionesStandard.habitacionesAJson());
         habitaciones.put("habitacionesSuite", habitacionesSuite.habitacionesAJson());
         habitaciones.put("habitacionesPresidenciales", habitacionesPresidenciales.habitacionesAJson());
 
-        return habitaciones;
-    }
-
-    public void guardarHabitaciones() throws NullNameException {
-        String arregloHabitaciones = todasLasHabitacionesAJson().toString();
-
-        try {
-            CreadorAJSON.uploadJSON(archivoHabitaciones, arregloHabitaciones);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
+        return habitaciones.toString();
     }
 
     public void cargarJSONHabitaciones() throws NullNameException {
         try {
-            JSONObject habitacionesJson = new JSONObject(CreadorAJSON.downloadJSON(archivoHabitaciones));
+            JSONObject habitacionesJson = new JSONObject(CreadorAJSON.downloadJSON(habitacionesService.getNombreArchivo()));
 
             cargarHabitacionesDesdeJSON(habitacionesJson.getJSONArray("habitacionesStandard"), HabitacionStandard.class);
             cargarHabitacionesDesdeJSON(habitacionesJson.getJSONArray("habitacionesSuite"), HabitacionSuite.class);
@@ -491,7 +449,7 @@ public class Hotel implements InterfacePersistencia {
         for (Empleado empleado : empleados) {
             if (empleado.getDni() == dni) {
                 empleados.remove(empleado);
-                guardarEmpleados();
+                empleadoService.persistir(pasarListaDeEmpleadosAJSON());
                 return true;
             }
         }
@@ -499,10 +457,10 @@ public class Hotel implements InterfacePersistencia {
     }
 
     public void hacerBackup() throws NullNameException {
-        guardarPasajeros();
-        guardarEmpleados();
-        guardarHabitaciones();
-        persistir(listaReservasToJson(reservas));
+        pasajeroService.persistir(pasarListaDePasajerosAJSON());
+        empleadoService.persistir(pasarListaDeEmpleadosAJSON());
+        habitacionesService.persistir(todasLasHabitacionesAJSON());
+        reservaService.persistir(listaReservasToJson());
     }
 
 
@@ -577,32 +535,23 @@ public class Hotel implements InterfacePersistencia {
     public void generarReserva(Reserva reserva) {
         reservas.add(reserva);
         actualizarHabitacionesEnModificacionEnReserva();
-        persistir(listaReservasToJson(reservas));
+        reservaService.persistir(listaReservasToJson());
     }
 
 
     /**
      * Metodo que transforma la lista de reservas en un JsonArray
      *
-     * @param reservas La lista de reservas
      * @return devuelve la lsta de reservas convertida en Json como string.
      */
-    public String listaReservasToJson(ArrayList<Reserva> reservas) {
-
-        JSONArray reservasJson = new JSONArray(reservas);
+    public String listaReservasToJson() {
+        JSONArray reservasJson = new JSONArray();
         for (Reserva reserva : reservas) {
             reservasJson.put(reserva.toJson());
         }
 
         return reservasJson.toString();
 
-    }
-
-
-    // Servicio
-    @Override
-    public boolean persistir(String contenido) {
-        return reservaService.persistir(contenido);
     }
 
     public Reserva buscarReservaSegunId(int id) throws ReservaNoExisteException {
@@ -626,7 +575,7 @@ public class Hotel implements InterfacePersistencia {
         for (Reserva reserva : reservas) {
             if (reserva.getId() == id) {
                 reservas.remove(reserva);
-                persistir(listaReservasToJson(reservas));
+                reservaService.persistir(listaReservasToJson());
                 respuesta = true;
                 break;
             }
