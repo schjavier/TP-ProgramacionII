@@ -49,7 +49,7 @@ public class Main {
                 esSoloNumeros(numeroIngresado);
                 opcion = Integer.parseInt(numeroIngresado);
             } catch (BadDataException e) {
-                System.out.println("Solo se aceptan números!");
+                System.out.println(e.getMessage());
                 opcion = 0; //para prevenir comportamientos inesperados
             }
 
@@ -495,7 +495,7 @@ public class Main {
      * Muestra un menu para las reservas.
      * @param hotel
      */
-    public static void menuReservas(Hotel hotel){
+    public static void menuReservas(Hotel hotel) {
         int opcion = -1;
         do {
 
@@ -512,7 +512,7 @@ public class Main {
                 esSoloNumeros(numeroIngresado);
                 opcion = Integer.parseInt(numeroIngresado);
             } catch (BadDataException e) {
-                System.out.println("Solo se aceptan números!");
+                System.out.println(e.getMessage() + ", si creaste una reserva no pasa nada :)");
                 opcion = 0; //para prevenir comportamientos inesperados
             }
 
@@ -520,7 +520,8 @@ public class Main {
                 case 1:
                     try {
                         agregarReserva(hotel);
-                    } catch (HabitacionNoEncontradaException | BadDataException | ReservaExisteException | PersonaExisteException e) {
+                    } catch (HabitacionNoEncontradaException | BadDataException | ReservaExisteException |
+                             PersonaExisteException e) {
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -554,10 +555,9 @@ public class Main {
                                 esSoloNumeros(numeroIngresado);
                                 eleccion = Integer.parseInt(numeroIngresado);
                             } catch (BadDataException e) {
-                                System.out.println("Solo se aceptan números!");
+                                System.out.println(e.getMessage());
                                 eleccion = 0; //para prevenir comportamientos inesperados
                             }
-
 
                             switch (eleccion) {
                                 case 1:
@@ -588,6 +588,11 @@ public class Main {
                                         System.out.println(e.getMessage());
                                     }
                                     break;
+                                case 0:
+                                    System.out.println("Regresando al menú anterior...");
+                                    break;
+                                default:
+                                    System.out.println("Ingrese una opcion valida");
                             }
 
                         } catch (ReservaNoExisteException ex) {
@@ -618,18 +623,14 @@ public class Main {
                             Reserva reservaEncontrada = hotel.buscarReservaSegunId(id_reserva);
                             System.out.println(reservaEncontrada);
                             System.out.println(hotel.obtenerInfoPasajerosEnReserva(reservaEncontrada));
-                        } catch (ReservaNoExisteException e) {
-                            System.out.println("La reserva ingresada no existe o no pudo ser encontrada");
-                        } catch (PersonaNoExisteException e) {
-                            System.out.println("Una de las personas de la reserva no se encuentra cargada en el sistema");
+                        } catch (ReservaNoExisteException | PersonaNoExisteException e) {
+                            System.out.println(e.getMessage());
                         }
                     } catch (BadDataException e) {
-                        System.out.println("Solo se aceptan números!");
+                        System.out.println(e.getMessage());
                     }
             }
         } while (opcion != 0);
-
-
     }
 
     public static void agregarReserva(Hotel hotel) throws HabitacionNoEncontradaException, BadDataException, ReservaExisteException, PersonaExisteException {
@@ -648,6 +649,8 @@ public class Main {
 
         Reserva intentoReserva = new Reserva(dniTitular, fechaInicio, fechaFinal, hotel.obtenerDniEmpleadoLogueado());
         VerificacionesDeDatos.fechaTieneSentido(intentoReserva);
+
+        intentoReserva.setActiva(true);
 
         boolean seguirAgregandoPersonas = true;
         while (seguirAgregandoPersonas) {
@@ -683,6 +686,7 @@ public class Main {
 
 
         intentoReserva.asignarHabitacionAReservaYLlenarDatosFaltantes(numeroHabitacion);
+
         hotel.generarReserva(intentoReserva);
     }
 
