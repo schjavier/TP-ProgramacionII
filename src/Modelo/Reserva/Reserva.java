@@ -23,7 +23,6 @@ public class Reserva {
         this.id = ++contadorIdReserva;
         this.dniTitular = dniTitular;
         this.pasajeros = new ArrayList<>();
-        pasajeros.add(dniTitular);
         this.activa = true;
         this.habitacion = habitacion;
         this.fechaInicio = fechaInicio;
