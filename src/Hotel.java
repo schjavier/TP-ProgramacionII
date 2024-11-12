@@ -460,7 +460,7 @@ public class Hotel {
         pasajeroService.persistir(pasarListaDePasajerosAJSON());
         empleadoService.persistir(pasarListaDeEmpleadosAJSON());
         habitacionesService.persistir(todasLasHabitacionesAJSON());
-        reservaService.persistir(listaReservasToJson(reservas));
+        reservaService.persistir(listaReservasToJson());
     }
 
 
@@ -535,19 +535,17 @@ public class Hotel {
     public void generarReserva(Reserva reserva) {
         reservas.add(reserva);
         actualizarHabitacionesEnModificacionEnReserva();
-        reservaService.persistir(listaReservasToJson(reservas));
+        reservaService.persistir(listaReservasToJson());
     }
 
 
     /**
      * Metodo que transforma la lista de reservas en un JsonArray
      *
-     * @param reservas La lista de reservas
      * @return devuelve la lsta de reservas convertida en Json como string.
      */
-    public String listaReservasToJson(ArrayList<Reserva> reservas) {
-
-        JSONArray reservasJson = new JSONArray(reservas);
+    public String listaReservasToJson() {
+        JSONArray reservasJson = new JSONArray();
         for (Reserva reserva : reservas) {
             reservasJson.put(reserva.toJson());
         }
@@ -577,7 +575,7 @@ public class Hotel {
         for (Reserva reserva : reservas) {
             if (reserva.getId() == id) {
                 reservas.remove(reserva);
-                reservaService.persistir(listaReservasToJson(reservas));
+                reservaService.persistir(listaReservasToJson());
                 respuesta = true;
                 break;
             }
