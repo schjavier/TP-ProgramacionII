@@ -36,14 +36,6 @@ abstract public class Habitaciones<T extends Habitacion> {
     }
 
 
-    /**
-     * Se elimina una habitacion segun el numero elegido. (NO ESTOY SEGURO SI TIENE SENTIDO TENER ESTO.)
-     * @param numHabitacion Numero elegido.
-     * @return retorna true si elimino algo.
-     */
-    public boolean eliminarHabitacionSegunNumero(int numHabitacion) {
-        return listaHabitaciones.removeIf(habitacion -> habitacion.getNroHabitacion() == numHabitacion);
-    }
 
     /**
      * Lista todas las habitaciones.

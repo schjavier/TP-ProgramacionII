@@ -41,6 +41,7 @@ public class Hotel {
             cargarJSONEmpleados();
             cargarJSONHabitaciones();
             cargarJSONReservas();
+            reservaService.persistir(listaReservasToJson());
         } catch (NullNameException e) {
             System.out.println("Nombre nulo.");
         }
@@ -89,18 +90,6 @@ public class Hotel {
                 .append(habitacionesPresidenciales.listarHabitaciones()));
     }
 
-    //Que elimine habitaciones solo con el numero
-    public boolean eliminarHabitacion(int habitacion) {
-        if (habitacionesStandard.eliminarHabitacionSegunNumero(habitacion)) {
-            return true;
-        } else if (habitacionesSuite.eliminarHabitacionSegunNumero(habitacion)) {
-            return true;
-        } else if (habitacionesPresidenciales.eliminarHabitacionSegunNumero(habitacion)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 
     /**
@@ -654,10 +643,15 @@ public class Hotel {
 
                     try {
                         habitacionguardada = buscarHabitacionPorNumero(reserva.getHabitacion());
-                        habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
-                        for (int p = 0; p < pasajeros.length(); p++) {
-                            int dnipersona = pasajeros.getInt(p);
-                            habitacionguardada.agregarPersonaAHabitacion(dnipersona);
+                        if(habitacionguardada.getEstado() != EstadoHabitacion.MANTENIMIENTO)
+                        {
+                            habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
+                            for (int p = 0; p < pasajeros.length(); p++) {
+                                int dnipersona = pasajeros.getInt(p);
+                                habitacionguardada.agregarPersonaAHabitacion(dnipersona);
+                            }
+                        } else {
+                            System.out.println("La habitación " + reserva.getHabitacion() + "Esta en mantenimiento, por lo tanto no se asignaran pasajeros.");
                         }
                     } catch (HabitacionNoEncontradaException e) {
                         System.out.println("Error en busqueda de habitacion en carga de datos [RESERVA]");
@@ -764,9 +758,14 @@ public class Hotel {
 
                 try {
                     habitacionguardada = buscarHabitacionPorNumero(reserva.getHabitacion());
-                    habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
-                    for (Integer dnipersona : reserva.getPasajeros()) {
-                        habitacionguardada.agregarPersonaAHabitacion(dnipersona);
+                    if(habitacionguardada.getEstado() != EstadoHabitacion.MANTENIMIENTO) {
+                        habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
+                        for (Integer dnipersona : reserva.getPasajeros()) {
+                            habitacionguardada.agregarPersonaAHabitacion(dnipersona);
+                        }
+                    } else
+                    {
+                        System.out.println("La habitación " + reserva.getHabitacion() + "Esta en mantenimiento, por lo tanto no se asignaran pasajeros.");
                     }
                 } catch (HabitacionNoEncontradaException e) {
                     System.out.println("Error en busqueda de habitacion en carga de datos [RESERVA]");

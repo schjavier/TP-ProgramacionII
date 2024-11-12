@@ -7,10 +7,18 @@ import Modelo.Persona.Persona;
 import java.util.Scanner;
 import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
 
-
+/**
+ * Menu para gestionar personas.
+ */
 public class GestionPersona {
     static Scanner teclado = new Scanner(System.in);
 
+    /**
+     * El menu para manejar las personas.
+     * @param persona Persona que llega
+     * @param hotel El sistema.
+     * @param <T> Lo que extiende de personas
+     */
     public static <T extends Persona> void mostrarMenu(T persona, Hotel hotel) {
 
         int opcion = 0;
@@ -70,6 +78,9 @@ public class GestionPersona {
         } while (opcion != 0);
     }
 
+    /**
+     * Muestra las opciones comunes
+     */
     public static void mostrarOpcionesComunes() {
         System.out.println("\n--- Gestion de la persona ---");
         System.out.println("1. Ver informacion");
@@ -78,32 +89,54 @@ public class GestionPersona {
         System.out.println("4. Cambiar dni");
     }
 
+    /**
+     * Muestra las opciones que el empleado puede tener
+     */
     public static void mostrarOpcionesEmpleado() {
         System.out.println("5. Cambiar usuario");
         System.out.println("6. Cambiar email");
         System.out.println("7. Cambiar clave");
 
     }
-
+    /**
+     * Muestra las opciones que el pasajero puede tener
+     */
     public static void mostrarOpcionesPasajero() {
         System.out.println("5. Cambiar domicilio");
     }
 
+    /**
+     * Cambia el nombre de la persona
+     * @param persona Persona que se esta gestionando
+     */
     public static void cambiarNombre(Persona persona) {
         System.out.println("Nombre actual: " + persona.getNombre() + "\n");
         persona.setNombre(Main.definirNombreoApe("Nuevo nombre: "));
     }
 
+    /**
+     * Cambia el apellido de la persona
+     * @param persona Persona que se esta gestionando
+     */
     public static void cambiarApellido(Persona persona) {
         System.out.println("Apellido actual: " + persona.getApellido() + "\n");
         persona.setApellido(Main.definirNombreoApe("Nuevo apellido: "));
     }
 
+    /**
+     * Cambia el dni de la persona
+     * @param persona La persona que se esta gestionando.
+     * @param hotel El sistema.
+     */
     public static void cambiarDni(Persona persona, Hotel hotel) {
         System.out.println("DNI actual: " + persona.getDni());
         persona.setDni(Main.definirDni(hotel));
     }
 
+    /**
+     * Cambia el domicilio del pasajero
+     * @param persona Persona que se esta gestionando
+     */
     public static void cambiarDomicilio(Persona persona) {
         Pasajero pasajero = (Pasajero) persona;
         System.out.println("Domicilio actual: " + pasajero.getDomicilio() + "\n");
@@ -111,6 +144,11 @@ public class GestionPersona {
         pasajero.setDomicilio(teclado.nextLine());
     }
 
+    /**
+     * Cambiar el usuario del empleado
+     * @param persona Persona que se esta gestionando
+     * @param hotel Sistema.
+     */
     public static void cambiarUsuario(Persona persona, Hotel hotel) {
         try {
             Empleado empleado = (Empleado) persona;
@@ -127,6 +165,10 @@ public class GestionPersona {
         }
     }
 
+    /**
+     * Cambia el email del empleado
+     * @param persona Persona que se esta gestionando
+     */
     public static void cambiarEmail(Persona persona) {
         try {
             if (!(persona instanceof Empleado)) {
@@ -142,6 +184,10 @@ public class GestionPersona {
         }
     }
 
+    /**
+     * Cambia la clave del usuario
+     * @param persona Persona que se esta gestionando
+     */
     public static void cambiarClave(Persona persona) {
         try {
             if (!(persona instanceof Empleado)) {
