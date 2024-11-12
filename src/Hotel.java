@@ -13,6 +13,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ *
+ * Clase wrapper del Sistema de gestion Hotelera.
+ *
+ * @author JulianAlonso
+ * @author TomasSilva
+ * @author JavierSchettini
+ */
 public class Hotel {
 
     private String nombre;
@@ -32,18 +40,19 @@ public class Hotel {
     private final ArrayList<Reserva> reservas = new ArrayList<>();
     private final ReservaService reservaService = new ReservaService();
 
-
+    /**
+     * Constructor del la clase
+     *
+     * @param nombre <code>String</code> el nombre del hotel
+     */
     public Hotel(String nombre) {
         this.nombre = nombre;
 
-        try {
             cargarJSONPasajeros();
             cargarJSONEmpleados();
             cargarJSONHabitaciones();
             cargarJSONReservas();
-        } catch (NullNameException e) {
-            System.out.println("Nombre nulo.");
-        }
+
     }
 
     /**
@@ -79,15 +88,39 @@ public class Hotel {
         habitacionesService.persistir(todasLasHabitacionesAJSON());
     }
 
-    public void crearEmpleado(String nombre, String apellido, int dni, String usuario, String email, String clave, TipoEmpleado tipoEmpleado) throws NullNameException {
+    /**
+     * Metodo que crea un empleado.
+     *
+     * @param nombre String
+     * @param apellido String
+     * @param dni entero
+     * @param usuario String nombre del usuario
+     * @param email String email del usuario
+     * @param clave String password
+     * @param tipoEmpleado Enum tipo de empleado
+     *
+     */
+
+    public void crearEmpleado(String nombre, String apellido, int dni, String usuario, String email, String clave, TipoEmpleado tipoEmpleado){
         empleados.add(new Empleado(nombre, apellido, dni, usuario, email, clave, tipoEmpleado));
         empleadoService.persistir(pasarListaDeEmpleadosAJSON());
     }
+
+    /**
+     * Lista todas las habitaciones en el sistema.
+     * @return StringBuilder que representa todas las habitaciones
+     */
 
     public StringBuilder listarHabitaciones() {
         return habitacionesStandard.listarHabitaciones().append(habitacionesSuite.listarHabitaciones()
                 .append(habitacionesPresidenciales.listarHabitaciones()));
     }
+
+    /**
+     *
+     * @param habitacion Int que representa el numero de habitacion a eliminar.
+     * @return devuelve true si puede eliminarla, false de otra forma.
+     */
 
     //Que elimine habitaciones solo con el numero
     public boolean eliminarHabitacion(int habitacion) {
@@ -117,17 +150,35 @@ public class Hotel {
         };
     }
 
-    public void revisarCocinasHabitaciones() throws NullNameException {
+    /**
+     * Metodo que revisa todas las cocinas de las habitaciones.
+     * Marca todas las habitaciones como revisadas y persiste la informacion.
+     *
+     */
+
+    public void revisarCocinasHabitaciones(){
         habitacionesSuite.marcarTodasHabitacionesComoRevisadas();
         habitacionesPresidenciales.marcarTodasHabitacionesComoRevisadas();
         habitacionesService.persistir(todasLasHabitacionesAJSON());
     }
 
-    public void revisarJacuzzisHabitaciones() throws NullNameException {
+    /**
+     * Metodo que revisa todos los jacuzzis de las habitaciones.
+     * Marca todas las habitaciones como revisadas y persiste la informacion.
+     *
+     */
+
+    public void revisarJacuzzisHabitaciones(){
         habitacionesPresidenciales.marcarTodasHabitacionesComoRevisadasJacuzzi();
         habitacionesService.persistir(todasLasHabitacionesAJSON());
     }
 
+    /**
+     *
+     * @param tipohabitacion entero que representa el tipo de habitacion.
+     * @param estado <code>Enum EstadoHabitacion</code> estado actual de la habitacion.
+     * @return <code>StringBuilder</code> que representa todas las habitacion segun el estado.
+     */
     public StringBuilder listarSegunEstado(int tipohabitacion, EstadoHabitacion estado) {
         StringBuilder todos = new StringBuilder();
         try {
@@ -138,10 +189,18 @@ public class Hotel {
         return todos;
     }
 
+    /**
+     * Metodo que devuelve la cantidad de empleados
+     * @return <code>int</code> cantidad de empleados
+     */
     public int obtenerCantidadEmpleados() {
         return empleados.size();
     }
 
+    /**
+     * Metodo que devuelve todos los empleados.
+     * @return un <code>StringBuilder</code> que representa todos los empleados
+     */
     public StringBuilder verEmpleados() {
         StringBuilder resultado = new StringBuilder("Lista de empleados: \n\n");
 
@@ -152,6 +211,14 @@ public class Hotel {
 
         return resultado;
     }
+
+    /**
+     * Metodo Que verifica si existe un pasajero segun el DNI.
+     *
+     * @param dni <code>int</code> numero de DNI.
+     * @return <code>true</code> si encuentra el dni del pasajero. <code>false</code> de otra forma.
+     * @throws BadDataException Puede lanzar una excepcion de este tipo, si no se puede verificar el dni que llega por parametro
+     */
 
     public boolean existePasajeroConEseDNI(int dni) throws BadDataException { // para hacer reservas o alguna otra cosa
         VerificacionesDeDatos.verificarDni(dni);
@@ -166,6 +233,13 @@ public class Hotel {
         return existe;
     }
 
+    /**
+     * Metodo que busca un pasajero segun el DNI.
+     * @param dni <code>int</code> que representa el DNI del pasajero a buscar.
+     * @return devuelve el objeto <code>Pasajero</code> que corresponde a ese DNI.
+     * @throws PersonaNoExisteException Puede lanzar esta excepcion si el pasajero que busca, no existe.
+     * @throws BadDataException Puede lanzar esta excepcion si el DNI no pude ser verificado.
+     */
     public Pasajero buscarPasajeroConEseDNI(int dni) throws PersonaNoExisteException, BadDataException // para mostrarDatos de una o mas personas (puede ser de las reservas no?)
     {
         VerificacionesDeDatos.verificarDni(dni);
@@ -183,6 +257,14 @@ public class Hotel {
 
         return persona;
     }
+
+    /**Metodo que busca una persona, sea empleado o pasajero segun el DNI pasado por parametro.
+     *
+     * @param dni <code>int</code> representa el numero de DNI de la persona a buscar
+     * @return devuelve el objeto <code>Persona</code> correspondiente a ese DNI.
+     * @throws PersonaNoExisteException si la persona buscada no existe lanza esta excepcion.
+     * @throws BadDataException Puede lanzar esta escepcion si el dni no puede ser verificado.
+     */
 
     public Persona buscarPersonaPorDni(int dni) throws PersonaNoExisteException, BadDataException {
         VerificacionesDeDatos.verificarDni(dni);
@@ -202,6 +284,14 @@ public class Hotel {
         throw new PersonaNoExisteException("Persona con el DNI: " + dni + " no existe.");
     }
 
+    /**
+     * Metodo que corrobora que exista un empleado con el dni pasado por parametro,
+     *
+     * @param dni <code>int</code> que representa el numero de documento.
+     * @return <code>true</code> si existe el empleado.
+     *         <code>false</code> de cualquier otro modo.
+     * @throws BadDataException puede lanzar esta excepcion si no puede verificar el DNI.
+     */
     public boolean existeEmpleadoConEseDNI(int dni) throws BadDataException {
         VerificacionesDeDatos.verificarDni(dni);
         boolean existe = false;
@@ -214,7 +304,12 @@ public class Hotel {
         return existe;
     }
 
-
+    /**
+     * Metodo que verifica su el DNI esta cargado en el sistema.
+     * @param dni <code>int</code> que representa el numero de DNI
+     * @throws PersonaExisteException Lanza esta excepcion si existe un empleado o pasajero con el DNI.
+     * @throws BadDataException Puede lanzar esta excepcion si no puede verificar el DNI pasado por parametro.
+     */
     public void verSiElDniEstaCargado(int dni) throws PersonaExisteException, BadDataException {
         VerificacionesDeDatos.verificarDni(dni);
 
@@ -223,13 +318,26 @@ public class Hotel {
         }
     }
 
-
+    /**
+     * Metodo para agreagr un Pasajero.
+     * Crea un obejeto <code>Pasajero</code>, lo agrega a la lista de pasajeros, y guarda los cambios.
+     *
+     * @param nombre <code>String</code> nombre del pasajero
+     * @param apellido <code>String</code> apellido del pasajero a agregar
+     * @param dni <code>int</code> que representa el numeor de DNI.
+     * @param direccion <code>String</code> direccion del pasajero a agregar.
+     */
     public void agregarPasajero(String nombre, String apellido, int dni, String direccion) {
         Pasajero pasajero = new Pasajero(nombre, apellido, dni, direccion);
         pasajeros.add(pasajero);
         pasajeroService.persistir(pasarListaDePasajerosAJSON());
     }
 
+    /**
+     * Metodo que cuenta el total de habitaciones.
+     *
+     * @return <code>int</code> que representa el numero total de habitaciones.
+     */
     public int obtenerNroHabitaciones() {
         int total = 0;
         for (HabitacionStandard habitacion : habitacionesStandard.getListaHabitaciones()) {
@@ -245,6 +353,11 @@ public class Hotel {
         return total;
     }
 
+    /**
+     * Metodo que cuenta el numero total de habitaciones segun el estado actual.
+     * @param estadoHabitacion <code>Enum EstadoHabitacion</code> estado actual de la habitacion.
+     * @return <code>int</code> numero total de habitaciones por estado.
+     */
     public int obtenerNroHabitacionesSegunEstado(EstadoHabitacion estadoHabitacion) {
         int total = 0;
 
@@ -267,7 +380,12 @@ public class Hotel {
         return total;
     }
 
-    public void cargarJSONPasajeros() throws NullNameException {
+    /**
+     * Metodo que carga el Archivo JSON de pasajeros al sistema.
+     *
+     */
+
+    public void cargarJSONPasajeros(){
         try {
             JSONArray pasajerosJson = new JSONArray(CreadorAJSON.downloadJSON(pasajeroService.getNombreArchivo()));
 
@@ -297,6 +415,10 @@ public class Hotel {
         }
     }
 
+    /**
+     * Metodo que trasforma la lista de pasajero en un <code>JSONArray</code>.
+     * @return devuelve un <code>String</code> que es el JSONArray pasado a string.
+     */
     public String pasarListaDePasajerosAJSON() {
         JSONArray arregloPasajeros = new JSONArray();
         for (Pasajero pasajero : pasajeros) {
@@ -304,6 +426,12 @@ public class Hotel {
         }
         return arregloPasajeros.toString();
     }
+
+    /**
+     * Metodo que verifica su existe un usuario en el sistema.
+     * @param username Nombre de usuario a buscar
+     * @return <code>true</code> si encuentra al usuario, <code>false</code> de cualqueir otro modo.
+     */
 
     public boolean existeUsuario(String username) {
         for (Empleado empleado : empleados) {
@@ -314,7 +442,13 @@ public class Hotel {
         return false;
     }
 
-    public void cargarJSONEmpleados() throws NullNameException {
+    /**
+     * Metodo que carga el Json de los empleado en el Sistema.
+     * Si atrapa una excepcion de tipo <code>IOException</code> lanzado por el metodo <code>dowloadJSON</code> crear el archivo, con un arreglo vacio.
+     *
+     */
+
+    public void cargarJSONEmpleados(){
         try {
             JSONArray empleadosJson = new JSONArray(CreadorAJSON.downloadJSON(empleadoService.getNombreArchivo()));
             for (int i = 0; i < empleadosJson.length(); i++) {
@@ -347,6 +481,11 @@ public class Hotel {
         }
     }
 
+    /**
+     * Metodo que transforma la lista de empleados del sistema en <code>JSONArray</code>
+     * @return devuelve un <code>JSONArray</code> convertido en String.
+     */
+
     public String pasarListaDeEmpleadosAJSON() {
         JSONArray arregloEmpleados = new JSONArray();
         for (Empleado empleado : empleados) {
@@ -354,6 +493,12 @@ public class Hotel {
         }
         return arregloEmpleados.toString();
     }
+
+    /**
+     * Metodo que transforma todas las habitaciones, en JSON.
+     *
+     * @return devuelve un <code>String</code> que representa todos los tipos de habitaciones en formato Json.
+     */
 
     public String todasLasHabitacionesAJSON() {
         JSONObject habitaciones = new JSONObject();
@@ -365,7 +510,11 @@ public class Hotel {
         return habitaciones.toString();
     }
 
-    public void cargarJSONHabitaciones() throws NullNameException {
+    /**
+     * Metodo que carga la todas las Habitaciones desde el archivo JSON.
+     */
+
+    public void cargarJSONHabitaciones(){
         try {
             JSONObject habitacionesJson = new JSONObject(CreadorAJSON.downloadJSON(habitacionesService.getNombreArchivo()));
 
@@ -377,6 +526,17 @@ public class Hotel {
             System.out.println("Error al leer el archivo de habitaciones: " + e.getMessage());
         }
     }
+
+    /**
+     * Metodo Generico que permite cargar las habitaciones segun su tipo.
+     * Itera sobre el <code>JSONArray</code> recivido por parametro.
+     * Verifica que el tipo de la habitacion sea de alguno de los tipos ya definidos en el Sistema.
+     * Crea una nueva habitacion del tipo encontrado.
+     *
+     * @param habitacionesArray un <code>JSONArray</code> de todas las habitaciones
+     * @param tipoHabitacion Clase generica que representa el tipo de Habitacion
+     * @param <T> Devuelve un Objeto generico de tipo T que extiende de Habitacion,
+     */
 
     private <T extends Habitacion> void cargarHabitacionesDesdeJSON(JSONArray habitacionesArray, Class<T> tipoHabitacion) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -412,6 +572,14 @@ public class Hotel {
         }
     }
 
+    /**
+     * Metodo que intenta iniciar la sesion en le sistema.
+     *
+     * @param username <code>String</code>  el nombre de usuario de usuario a autenticar.
+     * @param clave <code>String</code> password del usuario
+     * @throws PersonaNoExisteException Lanza esta excepcion si las credenciales del empleado son <code>null</code>
+     */
+
     public void intentarIniciarSesion(String username, String clave) throws PersonaNoExisteException {
         Empleado credencialesEmpleado = null;
 
@@ -429,23 +597,39 @@ public class Hotel {
         empleadoEnSistema = credencialesEmpleado;
     }
 
+    /**
+     * Cierra la sesion actual
+     */
+
     public void logOut() {
         empleadoEnSistema = null;
     }
 
-    public TipoEmpleado buscarPermisoDeUsuario() {
-        return empleadoEnSistema.getTipo();
-    }
-
+    /**
+     * Metodo para obtener el empleado que esta actualemente conectado al sistema.
+     *
+     * @return Devuelve un Objeto de tipo <code>Empleado</code>
+     */
     public Empleado obtenerEmpleadoLogueado() {
         return empleadoEnSistema;
     }
 
+    /** Metodo para obtener el DNI del empleado actualente conectado al sistema.
+     *
+     * @return <code>int</code> que representa el numero de documento del usuario.
+     */
     public int obtenerDniEmpleadoLogueado() {
         return empleadoEnSistema.getDni();
     }
 
-    public boolean eliminarEmpleadoPorElDni(int dni) throws NullNameException {
+    /**
+     * Elimina un empleado mediante el id que recibe por parametro.
+     *
+     * @param dni recibe un <code>int</code> que representa el DNI del empleado a eliminar
+     * @return <code>true</code> si lo pudo eliminar, <code>false</code> de otro modo.
+     */
+
+    public boolean eliminarEmpleadoPorElDni(int dni) {
         for (Empleado empleado : empleados) {
             if (empleado.getDni() == dni) {
                 empleados.remove(empleado);
@@ -456,7 +640,12 @@ public class Hotel {
         return false;
     }
 
-    public void hacerBackup() throws NullNameException {
+    /**
+     * Metodo que persiste todos los datos cargados en memoria.
+     *
+     */
+
+    public void hacerBackup(){
         pasajeroService.persistir(pasarListaDePasajerosAJSON());
         empleadoService.persistir(pasarListaDeEmpleadosAJSON());
         habitacionesService.persistir(todasLasHabitacionesAJSON());
@@ -554,6 +743,14 @@ public class Hotel {
 
     }
 
+    /**
+     * Metodo que retorna una reserva segun el ID pasado por parametro.
+     *
+     * @param id de la reserva.
+     * @return devuelve un objecto de tipo <code>Reserva</code>.
+     * @throws ReservaNoExisteException Lanza esta excepcion si no existe una reserva asociada al id.
+     */
+
     public Reserva buscarReservaSegunId(int id) throws ReservaNoExisteException {
         Reserva busqueda = null;
         for (Reserva reserva : reservas) {
@@ -570,6 +767,12 @@ public class Hotel {
         return busqueda;
     }
 
+    /**
+     * Elimina una reserva mediante el id recibido por parametro.
+     * @param id de la reserva a eliminar
+     * @return <code>true</code> si puso ser eliminada, <code>false</code> de otra forma.
+     */
+
     public boolean eliminarReserva(int id) {
         boolean respuesta = false;
         for (Reserva reserva : reservas) {
@@ -583,6 +786,16 @@ public class Hotel {
         return respuesta;
     }
 
+
+    /** Metodo que modifica el titular de una reserva.
+     *
+     * @param id de la reserva a modificar
+     * @param dniTitular numero de documento del nuevo titular de la reserva
+     * @return <code>true</code> si se pudo modificar, <code>false</code> de otra forma.
+     * @throws ReservaNoExisteException Puede lanza resta excepcion cuando la reserva no existe.
+     * @throws ReservaExisteException Lanza esta excepcion cuando el titular ya tiene una reserva activa.
+     * @throws BadDataException Puede lanzar esta escepcion cuando no puede verificar el numero de documento.
+     */
     public boolean modificarTitularReserva(int id, int dniTitular) throws ReservaNoExisteException, ReservaExisteException, BadDataException {
         boolean respuesta = false;
         VerificacionesDeDatos.verificarDni(dniTitular);
@@ -596,8 +809,18 @@ public class Hotel {
         return respuesta;
     }
 
+    /**
+     * Metodo que permite agregar mas pasajeros a una reserva.
+     *
+     * @param id de la reserva a modificar.
+     * @param dniPasajero el numero de documento del pasajero.
+     * @return <code>true</code> si el pasajero fue agregado con exito, <code>false</code> de otra forma.
+     * @throws ReservaNoExisteException puede lanzar esta excepcion si el id no esta asociado a ninguna reserva.
+     * @throws HabitacionNoEncontradaException puede lanzar esta excepcion si el numero de habitacion no se encuentra.
+     * @throws MuchasPersonasException Lanza esta excepcion cuando se supera el limite de pasajeros permitidos.
+     */
 
-    public boolean agregarPasajeroAReserva(int id, int dniPasajero) throws ReservaNoExisteException, HabitacionNoEncontradaException {
+    public boolean agregarPasajeroAReserva(int id, int dniPasajero) throws ReservaNoExisteException, HabitacionNoEncontradaException, MuchasPersonasException {
         boolean respuesta = false;
         Reserva reservaAModificar = buscarReservaSegunId(id);
         Habitacion habitacionreserva = buscarHabitacionPorNumero(reservaAModificar.getHabitacion());
@@ -611,6 +834,13 @@ public class Hotel {
         return respuesta;
     }
 
+    /**
+     *
+     * @param id de la reserva a modificar.
+     * @param nroHabitacion nuevo numero de habitacion.
+     * @return <code>true</code> si la reserva pudo ser modificada, <code>false</code> de otra forma.
+     * @throws ReservaNoExisteException Puede lanzar esta excepcion si no se encuantra reserva asociada al id.
+     */
     public boolean cambiarNroHabitacionDeReserva(int id, int nroHabitacion) throws ReservaNoExisteException {
         boolean respuesta = false;
         Reserva reservaAModificar = buscarReservaSegunId(id);
@@ -619,8 +849,13 @@ public class Hotel {
         return respuesta;
     }
 
+    /**
+     * Metodo que carga las reservas desde el archivo json.
+     *
+     *
+     */
 
-    public void cargarJSONReservas() throws NullNameException {
+    public void cargarJSONReservas(){
         try {
             JSONArray jsonReservas = new JSONArray(CreadorAJSON.downloadJSON(reservaService.getNombreArchivo()));
             for (int i = 0; i < jsonReservas.length(); i++) {
@@ -673,6 +908,12 @@ public class Hotel {
         }
     }
 
+    /** Metodo que muestra las habitaciones disponibles.
+     *
+     * @param intento un objeto de tipo <code>Reserva</code>.
+     * @return Una lista de los numeros de todas las habitaciones disponibles
+     * @throws HabitacionNoEncontradaException Puede lanzar esta excepcion si no encuetra una habitacion.
+     */
 
     public ArrayList<Integer> verHabitacionesDisponibles(Reserva intento) throws HabitacionNoEncontradaException {
         ArrayList<Integer> numerosdehabitacionesdisp = new ArrayList<>();
@@ -702,6 +943,14 @@ public class Hotel {
         return numerosdehabitacionesdisp;
     }
 
+    /**
+     * Metodo que chequea que una habitacion este disponible.
+     *
+     * @param intento un objeto de tipo <code>Reserva</code> que es el intento de reserva.
+     * @param numhabitacion el numero de la habitacion a reservar
+     * @return <code>true</code> si esta disponible, <code>false</code> si no lo esta.
+     */
+
     public boolean verSiHabitacionEstaDisponible(Reserva intento, int numhabitacion) {
         boolean disponible = true;
         for (Reserva reserva : reservas) {
@@ -715,6 +964,13 @@ public class Hotel {
         return disponible;
     }
 
+    /**
+     * Metodo que retorna los datos de una habitacion segun su numero.
+     *
+     * @param numeroHabitacion el numero de la habitacion a buscar.
+     * @return un <code>String</code> con toda la info de la habitacion.
+     */
+
     public String traerDatosDeHabitacionSegunNum(int numeroHabitacion) {
         String info = "";
         try {
@@ -725,6 +981,13 @@ public class Hotel {
         return info;
     }
 
+    /**
+     * Metodo que retrona una habitacion segun su numero.
+     *
+     * @param numeroHabitacion el numero de la habitacion a buscar.
+     * @return un objeto de tipo <code>Habitacion</code> asociado al numero recivid por parametro.
+     * @throws HabitacionNoEncontradaException puede lanzar esta excepcion si la habitacion no se encuentra.
+     */
     public Habitacion buscarHabitacionPorNumero(int numeroHabitacion) throws HabitacionNoEncontradaException {
         Habitacion prueba = null;
         for (int i = 1; i <= 3; i++) { // 3 es el nro de tipos de habitacion que existen
@@ -745,9 +1008,11 @@ public class Hotel {
         return prueba;
     }
 
-    /**
-     * Limpia las personas de las habitaciones de las 3 listas, y se inserta las personas de nuevo en caso de que una reserva siga vigente.
+    /** Metodo que limpia las personas de las habitaciones de las 3 listas.
+     *  Inserta las personas de nuevo en caso de que una reserva siga vigente.
+
      */
+
     public void actualizarHabitacionesEnModificacionEnReserva() {
         for (int i = 1; i <= 3; i++) {
             try {

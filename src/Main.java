@@ -574,7 +574,7 @@ public class Main {
                                         int dniPasajero = agregarPersonaAReservaCreando(hotel, "Titular");
                                         hotel.agregarPasajeroAReserva(id_reserva, dniPasajero);
                                     } catch (PersonaExisteException | HabitacionNoEncontradaException |
-                                             ReservaNoExisteException e) {
+                                             ReservaNoExisteException | MuchasPersonasException e) {
                                         System.out.println(e.getMessage());
                                     }
 
