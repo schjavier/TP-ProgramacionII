@@ -4,7 +4,8 @@ import org.json.JSONObject;
 
 
 /**
- * Un empleado del sistema.
+ * Clase que representa un empleado del sistema.
+ *
  */
 public class Empleado extends Persona {
     private static int contadorIdEmpleado = 0; // id auto incremental
@@ -23,13 +24,6 @@ public class Empleado extends Persona {
         this.tipo = tipoEmpleado;
     }
 
-    public static int getContadorIdEmpleado() {
-        return contadorIdEmpleado;
-    }
-
-    public int getIdEmpleado() {
-        return idEmpleado;
-    }
 
     public String getUsuario() {
         return usuario;
@@ -69,6 +63,10 @@ public class Empleado extends Persona {
                 "Tipo: " + tipo.getTipoEmpleado() + "\n";
     }
 
+    /**
+     * Metodo que convierte en JSON a un empleado.
+     * @return un {@code JSONObject}
+     */
     public JSONObject toJSON() {
         JSONObject empleado = new JSONObject();
         // datos base

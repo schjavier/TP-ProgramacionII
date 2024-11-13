@@ -2,10 +2,20 @@ package JSONCreator;
 
 import java.io.*;
 
+/**
+ * Clase final que permite trabajar con JSON
+ */
+
 public final class CreadorAJSON {
 
     private CreadorAJSON() {}
 
+    /**
+     * Metodo que permite escribir en un archivo el contenido en formato json.
+     * @param nombre {@code String} que representa el nombre del archivo.
+     * @param contenido un {@code String} que representa el contenido que se va a persistir
+     * @throws IOException Lanza esta excepcion si ocurre algun error con los archivos.
+     */
     public static void uploadJSON(String nombre, String contenido) throws IOException
     {
         try {
@@ -19,6 +29,12 @@ public final class CreadorAJSON {
         }
     }
 
+    /**
+     * Metodo que [ermite descargar el contenido de un JSON al sistema
+     * @param nombre {@code String} que reprensenta el nombre del archivo
+     * @return devuelve un {@code String} con toda la informacion del json.
+     * @throws IOException Lanza esta excepcion si hay promblemas con el archivo
+     */
     public static String downloadJSON(String nombre) throws IOException
     {
         String datos;
@@ -34,17 +50,5 @@ public final class CreadorAJSON {
         return datos;
     }
 
-    public static void cleanJSON(String nombre) throws IOException
-    {
-        try {
-            File archivo = new File("src/Persistencia/" + nombre);
-            BufferedWriter escritura = new BufferedWriter(new FileWriter(archivo,false));
-            escritura.write("");
-            escritura.flush();
-            escritura.close();
-        } catch (IOException e) {
-            throw new IOException(e);
-        }
-    }
 
 }

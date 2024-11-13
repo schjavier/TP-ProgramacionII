@@ -7,14 +7,18 @@ import java.util.Scanner;
 import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
 
 /**
- * <p>Clase para gestionar todo sobre habitaciones
+ * Clase para gestionar habitaciones.
+ *
+ *
  */
+
 public class GestionHabitacion {
 
     /**
-     * Recibe una habitacion sobre que se va a trabajar en el menu.
-     * @param habitacion Habitacion que llega
-     * @param <T> Tipo que extiende de {@link Habitacion}
+     * Metodo generico para gestionar una habitacion, dependiendo del tipo.
+     *
+     * @param habitacion la habitacion a gestionar
+     *
      */
     public static <T extends Habitacion> void mostrarMenu(T habitacion, Hotel hotel) throws BadDataException {
 
@@ -86,8 +90,9 @@ public class GestionHabitacion {
     }
 
     /**
-     * Muestra las opciones que tiene en comun todas las habitaciones
+     * Metodo que muestra unas serie de opciones comunes a todos los tipos de habitacion
      */
+
     public static void mostrarOpcionesComunes() {
         System.out.println("1. Ver estado de la habitación");
         System.out.println("2. Cambiar estado de la habitación");
@@ -96,22 +101,23 @@ public class GestionHabitacion {
         System.out.println("5. Ver resumen de la habitacion");
     }
 
+
     /**
-     * Se muestra el estado de la habitacion actual.
-     * @param habitacion Habitacion actual
-     * @param <T> Tipo que extiende de {@link Habitacion}
+     * Metodo generico para ver el estado de una habitacion
+     *
+     * @param habitacion habitacion de la cual queremos saber el estado
      */
     private static <T extends Habitacion> void verEstado(T habitacion) {
         System.out.println("Estado actual de la habitación: " + habitacion.getEstado());
     }
 
     /**
-     * Cambia el estado de la habitación. No se permite hacerlo si tiene personas dentro.
-     * @param scanner Teclado
-     * @param habitacion Habitacion actual
-     * @param <T> Tipo que extiende de {@link Habitacion}
-     * @throws BadDataException En caso de que la habitacion tenga personas adentro, o se quiera cambiar a ocupada
+     * Metodo generico que permite cambiar el estado de una habitacion.
+     *
+     * @param scanner lee los datos ingresados por teclado
+     * @param habitacion la habitacion a cambiarle el estado
      */
+
     private static <T extends Habitacion> void cambiarEstado(Scanner scanner, T habitacion) throws BadDataException {
         String err = "";
         System.out.println("Estados disponibles:");
@@ -184,7 +190,7 @@ public class GestionHabitacion {
 
     /**
      * Cambia la fecha de jacuzziRevisado al dia de hoy.
-     * @param habitacion Habitacion actual, solo puede ser precidencial
+     * @param habitacion Habitacion actual, solo puede ser presidencial
      */
     private static void revisarJacuzzi(HabitacionPresidencial habitacion) {
         habitacion.marcarMantenimientoEnJacuzzi();

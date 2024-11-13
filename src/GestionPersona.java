@@ -8,16 +8,18 @@ import java.util.Scanner;
 import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
 
 /**
- * Menu para gestionar personas.
+ * Clase que permite gestionar una persona.
+ *
  */
+
 public class GestionPersona {
     static Scanner teclado = new Scanner(System.in);
 
     /**
-     * El menu para manejar las personas.
-     * @param persona Persona que llega
-     * @param hotel El sistema.
-     * @param <T> Lo que extiende de personas
+     * Metodo estatico que muestra el menu de personas, muestra opciones dependiendo si la persona es empleado o pasajero.
+     * @param persona la persona de la cual se mostraran las opciones
+     * @param hotel objeto de tipo<code>Hotel</code>.
+     *
      */
     public static <T extends Persona> void mostrarMenu(T persona, Hotel hotel) {
 
@@ -79,8 +81,10 @@ public class GestionPersona {
     }
 
     /**
-     * Muestra las opciones comunes
+     * Metodo que muestra una serie de opciones comunes a todos los tipos de <code>Persona</code>
      */
+
+
     public static void mostrarOpcionesComunes() {
         System.out.println("\n--- Gestion de la persona ---");
         System.out.println("1. Ver informacion");
@@ -90,7 +94,7 @@ public class GestionPersona {
     }
 
     /**
-     * Muestra las opciones que el empleado puede tener
+     * Metodo que muestra las opciones de empleado.
      */
     public static void mostrarOpcionesEmpleado() {
         System.out.println("5. Cambiar usuario");
@@ -98,35 +102,37 @@ public class GestionPersona {
         System.out.println("7. Cambiar clave");
 
     }
+
     /**
-     * Muestra las opciones que el pasajero puede tener
+     * Metodo que muestra las opciones de Pasajero.
      */
     public static void mostrarOpcionesPasajero() {
         System.out.println("5. Cambiar domicilio");
     }
 
     /**
-     * Cambia el nombre de la persona
-     * @param persona Persona que se esta gestionando
+     * Metodo que cambia el nombre de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el nombre.
      */
+
     public static void cambiarNombre(Persona persona) {
         System.out.println("Nombre actual: " + persona.getNombre() + "\n");
         persona.setNombre(Main.definirNombreoApe("Nuevo nombre: "));
     }
 
     /**
-     * Cambia el apellido de la persona
-     * @param persona Persona que se esta gestionando
+     * Metodo que cambia el apellido de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el apellido.
      */
+
     public static void cambiarApellido(Persona persona) {
         System.out.println("Apellido actual: " + persona.getApellido() + "\n");
         persona.setApellido(Main.definirNombreoApe("Nuevo apellido: "));
     }
 
     /**
-     * Cambia el dni de la persona
-     * @param persona La persona que se esta gestionando.
-     * @param hotel El sistema.
+     * Metodo que cambia el dni de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el dni.
      */
     public static void cambiarDni(Persona persona, Hotel hotel) {
         System.out.println("DNI actual: " + persona.getDni());
@@ -134,9 +140,10 @@ public class GestionPersona {
     }
 
     /**
-     * Cambia el domicilio del pasajero
-     * @param persona Persona que se esta gestionando
+     * Metodo que cambia el domicilio de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el domicilio.
      */
+
     public static void cambiarDomicilio(Persona persona) {
         Pasajero pasajero = (Pasajero) persona;
         System.out.println("Domicilio actual: " + pasajero.getDomicilio() + "\n");
@@ -145,10 +152,10 @@ public class GestionPersona {
     }
 
     /**
-     * Cambiar el usuario del empleado
-     * @param persona Persona que se esta gestionando
-     * @param hotel Sistema.
+     * Metodo que cambia el Usuario de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar.
      */
+
     public static void cambiarUsuario(Persona persona, Hotel hotel) {
         try {
             Empleado empleado = (Empleado) persona;
@@ -164,10 +171,9 @@ public class GestionPersona {
             System.out.println(e.getMessage());
         }
     }
-
     /**
-     * Cambia el email del empleado
-     * @param persona Persona que se esta gestionando
+     * Metodo que cambia el emial de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el email.
      */
     public static void cambiarEmail(Persona persona) {
         try {
@@ -183,11 +189,11 @@ public class GestionPersona {
             System.out.println(e.getMessage());
         }
     }
-
     /**
-     * Cambia la clave del usuario
-     * @param persona Persona que se esta gestionando
+     * Metodo que cambia el la clave de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el domicilio.
      */
+
     public static void cambiarClave(Persona persona) {
         try {
             if (!(persona instanceof Empleado)) {

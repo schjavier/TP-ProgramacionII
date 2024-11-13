@@ -70,9 +70,9 @@ abstract public class Habitaciones<T extends Habitacion> {
     }
 
     /**
-     *
-     * @param numHabitacion
-     * @return
+     *Metodo que permite traer una habitacion mediante su numero
+     * @param numHabitacion el numero de la habitacion que se quiere traer
+     * @return devuelve un dato T.
      */
     public T traerHabitacionSegunId(int numHabitacion){
         T room = null;
@@ -84,14 +84,22 @@ abstract public class Habitaciones<T extends Habitacion> {
         return room;
     }
 
-
+    /**
+     * Metodo para retronar toda la lista de habitaciones
+     * @return devuelve un {@code ArrayList} de tipo de dato generico.
+     */
     public ArrayList<T> retornarLista()
     {
         return listaHabitaciones;
     }
 
+    /**
+     * Metodo que vuelve a cero el contador de pasajeros en un habitacion.
+     */
+
     public void limpiarPersonasDeHabitaciones()
     {
+
         for (T habitacion : listaHabitaciones) {
             if(habitacion.getNroOcupantes() != 0)
             {
