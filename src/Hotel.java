@@ -116,25 +116,6 @@ public class Hotel {
                 .append(habitacionesPresidenciales.listarHabitaciones()));
     }
 
-    /**
-     *
-     * @param habitacion Int que representa el numero de habitacion a eliminar.
-     * @return devuelve true si puede eliminarla, false de otra forma.
-     */
-
-    //Que elimine habitaciones solo con el numero
-    public boolean eliminarHabitacion(int habitacion) {
-        if (habitacionesStandard.eliminarHabitacionSegunNumero(habitacion)) {
-            return true;
-        } else if (habitacionesSuite.eliminarHabitacionSegunNumero(habitacion)) {
-            return true;
-        } else if (habitacionesPresidenciales.eliminarHabitacionSegunNumero(habitacion)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     /**
      * @param tipoHabitacion Un numero del 1 al x siendo x el ultimo tipo de habitacion que haya
