@@ -5,8 +5,20 @@ import java.util.Scanner;
 
 import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
 
+/**
+ * Clase para gestionar habitaciones.
+ *
+ *
+ */
+
 public class GestionHabitacion {
 
+    /**
+     * Metodo generico para gestionar una habitacion, dependiendo del tipo.
+     *
+     * @param habitacion la habitacion a gestionar
+     *
+     */
     public static <T extends Habitacion> void mostrarMenu(T habitacion) {
 
         Scanner scanner = new Scanner(System.in);
@@ -72,6 +84,10 @@ public class GestionHabitacion {
         } while (opcion != 0);
     }
 
+    /**
+     * Metodo que muestra unas serie de opciones comunes a todos los tipos de habitacion
+     */
+
     public static void mostrarOpcionesComunes() {
         System.out.println("1. Ver estado de la habitación");
         System.out.println("2. Cambiar estado de la habitación");
@@ -80,9 +96,22 @@ public class GestionHabitacion {
         System.out.println("5. Ver resumen de la habitacion");
     }
 
+
+    /**
+     * Metodo generico para ver el estado de una habitacion
+     *
+     * @param habitacion habitacion de la cual queremos saber el estado
+     */
     private static <T extends Habitacion> void verEstado(T habitacion) {
         System.out.println("Estado actual de la habitación: " + habitacion.getEstado());
     }
+
+    /**
+     * Metodo generico que permite cambiar el estado de una habitacion.
+     *
+     * @param scanner lee los datos ingresados por teclado
+     * @param habitacion la habitacion a cambiarle el estado
+     */
 
     private static <T extends Habitacion> void cambiarEstado(Scanner scanner, T habitacion) {
         System.out.println("Estados disponibles:");
@@ -97,18 +126,42 @@ public class GestionHabitacion {
         }
     }
 
+    /**
+     * Metodo que muestra por pantalla los ocupantes de una determinada habitacion.
+     *
+     * @param habitacion la habitacion de la cual sez listaran los ocupantes.
+     */
+
     private static <T extends Habitacion> void verOcupantes(T habitacion) {
         System.out.println("Ocupantes actuales: " + habitacion.getOcupantes());
     }
+
+    /**
+     * Metodo que imprime por pantalla la cantidad de ocupantes de una determinada habitacion.
+     *
+     * @param habitacion La habitacion de donde misramos a los ocupantes.
+     */
 
     private static <T extends Habitacion> void verNumeroOcupantes(T habitacion) {
         System.out.println("Ocupantes actuales: " + habitacion.getNroOcupantes());
     }
 
+    /**
+     * Metodo que permite revisar una cocina de una habitacion que tenga cocina.
+     *
+     * @param habitacion la habitacion a revisar.
+     */
+
     private static <T extends Habitacion & TieneCocina> void revisarCocina(T habitacion) {
         habitacion.marcarMantenimientoHechoEnCocina();
         System.out.println("Revision de cocina completa!");
     }
+
+    /**
+     * Metodo que permite revisar el jacuzzi de una habitacion .
+     *
+     * @param habitacion
+     */
 
     private static void revisarJacuzzi(HabitacionPresidencial habitacion) {
         habitacion.marcarMantenimientoEnJacuzzi();

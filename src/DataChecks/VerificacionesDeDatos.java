@@ -4,6 +4,10 @@ import Exceptions.BadDataException;
 import Modelo.Reserva.Reserva;
 import java.time.LocalDate;
 
+/**
+ * Clase final, que contiene metodos para hacer verificaciones de ditinto tipo de datos.
+ */
+
 public final class VerificacionesDeDatos {
 
     /**
@@ -207,6 +211,11 @@ public final class VerificacionesDeDatos {
         return true;
     }
 
+    /**
+     * Metodo que verifica que la fecha pasada por parametro es antes de hoy
+     * @param intento la fecha a evaluar
+     * @return {@code true} si es antes, {@code false} de otra forma
+     */
     public static boolean fechaAntesDeHoy(LocalDate intento)
     {
         boolean antesDeHoy = false;

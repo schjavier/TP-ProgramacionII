@@ -7,10 +7,20 @@ import Modelo.Persona.Persona;
 import java.util.Scanner;
 import static DataChecks.VerificacionesDeDatos.esSoloNumeros;
 
+/**
+ * Clase que permite gestionar una persona.
+ *
+ */
 
 public class GestionPersona {
     static Scanner teclado = new Scanner(System.in);
 
+    /**
+     * Metodo estatico que muestra el menu de personas, muestra opciones dependiendo si la persona es empleado o pasajero.
+     * @param persona la persona de la cual se mostraran las opciones
+     * @param hotel objeto de tipo<code>Hotel</code>.
+     *
+     */
     public static <T extends Persona> void mostrarMenu(T persona, Hotel hotel) {
 
         int opcion = 0;
@@ -70,6 +80,11 @@ public class GestionPersona {
         } while (opcion != 0);
     }
 
+    /**
+     * Metodo que muestra una serie de opciones comunes a todos los tipos de <code>Persona</code>
+     */
+
+
     public static void mostrarOpcionesComunes() {
         System.out.println("\n--- Gestion de la persona ---");
         System.out.println("1. Ver informacion");
@@ -78,6 +93,9 @@ public class GestionPersona {
         System.out.println("4. Cambiar dni");
     }
 
+    /**
+     * Metodo que muestra las opciones de empleado.
+     */
     public static void mostrarOpcionesEmpleado() {
         System.out.println("5. Cambiar usuario");
         System.out.println("6. Cambiar email");
@@ -85,24 +103,46 @@ public class GestionPersona {
 
     }
 
+    /**
+     * Metodo que muestra las opciones de Pasajero.
+     */
     public static void mostrarOpcionesPasajero() {
         System.out.println("5. Cambiar domicilio");
     }
+
+    /**
+     * Metodo que cambia el nombre de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el nombre.
+     */
 
     public static void cambiarNombre(Persona persona) {
         System.out.println("Nombre actual: " + persona.getNombre() + "\n");
         persona.setNombre(Main.definirNombreoApe("Nuevo nombre: "));
     }
 
+    /**
+     * Metodo que cambia el apellido de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el apellido.
+     */
+
     public static void cambiarApellido(Persona persona) {
         System.out.println("Apellido actual: " + persona.getApellido() + "\n");
         persona.setApellido(Main.definirNombreoApe("Nuevo apellido: "));
     }
 
+    /**
+     * Metodo que cambia el dni de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el dni.
+     */
     public static void cambiarDni(Persona persona, Hotel hotel) {
         System.out.println("DNI actual: " + persona.getDni());
         persona.setDni(Main.definirDni(hotel));
     }
+
+    /**
+     * Metodo que cambia el domicilio de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el domicilio.
+     */
 
     public static void cambiarDomicilio(Persona persona) {
         Pasajero pasajero = (Pasajero) persona;
@@ -110,6 +150,11 @@ public class GestionPersona {
         System.out.println("Nuevo domicilio: ");
         pasajero.setDomicilio(teclado.nextLine());
     }
+
+    /**
+     * Metodo que cambia el Usuario de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar.
+     */
 
     public static void cambiarUsuario(Persona persona, Hotel hotel) {
         try {
@@ -126,7 +171,10 @@ public class GestionPersona {
             System.out.println(e.getMessage());
         }
     }
-
+    /**
+     * Metodo que cambia el emial de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el email.
+     */
     public static void cambiarEmail(Persona persona) {
         try {
             if (!(persona instanceof Empleado)) {
@@ -141,6 +189,10 @@ public class GestionPersona {
             System.out.println(e.getMessage());
         }
     }
+    /**
+     * Metodo que cambia el la clave de una persona recibida por parametro.
+     * @param persona La persona a la cual se le va a cambiar el domicilio.
+     */
 
     public static void cambiarClave(Persona persona) {
         try {
