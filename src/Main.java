@@ -723,6 +723,7 @@ public class Main {
                     } catch (PersonaNoExisteException | BadDataException e) {
                         System.out.println(e.getMessage());
                     }
+                    break;
                 case 5:
                     id_reserva = -1;
                     System.out.println("Ingrese el Id de la reserva que quiere visualizar: ");
