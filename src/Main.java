@@ -626,14 +626,15 @@ public class Main {
                     break;
                 case 2:
                     System.out.println("Ingrese el Id de la reserva que quiere eliminar: ");
+                    int reservaborrar = -1;
                     try {
-                        int reservaborrar = 0;
                         String numeroIngresado = teclado.nextLine();
                         esSoloNumeros(numeroIngresado);
                         reservaborrar = Integer.parseInt(numeroIngresado);
                         hotel.eliminarReserva(reservaborrar);
                         hotel.actualizarHabitacionesEnModificacionEnReserva();
                     } catch (BadDataException e) {
+                        reservaborrar = -1;
                         System.out.println(e.getMessage());
                     }
 
