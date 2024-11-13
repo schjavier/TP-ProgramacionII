@@ -626,7 +626,17 @@ public class Main {
                     break;
                 case 2:
                     System.out.println("Ingrese el Id de la reserva que quiere eliminar: ");
-                    hotel.eliminarReserva(Integer.parseInt(teclado.nextLine()));
+                    try {
+                        int reservaborrar = 0;
+                        String numeroIngresado = teclado.nextLine();
+                        esSoloNumeros(numeroIngresado);
+                        reservaborrar = Integer.parseInt(numeroIngresado);
+                        hotel.eliminarReserva(reservaborrar);
+                        hotel.actualizarHabitacionesEnModificacionEnReserva();
+                    } catch (BadDataException e) {
+                        System.out.println(e.getMessage());
+                    }
+
                     break;
                 case 3:
                     int id_reserva = -1;
@@ -689,6 +699,7 @@ public class Main {
                                     break;
                                 case 0:
                                     System.out.println("Regresando al menú anterior...");
+                                    hotel.actualizarHabitacionesEnModificacionEnReserva();
                                     break;
                                 default:
                                     System.out.println("Ingrese una opcion valida");
