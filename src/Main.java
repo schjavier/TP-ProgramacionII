@@ -188,12 +188,11 @@ public class Main {
             System.out.println("\n--- Menu del administrador ---");
             System.out.println("1. Crear habitacion(es)");
             System.out.println("2. Gestionar una habitacion por su ID");
-            System.out.println("3. Eliminar una habitacion por su ID");
-            System.out.println("4. Crear un empleado");
-            System.out.println("5. Ver lista de empleados");
-            System.out.println("6. Gestionar un empleado");
-            System.out.println("7. Eliminar un empleado");
-            System.out.println("8. Hacer backup preventivo");
+            System.out.println("3. Crear un empleado");
+            System.out.println("4. Ver lista de empleados");
+            System.out.println("5. Gestionar un empleado");
+            System.out.println("6. Eliminar un empleado");
+            System.out.println("7. Persistir estado actual del sistema");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -218,21 +217,18 @@ public class Main {
                     }
                     break;
                 case 3:
-                    eliminarHabitacion(hotel);
-                    break;
-                case 4:
                     crearEmpleado(hotel,false);
                     break;
-                case 5:
+                case 4:
                     System.out.println(hotel.verEmpleados());
                     break;
-                case 6:
+                case 5:
                     gestionarPersona(hotel);
                     break;
-                case 7:
+                case 6:
                     eliminarEmpleado(hotel);
                     break;
-                case 8:
+                case 7:
                     hotel.hacerBackup();
                     break;
                 case 0:
@@ -435,13 +431,6 @@ public class Main {
 
     }
 
-    public static void eliminarHabitacion(Hotel hotel) {
-        int nroHab = 0;
-
-        System.out.println("Ingrese el numero de habitacion a eliminar: ");
-        nroHab = Integer.parseInt(teclado.nextLine());
-        hotel.eliminarHabitacion(nroHab);
-    }
 
     /**
      * Metodo que lista las habitaciones del hotel segun el estado en el que se encuentran
@@ -495,21 +484,23 @@ public class Main {
      *
      * @param hotel el objeto de tipo <code>Hotel</code>
      * @throws HabitacionNoEncontradaException puede lanzar esta excepcion si no encuentra el numero de habitacion
-
      */
-    public static void gestionarHabitacion(Hotel hotel) throws HabitacionNoEncontradaException{
-        Habitacion prueba = null;
+
+    public static void gestionarHabitacion(Hotel hotel) throws HabitacionNoEncontradaException, NullNameException {
+        Habitacion habitacion = null;
 
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");
 
         try {
             int numeroHabitacion = Integer.parseInt(teclado.nextLine());
-            prueba = hotel.buscarHabitacionPorNumero(numeroHabitacion);
-            GestionHabitacion.mostrarMenu(prueba);
+            habitacion = hotel.buscarHabitacionPorNumero(numeroHabitacion);
+            GestionHabitacion.mostrarMenu(habitacion,hotel);
             hotel.hacerBackup();
         } catch (NumberFormatException e)
         {
             System.out.println("Solo usar numeros!!!");
+        } catch (BadDataException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -614,13 +605,14 @@ public class Main {
             System.out.println("2. Eliminar una reserva");
             System.out.println("3. Modificar una Reserva Existente");
             System.out.println("4. Ver reservas hechas por titular");
+            System.out.println("5. Mostrar informacion de una reserva por su ID");
             System.out.println("0. Salir");
             try {
                 String numeroIngresado = teclado.nextLine();
                 esSoloNumeros(numeroIngresado);
                 opcion = Integer.parseInt(numeroIngresado);
             } catch (BadDataException e) {
-                System.out.println("Solo se aceptan números!");
+                System.out.println(e.getMessage() + ", si creaste una reserva no pasa nada :)");
                 opcion = 0; //para prevenir comportamientos inesperados
             }
 
@@ -662,10 +654,9 @@ public class Main {
                                 esSoloNumeros(numeroIngresado);
                                 eleccion = Integer.parseInt(numeroIngresado);
                             } catch (BadDataException e) {
-                                System.out.println("Solo se aceptan números!");
+                                System.out.println(e.getMessage());
                                 eleccion = 0; //para prevenir comportamientos inesperados
                             }
-
 
                             switch (eleccion) {
                                 case 1:
@@ -696,6 +687,11 @@ public class Main {
                                         System.out.println(e.getMessage());
                                     }
                                     break;
+                                case 0:
+                                    System.out.println("Regresando al menú anterior...");
+                                    break;
+                                default:
+                                    System.out.println("Ingrese una opcion valida");
                             }
 
                         } catch (ReservaNoExisteException ex) {
@@ -715,10 +711,25 @@ public class Main {
                     } catch (PersonaNoExisteException | BadDataException e) {
                         System.out.println(e.getMessage());
                     }
+                case 5:
+                    id_reserva = -1;
+                    System.out.println("Ingrese el Id de la reserva que quiere visualizar: ");
+                    try {
+                        String numeroIngresado = teclado.nextLine();
+                        esSoloNumeros(numeroIngresado);
+                        id_reserva = Integer.parseInt(numeroIngresado);
+                        try {
+                            Reserva reservaEncontrada = hotel.buscarReservaSegunId(id_reserva);
+                            System.out.println(reservaEncontrada);
+                            System.out.println(hotel.obtenerInfoPasajeros(reservaEncontrada.getPasajeros()));
+                        } catch (ReservaNoExisteException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    } catch (BadDataException e) {
+                        System.out.println(e.getMessage());
+                    }
             }
         } while (opcion != 0);
-
-
     }
 
     /**
@@ -748,6 +759,8 @@ public class Main {
         Reserva intentoReserva = new Reserva(dniTitular, fechaInicio, fechaFinal, hotel.obtenerDniEmpleadoLogueado());
         VerificacionesDeDatos.fechaTieneSentido(intentoReserva);
 
+        intentoReserva.setActiva(true);
+
         boolean seguirAgregandoPersonas = true;
         while (seguirAgregandoPersonas) {
             int eleccion = -1;
@@ -767,21 +780,14 @@ public class Main {
             }
         }
 
-        System.out.println("Pasajeros:" + intentoReserva.getPasajeros());
-        for (Integer dni : intentoReserva.getPasajeros()) {
-            try {
-                System.out.println(hotel.buscarPasajeroConEseDNI(dni));
-            } catch (PersonaNoExisteException e) {
-                System.out.println("La " + dni + " no existe?");
-            }
-            System.out.println("---");
-        }
+        System.out.println(hotel.obtenerInfoPasajeros(intentoReserva.getPasajeros()));
 
         System.out.println("Cantidad:" + intentoReserva.getCantidadPersonasEnReserva());
         int numeroHabitacion = selectorDeHabitacionDisponible(hotel, intentoReserva);
 
 
         intentoReserva.asignarHabitacionAReservaYLlenarDatosFaltantes(numeroHabitacion);
+
         hotel.generarReserva(intentoReserva);
     }
 

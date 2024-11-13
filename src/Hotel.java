@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,12 +48,11 @@ public class Hotel {
      */
     public Hotel(String nombre) {
         this.nombre = nombre;
-
             cargarJSONPasajeros();
             cargarJSONEmpleados();
             cargarJSONHabitaciones();
             cargarJSONReservas();
-
+            reservaService.persistir(listaReservasToJson());
     }
 
     /**
@@ -855,7 +855,7 @@ public class Hotel {
      *
      */
 
-    public void cargarJSONReservas(){
+    public void cargarJSONReservas() {
         try {
             JSONArray jsonReservas = new JSONArray(CreadorAJSON.downloadJSON(reservaService.getNombreArchivo()));
             for (int i = 0; i < jsonReservas.length(); i++) {
@@ -889,10 +889,15 @@ public class Hotel {
 
                     try {
                         habitacionguardada = buscarHabitacionPorNumero(reserva.getHabitacion());
-                        habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
-                        for (int p = 0; p < pasajeros.length(); p++) {
-                            int dnipersona = pasajeros.getInt(p);
-                            habitacionguardada.agregarPersonaAHabitacion(dnipersona);
+                        if(habitacionguardada.getEstado() != EstadoHabitacion.MANTENIMIENTO)
+                        {
+                            habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
+                            for (int p = 0; p < pasajeros.length(); p++) {
+                                int dnipersona = pasajeros.getInt(p);
+                                habitacionguardada.agregarPersonaAHabitacion(dnipersona);
+                            }
+                        } else {
+                            System.out.println("La habitación " + reserva.getHabitacion() + "Esta en mantenimiento, por lo tanto no se asignaran pasajeros.");
                         }
                     } catch (HabitacionNoEncontradaException e) {
                         System.out.println("Error en busqueda de habitacion en carga de datos [RESERVA]");
@@ -1030,15 +1035,42 @@ public class Hotel {
 
                 try {
                     habitacionguardada = buscarHabitacionPorNumero(reserva.getHabitacion());
-                    habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
-                    for (Integer dnipersona : reserva.getPasajeros()) {
-                        habitacionguardada.agregarPersonaAHabitacion(dnipersona);
+                    if(habitacionguardada.getEstado() != EstadoHabitacion.MANTENIMIENTO) {
+                        habitacionguardada.setEstado(EstadoHabitacion.OCUPADA);
+                        for (Integer dnipersona : reserva.getPasajeros()) {
+                            habitacionguardada.agregarPersonaAHabitacion(dnipersona);
+                        }
+                    } else
+                    {
+                        System.out.println("La habitación " + reserva.getHabitacion() + "Esta en mantenimiento, por lo tanto no se asignaran pasajeros.");
                     }
                 } catch (HabitacionNoEncontradaException e) {
                     System.out.println("Error en busqueda de habitacion en carga de datos [RESERVA]");
                 }
             }
         }
+    }
+
+    /**
+     * Muestra la información de los ocupantes a partir de sus DNIs
+     * @param dniPasajeros una lista con los DNIs de los pasajeros que quiere conocerse su información
+     * @return resultado Un string con la información de cada uno de los pasajeros
+     */
+    public String obtenerInfoPasajeros(ArrayList<Integer> dniPasajeros) throws BadDataException {
+        StringBuilder resultado = new StringBuilder();
+        if (!dniPasajeros.isEmpty()) {
+            resultado.append("--- Info pasajeros ---\n\n");
+
+            for (Integer dniPasajero: dniPasajeros) {
+                try {
+                    resultado.append(buscarPasajeroConEseDNI(dniPasajero)).append("\n\n");
+                } catch (PersonaNoExisteException e) {
+                    resultado.append(e.getMessage());
+                }
+            }
+        }
+
+        return resultado.toString();
     }
 }
 

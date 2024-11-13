@@ -1,4 +1,5 @@
 import Exceptions.BadDataException;
+import Exceptions.PersonaNoExisteException;
 import Modelo.Habitaciones.*;
 
 import java.util.Scanner;
@@ -19,7 +20,7 @@ public class GestionHabitacion {
      * @param habitacion la habitacion a gestionar
      *
      */
-    public static <T extends Habitacion> void mostrarMenu(T habitacion) {
+    public static <T extends Habitacion> void mostrarMenu(T habitacion, Hotel hotel) throws BadDataException {
 
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;
@@ -51,10 +52,14 @@ public class GestionHabitacion {
                     verEstado(habitacion);
                     break;
                 case 2:
-                    cambiarEstado(scanner, habitacion);
+                    try {
+                        cambiarEstado(scanner, habitacion);
+                    } catch (BadDataException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 3:
-                    verOcupantes(habitacion);
+                    verOcupantes(habitacion,hotel);
                     break;
                 case 4:
                     verNumeroOcupantes(habitacion);
@@ -91,7 +96,7 @@ public class GestionHabitacion {
     public static void mostrarOpcionesComunes() {
         System.out.println("1. Ver estado de la habitación");
         System.out.println("2. Cambiar estado de la habitación");
-        System.out.println("3. Ver DNI de ocupantes de la habitación");
+        System.out.println("3. Ver info de ocupantes de la habitación");
         System.out.println("4. Ver número de ocupantes actuales");
         System.out.println("5. Ver resumen de la habitacion");
     }
@@ -113,56 +118,80 @@ public class GestionHabitacion {
      * @param habitacion la habitacion a cambiarle el estado
      */
 
-    private static <T extends Habitacion> void cambiarEstado(Scanner scanner, T habitacion) {
+    private static <T extends Habitacion> void cambiarEstado(Scanner scanner, T habitacion) throws BadDataException {
+        String err = "";
         System.out.println("Estados disponibles:");
         System.out.println(EstadoHabitacion.retornarValoresDeEnum());
         System.out.print("Seleccione el nuevo estado: ");
-        int estadoSeleccionado = Integer.parseInt(scanner.nextLine());
+
+        int estadoSeleccionado = 0;
+        String numeroIngresado = scanner.nextLine();
+        esSoloNumeros(numeroIngresado);
+        estadoSeleccionado = Integer.parseInt(numeroIngresado);
+
         if (estadoSeleccionado >= 0 && estadoSeleccionado < EstadoHabitacion.values().length) {
-            habitacion.setEstado(EstadoHabitacion.values()[estadoSeleccionado]);
+            EstadoHabitacion estadoCheck = EstadoHabitacion.values()[estadoSeleccionado];
+
+            if(estadoCheck == EstadoHabitacion.OCUPADA)
+            {
+                err = err.concat("No puede ser el estado ocupado!");
+            }
+
+            if(habitacion.getNroOcupantes() != 0)
+            {
+                err = err.concat("No puede cambiarse el estado si la habitación se encuentra ocupada actualmente!");
+            }
+
+            if(!err.isBlank())
+            {
+                throw new BadDataException(err);
+            }
+
+
             System.out.println("Estado cambiado a: " + habitacion.getEstado());
         } else {
-            System.out.println("Estado no válido.");
+            err = err.concat("Estado no valido");
+            throw new BadDataException(err);
         }
     }
 
     /**
-     * Metodo que muestra por pantalla los ocupantes de una determinada habitacion.
-     *
-     * @param habitacion la habitacion de la cual sez listaran los ocupantes.
+     * Muestra la información de los ocupantes, a partir de sus DNIs
+     * @param habitacion Habitacion actual
+     * @param hotel Una instancia de Hotel, para extraer la información de los ocupantes
+     * @param <T> Tipo que extiende de {@link Habitacion}
      */
-
-    private static <T extends Habitacion> void verOcupantes(T habitacion) {
-        System.out.println("Ocupantes actuales: " + habitacion.getOcupantes());
+    private static <T extends Habitacion> void verOcupantes(T habitacion,Hotel hotel) throws BadDataException {
+        if (habitacion.getEstado() == EstadoHabitacion.OCUPADA) {
+            System.out.println(hotel.obtenerInfoPasajeros(habitacion.getOcupantes()));
+        } else {
+            System.out.println("La habitación no tiene ocupantes");
+        }
     }
 
     /**
-     * Metodo que imprime por pantalla la cantidad de ocupantes de una determinada habitacion.
-     *
-     * @param habitacion La habitacion de donde misramos a los ocupantes.
+     * Muestra un numero de la cantidad de personas que hospedan la habitacion
+     * @param habitacion Habitacion actual
+     * @param <T> Tipo que extiende de {@link Habitacion}
      */
-
     private static <T extends Habitacion> void verNumeroOcupantes(T habitacion) {
         System.out.println("Ocupantes actuales: " + habitacion.getNroOcupantes());
     }
 
     /**
-     * Metodo que permite revisar una cocina de una habitacion que tenga cocina.
-     *
-     * @param habitacion la habitacion a revisar.
+     * Cambia la fecha de cocinaRevisada al dia de hoy.
+     * @param habitacion Habitacion actual
+     * @param <T> Tipo que extiende de {@link Habitacion} y tiene la interfaz {@link TieneCocina}
      */
-
     private static <T extends Habitacion & TieneCocina> void revisarCocina(T habitacion) {
         habitacion.marcarMantenimientoHechoEnCocina();
         System.out.println("Revision de cocina completa!");
     }
 
     /**
-     * Metodo que permite revisar el jacuzzi de una habitacion .
-     *
-     * @param habitacion
+     * Cambia la fecha de jacuzziRevisado al dia de hoy.
+     * @param habitacion Habitacion actual, solo puede ser presidencial
      */
-
     private static void revisarJacuzzi(HabitacionPresidencial habitacion) {
         habitacion.marcarMantenimientoEnJacuzzi();
         System.out.println("Revision de jacuzzi completo!");
