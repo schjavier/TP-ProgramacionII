@@ -780,7 +780,7 @@ public class Hotel {
      * @param dniPasajeros una lista con los DNIs de los pasajeros que quiere conocerse su información
      * @return resultado Un string con la información de cada uno de los pasajeros
      */
-    public String obtenerInfoPasajeros(ArrayList<Integer> dniPasajeros) throws BadDataException, PersonaNoExisteException {
+    public String obtenerInfoPasajeros(ArrayList<Integer> dniPasajeros) throws BadDataException {
         StringBuilder resultado = new StringBuilder();
         if (!dniPasajeros.isEmpty()) {
             resultado.append("--- Info pasajeros ---\n\n");

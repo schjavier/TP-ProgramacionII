@@ -197,7 +197,7 @@ public class Main {
         } while (opcion != 0);
     }
 
-    static public void menuGestionRecepcionista(Hotel hotel) throws UsuarioNoAutorizadoException, NullNameException, PersonaNoExisteException {
+    static public void menuGestionRecepcionista(Hotel hotel) throws UsuarioNoAutorizadoException, NullNameException {
         if (hotel.obtenerEmpleadoLogueado().getTipo() != TipoEmpleado.RECEPCIONISTA) {
             throw new UsuarioNoAutorizadoException("El usuario no tiene permisos para este menu");
         }
@@ -486,7 +486,7 @@ public class Main {
      * Muestra un menu para las reservas.
      * @param hotel
      */
-    public static void menuReservas(Hotel hotel) throws PersonaNoExisteException {
+    public static void menuReservas(Hotel hotel) {
         int opcion = -1;
         do {
 
@@ -614,7 +614,7 @@ public class Main {
                             Reserva reservaEncontrada = hotel.buscarReservaSegunId(id_reserva);
                             System.out.println(reservaEncontrada);
                             System.out.println(hotel.obtenerInfoPasajeros(reservaEncontrada.getPasajeros()));
-                        } catch (ReservaNoExisteException | PersonaNoExisteException e) {
+                        } catch (ReservaNoExisteException e) {
                             System.out.println(e.getMessage());
                         }
                     } catch (BadDataException e) {
@@ -624,7 +624,7 @@ public class Main {
         } while (opcion != 0);
     }
 
-    public static void agregarReserva(Hotel hotel) throws HabitacionNoEncontradaException, BadDataException, ReservaExisteException, PersonaExisteException, PersonaNoExisteException {
+    public static void agregarReserva(Hotel hotel) throws HabitacionNoEncontradaException, BadDataException, ReservaExisteException, PersonaExisteException {
         int dniTitular = 0;
         LocalDate fechaInicio = null;
         LocalDate fechaFinal = null;
