@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -774,11 +775,23 @@ public class Hotel {
         }
     }
 
-    public String obtenerInfoPasajerosEnReserva(Reserva reserva) throws BadDataException, PersonaNoExisteException {
-        StringBuilder resultado = new StringBuilder("--- Info pasajeros ---\n\n");
+    /**
+     * Muestra la información de los ocupantes a partir de sus DNIs
+     * @param dniPasajeros una lista con los DNIs de los pasajeros que quiere conocerse su información
+     * @return resultado Un string con la información de cada uno de los pasajeros
+     */
+    public String obtenerInfoPasajeros(ArrayList<Integer> dniPasajeros) throws BadDataException, PersonaNoExisteException {
+        StringBuilder resultado = new StringBuilder();
+        if (!dniPasajeros.isEmpty()) {
+            resultado.append("--- Info pasajeros ---\n\n");
 
-        for (Integer dniPasajero : reserva.getPasajeros()) {
-            resultado.append(buscarPasajeroConEseDNI(dniPasajero)).append("\n\n");
+            for (Integer dniPasajero: dniPasajeros) {
+                try {
+                    resultado.append(buscarPasajeroConEseDNI(dniPasajero)).append("\n\n");
+                } catch (PersonaNoExisteException e) {
+                    resultado.append(e.getMessage());
+                }
+            }
         }
 
         return resultado.toString();
