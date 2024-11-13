@@ -197,7 +197,7 @@ public class Main {
         } while (opcion != 0);
     }
 
-    static public void menuGestionRecepcionista(Hotel hotel) throws UsuarioNoAutorizadoException, BadOptionException, NullNameException {
+    static public void menuGestionRecepcionista(Hotel hotel) throws UsuarioNoAutorizadoException, NullNameException {
         if (hotel.obtenerEmpleadoLogueado().getTipo() != TipoEmpleado.RECEPCIONISTA) {
             throw new UsuarioNoAutorizadoException("El usuario no tiene permisos para este menu");
         }
@@ -395,18 +395,20 @@ public class Main {
      */
 
     public static void gestionarHabitacion(Hotel hotel) throws HabitacionNoEncontradaException, NullNameException {
-        Habitacion prueba = null;
+        Habitacion habitacion = null;
 
         System.out.println("Ingrese el numero de la habitacion a gestionar: ");
 
         try {
             int numeroHabitacion = Integer.parseInt(teclado.nextLine());
-            prueba = hotel.buscarHabitacionPorNumero(numeroHabitacion);
-            GestionHabitacion.mostrarMenu(prueba);
+            habitacion = hotel.buscarHabitacionPorNumero(numeroHabitacion);
+            GestionHabitacion.mostrarMenu(habitacion,hotel);
             hotel.hacerBackup();
         } catch (NumberFormatException e)
         {
             System.out.println("Solo usar numeros!!!");
+        } catch (BadDataException | PersonaNoExisteException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -611,8 +613,8 @@ public class Main {
                         try {
                             Reserva reservaEncontrada = hotel.buscarReservaSegunId(id_reserva);
                             System.out.println(reservaEncontrada);
-                            System.out.println(hotel.obtenerInfoPasajerosEnReserva(reservaEncontrada));
-                        } catch (ReservaNoExisteException | PersonaNoExisteException e) {
+                            System.out.println(hotel.obtenerInfoPasajeros(reservaEncontrada.getPasajeros()));
+                        } catch (ReservaNoExisteException e) {
                             System.out.println(e.getMessage());
                         }
                     } catch (BadDataException e) {
@@ -660,15 +662,7 @@ public class Main {
             }
         }
 
-        System.out.println("Pasajeros:" + intentoReserva.getPasajeros());
-        for (Integer dni : intentoReserva.getPasajeros()) {
-            try {
-                System.out.println(hotel.buscarPasajeroConEseDNI(dni));
-            } catch (PersonaNoExisteException e) {
-                System.out.println("La " + dni + " no existe?");
-            }
-            System.out.println("---");
-        }
+        System.out.println(hotel.obtenerInfoPasajeros(intentoReserva.getPasajeros()));
 
         System.out.println("Cantidad:" + intentoReserva.getCantidadPersonasEnReserva());
         int numeroHabitacion = selectorDeHabitacionDisponible(hotel, intentoReserva);

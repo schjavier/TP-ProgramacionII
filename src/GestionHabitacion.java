@@ -1,4 +1,5 @@
 import Exceptions.BadDataException;
+import Exceptions.PersonaNoExisteException;
 import Modelo.Habitaciones.*;
 
 import java.util.Scanner;
@@ -15,7 +16,7 @@ public class GestionHabitacion {
      * @param habitacion Habitacion que llega
      * @param <T> Tipo que extiende de {@link Habitacion}
      */
-    public static <T extends Habitacion> void mostrarMenu(T habitacion) {
+    public static <T extends Habitacion> void mostrarMenu(T habitacion, Hotel hotel) throws BadDataException, PersonaNoExisteException {
 
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;
@@ -54,7 +55,7 @@ public class GestionHabitacion {
                     }
                     break;
                 case 3:
-                    verOcupantes(habitacion);
+                    verOcupantes(habitacion,hotel);
                     break;
                 case 4:
                     verNumeroOcupantes(habitacion);
@@ -90,7 +91,7 @@ public class GestionHabitacion {
     public static void mostrarOpcionesComunes() {
         System.out.println("1. Ver estado de la habitación");
         System.out.println("2. Cambiar estado de la habitación");
-        System.out.println("3. Ver DNI de ocupantes de la habitación");
+        System.out.println("3. Ver info de ocupantes de la habitación");
         System.out.println("4. Ver número de ocupantes actuales");
         System.out.println("5. Ver resumen de la habitacion");
     }
@@ -149,12 +150,17 @@ public class GestionHabitacion {
     }
 
     /**
-     * Muestra la lista de dnis de los ocupantes
+     * Muestra la información de los ocupantes, a partir de sus DNIs
      * @param habitacion Habitacion actual
+     * @param hotel Una instancia de Hotel, para extraer la información de los ocupantes
      * @param <T> Tipo que extiende de {@link Habitacion}
      */
-    private static <T extends Habitacion> void verOcupantes(T habitacion) {
-        System.out.println("Ocupantes actuales: " + habitacion.getOcupantes());
+    private static <T extends Habitacion> void verOcupantes(T habitacion,Hotel hotel) throws BadDataException, PersonaNoExisteException {
+        if (habitacion.getEstado() == EstadoHabitacion.OCUPADA) {
+            System.out.println(hotel.obtenerInfoPasajeros(habitacion.getOcupantes()));
+        } else {
+            System.out.println("La habitación no tiene ocupantes");
+        }
     }
 
     /**
