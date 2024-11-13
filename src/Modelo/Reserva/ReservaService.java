@@ -7,10 +7,9 @@ import Persistencia.InterfacePersistencia;
 import java.io.IOException;
 
 /**
- *
- * Clase que se encargara de llevar y traer informacion desde los archivos a la memoria, y viceversa
- *
+ * Clase de servicio que se encarga de guardar en un archivo los datos en memoria
  */
+
 public class ReservaService implements InterfacePersistencia {
 
     private final String nombreArchivo = "Reservas.json";
@@ -23,9 +22,9 @@ public class ReservaService implements InterfacePersistencia {
     }
 
     /**
-     * @param contenido un string que representa el Contenido a presistir
-     * @return true si se puso persistir los datos, false de otra forma.
-     * @throws NullNameException
+     *
+     * @param contenido un <code>String</code> que representa el contenido a persistir
+     * @return {@code true} si pudo persistir los datos, {@code false} de cualquier otra forma
      */
     @Override
     public boolean persistir(String contenido) {

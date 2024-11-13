@@ -8,6 +8,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * Clase que representa una Reserva de habitacion en el sistema
+ */
+
 public class Reserva {
     private static int contadorIdReserva = 0; // id auto incremental
     private int id;
@@ -40,8 +44,6 @@ public class Reserva {
         this.guardadoPor = guardadoPor;
     }
 
-    // en la clase reserva agregarmos los pasajeros, con un metodo para eso.
-
     public int getId() {
         return id;
     }
@@ -58,17 +60,12 @@ public class Reserva {
         return pasajeros;
     }
 
-    public void agregarPasajero(int dniPasajero){
-        this.pasajeros.add(dniPasajero);
-    }
-
-
     public int getHabitacion() {
         return habitacion;
     }
 
     public void setHabitacion(int habitacion) {
-        this.habitacion = habitacion; // aca podria ponerse una excepcion si la reserva no esta activa
+        this.habitacion = habitacion;
     }
 
     public boolean isActiva() {
@@ -83,28 +80,32 @@ public class Reserva {
         return fechaInicio;
     }
 
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio; // aca podria ponerse una excepcion
-    }
-
     public LocalDate getFechaFinal() {
         return fechaFinal;
     }
 
-    public void setFechaFinal(LocalDate fechaFinal) {
-        this.fechaFinal = fechaFinal; // aca podria ponerse una excepcion
-    }
-
+    /**
+     * Metodo que permite agregar personas a la reserva
+     * @param dni un {@code int} que representa el numero de dodumento de la persona
+     */
     public void agregarPersonaAReserva(Integer dni)
     {
         pasajeros.add(dni);
     }
 
+    /**
+     * Metodo que devueve la cantidad de personas en la reserva
+     * @return un {@code int} que represenra la cantidad de personas
+     */
     public int getCantidadPersonasEnReserva()
     {
         return pasajeros.size();
     }
 
+    /**
+     * Metodo que asigna una habitacion a la reserva
+     * @param numhabitacion un {@code int} que representa el numero de habitacion
+     */
     public void asignarHabitacionAReservaYLlenarDatosFaltantes(int numhabitacion)
     {
         this.id = ++contadorIdReserva;
@@ -121,6 +122,11 @@ public class Reserva {
                 "Fecha de inicio: " + fechaInicio + "\n" +
                 "Fecha de finalizacion: " + fechaFinal + "\n";
     }
+
+    /**
+     * Metodo que comvierte una {@code Reserva} en un JSON
+     * @return devuelve un {@code JSONObject} que representa la reserva.
+     */
 
     public JSONObject toJson(){
         JSONObject reserva = new JSONObject();

@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 
 /**
- * Un pasajero que hace reservas y esta en habitaciones
+ * Clase que representa a un pasajero que hace reservas y esta en habitaciones
  */
 public class Pasajero extends Persona {
     private String domicilio;
@@ -27,6 +27,12 @@ public class Pasajero extends Persona {
         return super.toString() +
                 "domicilio: " + domicilio;
     }
+
+    /**
+     * Clase que convierte un pasajero a JSON
+     *
+     * @return devuelve {@code JSONObject} que representa el Pasajero
+     */
 
     public JSONObject toJSON()
     {
