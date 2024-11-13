@@ -1008,9 +1008,10 @@ public class Hotel {
         return prueba;
     }
 
-    /** Metodo que limpia las personas de las habitaciones de las 3 listas.
-     *  Inserta las personas de nuevo en caso de que una reserva siga vigente.
-
+    /**
+     * Metodo que limpia las personas de las habitaciones de las 3 listas.
+     * Inserta las personas de nuevo en caso de que una reserva siga vigente.
+     *
      */
 
     public void actualizarHabitacionesEnModificacionEnReserva() {
