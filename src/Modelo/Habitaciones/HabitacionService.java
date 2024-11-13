@@ -11,10 +11,20 @@ public class HabitacionService implements InterfacePersistencia {
     public HabitacionService() {
     }
 
+    /**
+     * Metodo que devuelde el nombre de archivo.
+     * @return un {@code String} quae representa el nombre del archivo/
+     */
     public String getNombreArchivo() {
         return nombreArchivo;
     }
 
+
+    /**
+     *
+     * @param contenido un <code>String</code> que representa el contenido a persistir
+     * @return {@code true} si se pudo persistir con exit, {@code false} en cualquier otra forma
+     */
     @Override
     public boolean persistir(String contenido) {
         boolean respuesta = false;

@@ -4,6 +4,10 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Clase de HabitacionPresidencial
+ */
+
 public class HabitacionPresidencial extends Habitacion implements TieneCocina {
     private LocalDate ultimaRevisionCocina;
     private LocalDate ultimaRevisionJacuzzi;
@@ -20,11 +24,18 @@ public class HabitacionPresidencial extends Habitacion implements TieneCocina {
         this.ultimaRevisionJacuzzi = LocalDate.now();
     }
 
+
+    /**
+     * Metodo que permite marcar que esta hecho el mantenimiento. sobre escrito desde la interface {@code TieneCocina}
+     */
     @Override
     public void marcarMantenimientoHechoEnCocina() {
         this.ultimaRevisionCocina = LocalDate.now();
     }
 
+    /**
+     * Metodo que permite marcar que esta hecho el mantenimiento
+     */
     public void marcarMantenimientoEnJacuzzi() {
         this.ultimaRevisionJacuzzi = LocalDate.now();
     }
