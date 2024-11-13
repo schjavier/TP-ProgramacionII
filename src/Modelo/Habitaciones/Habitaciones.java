@@ -107,6 +107,7 @@ abstract public class Habitaciones<T extends Habitacion> {
 
     public void limpiarPersonasDeHabitaciones()
     {
+
         for (T habitacion : listaHabitaciones) {
             if(habitacion.getNroOcupantes() != 0)
             {
