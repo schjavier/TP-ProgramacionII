@@ -407,7 +407,7 @@ public class Main {
         } catch (NumberFormatException e)
         {
             System.out.println("Solo usar numeros!!!");
-        } catch (BadDataException | PersonaNoExisteException e) {
+        } catch (BadDataException e) {
             System.out.println(e.getMessage());
         }
     }

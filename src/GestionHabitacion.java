@@ -16,7 +16,7 @@ public class GestionHabitacion {
      * @param habitacion Habitacion que llega
      * @param <T> Tipo que extiende de {@link Habitacion}
      */
-    public static <T extends Habitacion> void mostrarMenu(T habitacion, Hotel hotel) throws BadDataException, PersonaNoExisteException {
+    public static <T extends Habitacion> void mostrarMenu(T habitacion, Hotel hotel) throws BadDataException {
 
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;
@@ -155,7 +155,7 @@ public class GestionHabitacion {
      * @param hotel Una instancia de Hotel, para extraer la información de los ocupantes
      * @param <T> Tipo que extiende de {@link Habitacion}
      */
-    private static <T extends Habitacion> void verOcupantes(T habitacion,Hotel hotel) throws BadDataException, PersonaNoExisteException {
+    private static <T extends Habitacion> void verOcupantes(T habitacion,Hotel hotel) throws BadDataException {
         if (habitacion.getEstado() == EstadoHabitacion.OCUPADA) {
             System.out.println(hotel.obtenerInfoPasajeros(habitacion.getOcupantes()));
         } else {
